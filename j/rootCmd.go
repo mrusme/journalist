@@ -3,8 +3,11 @@ package j
 import (
   "fmt"
   "github.com/spf13/cobra"
+  "github.com/mrusme/journalist/db"
   "os"
 )
+
+var database *db.Database
 
 var rootCmd = &cobra.Command{
   Use:   "journalist",
