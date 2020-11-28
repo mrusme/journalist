@@ -3,7 +3,7 @@ package api
 import (
   "net/http"
   "log"
-  "io"
+  "encoding/json"
   "github.com/gorilla/mux"
 )
 
@@ -51,6 +51,7 @@ type ApiResponse struct {
   Feeds          []ApiFeed       `json:"feeds,omitempty"`
   Favicons       []ApiFavicon    `json:"favicons,omitempty"`
   Items          []ApiItem       `json:"items,omitempty"`
+  TotalItems     int             `json:"total_items,omitempty"`
 }
 
 func api(w http.ResponseWriter, r *http.Request) {
