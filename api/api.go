@@ -60,10 +60,30 @@ func api(w http.ResponseWriter, r *http.Request) {
       return
   }
 
+  r.ParseForm()
+
+  _, hasApi := r.Form["api"]
+  if hasApi == false {
+    w.WriteHeader(http.StatusBadRequest)
+    return
+  }
+
+  // qApi := r.FormValue("api")
+  log.Printf("%+v", r.Form)
+
+  apiResponse := ApiResponse{}
+  apiResponse.ApiVersion = "2"
+  apiResponse.Auth = 1
+
+  _, hasGroups := r.Form["groups"]
+  if hasGroups == true {
+    apiResponse.Groups = []ApiGroup{ { ID: 0, Title: "test" } }
+  }
+
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusOK)
 
-  io.WriteString(w, `{"alive": true}`)
+  json.NewEncoder(w).Encode(apiResponse)
 }
 
 func Server() {
