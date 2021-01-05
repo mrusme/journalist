@@ -24,6 +24,6 @@ var serverCmd = &cobra.Command{
       os.Exit(1)
     }
 
-    api.Server()
+    api.Server(database)
   },
 }
