@@ -22,17 +22,30 @@ var subscribeCmd = &cobra.Command{
     user := GetApiKey(flagUser, flagPassword)
 
     feedUrl, err := url.Parse(args[0])
+    fmt.Printf("%s\n", feedUrl)
     if err != nil {
       log.Fatal(err)
     }
 
-    // _, err = database.AddEntry(user, newEntry, isRunning)
-    // if err != nil {
-    //   fmt.Printf("%s %+v\n", CharError, err)
-    //   os.Exit(1)
-    // }
+    var group db.Group
+    var grouperr error
+    group, grouperr = database.GetGroup(user, flagGroup)
+    if grouperr != nil {
+      _, grouperr = database.AddGroup(user, db.Group{
+        Title: flagGroup,
+      })
 
-    // fmt.Printf(newEntry.GetOutputForTrack(isRunning, false))
+      if grouperr != nil {
+        log.Fatal(grouperr)
+      }
+
+      group, grouperr = database.GetGroup(user, flagGroup)
+      if grouperr != nil {
+        log.Fatal(grouperr)
+      }
+    }
+
+    fmt.Printf("%v\n", group.IncID)
     return
   },
 }
