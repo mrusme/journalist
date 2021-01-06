@@ -7,6 +7,7 @@ import (
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
+  "github.com/mrusme/journalist/rss"
 )
 
 var flagGroup string
@@ -44,6 +45,8 @@ var subscribeCmd = &cobra.Command{
         log.Fatal(grouperr)
       }
     }
+
+    rss.LoadFeed(feedUrl.String())
 
     fmt.Printf("%v\n", group.IncID)
     return
