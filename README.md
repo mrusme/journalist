@@ -19,5 +19,10 @@ the version in `journalist --help` to be a different one.
 
 ## Usage
 
-Please make sure to `export JOURNALIST_DB=~/.config/journalist.db` (or whatever location 
-you would like to have the journalist database at).
+Please make sure to 
+`export JOURNALIST_DB="postgres://postgres:postgres@127.0.0.1:5432/journalist"` 
+or however your PostgreSQL connection string might look.
+
+You can change the log level using the `JOURNALIST_LOG_LEVEL` env variable,
+e.g. `JOURNALIST_LOG_LEVEL=10` for `debug`. By default, the level is set to 
+`warn`.
