@@ -23,6 +23,44 @@ CREATE TABLE IF NOT EXISTS groups (
     "created_at" TIMESTAMP NOT NULL,
     "updated_at" TIMESTAMP NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS feeds (
+    "id" SERIAL PRIMARY KEY,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "link" TEXT NOT NULL,
+    "feed_link" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "language" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "copyright" TEXT NOT NULL,
+    "generator" TEXT NOT NULL,
+    "categories" TEXT NOT NULL,
+    "group" INT NOT NULL,
+    "user" TEXT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL,
+    "updated_at" TIMESTAMP NOT NULL,
+    CONSTRAINT fk_group FOREIGN KEY("group") REFERENCES groups("id")
+);
+
+CREATE TABLE IF NOT EXISTS items (
+    "id" SERIAL PRIMARY KEY,
+    "guid" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "link" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "categories" TEXT NOT NULL,
+    "is_read" BOOL NOT NULL,
+    "is_saved" BOOL NOT NULL,
+    "feed" INT NOT NULL,
+    "user" TEXT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL,
+    "updated_at" TIMESTAMP NOT NULL,
+    CONSTRAINT fk_feed FOREIGN KEY("feed") REFERENCES feeds("id")
+);
 `
 
 type Database struct {
@@ -81,10 +119,6 @@ func (database *Database) GetGroupByTitleAndUser(title string, user string) (Gro
     SELECT * FROM groups WHERE "title_unix" = $1 AND "user" = $2
   `, GetUnixName(title), user)
 
-  if err != nil {
-    return ret, err
-  }
-
   return ret, err
 }
 
@@ -130,8 +164,15 @@ func (database *Database) ListGroupsByUser(user string) ([]Group, error) {
 // func (database *Database) AddFeed(feed Feed) (string, error) {
 // }
 
-// func (database *Database) GetFeed(feed Feed) (Feed, error) {
-// }
+func (database *Database) GetFeedByLinkAndUser(link string, user string) (Feed, error) {
+  var ret Feed
+
+  err := database.DB.Get(&ret, `
+    SELECT * FROM feeds WHERE "link" = $1 AND "user" = $2
+  `, link, user)
+
+  return ret, err
+}
 
 // func (database *Database) UpdateFeed(feed Feed) (string, error) {
 // }

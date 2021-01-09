@@ -16,6 +16,7 @@ type Feed struct {
   Copyright         string          `json:"copyright,omitempty"`
   Generator         string          `json:"generator,omitempty"`
   Categories        string          `json:"categories,omitempty"`
+  Group             uint            `json:"group,omitempty"`
   User              string          `json:"user,omitempty"`
   CreatedAt         time.Time       `json:"created_at,omitempty"`
   UpdatedAt         time.Time       `json:"update_at,omitempty"`
