@@ -5,8 +5,7 @@ import (
 )
 
 type Item struct {
-  ID                string          `json:"-"`
-  IncID             int             `json:"inc_id,omitempty"`
+  ID                uint            `json:"id,omitempty"`
   Title             string          `json:"title,omitempty"`
   URL               string          `json:"url,omitempty"`
   Author            string          `json:"author,omitempty"`
@@ -16,11 +15,6 @@ type Item struct {
   IsRead            bool            `json:"is_read,omitempty"`
   IsSaved           bool            `json:"is_saved,omitempty"`
   FaviconData       string          `json:"favicon_data,omitempty"`
+  User              string          `json:"user,omitempty"`
   CreatedAt         time.Time       `json:"created_at,omitempty"`
-}
-
-func (item *Item) SetIDFromDatabaseKey(key string) (error) {
-  var err error
-  item.ID, err = GetIDFromDatabaseKey(key)
-  return err
 }

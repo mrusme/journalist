@@ -2,20 +2,18 @@ package db
 
 import (
   "os"
-  "sort"
   "strings"
-  "strconv"
   "regexp"
-  "log"
-  // "fmt"
+  "fmt"
+  "time"
   "errors"
-  "encoding/json"
-  "github.com/tidwall/buntdb"
-  "github.com/google/uuid"
+  // "encoding/json"
+  "github.com/genjidb/genji"
+  "github.com/genjidb/genji/document"
 )
 
 type Database struct {
-  DB *buntdb.DB
+  DB *genji.DB
 }
 
 func InitDatabase() (*Database, error) {
@@ -24,252 +22,139 @@ func InitDatabase() (*Database, error) {
     return nil, errors.New("please `export JOURNALIST_DB` to the location the geld database should be stored at")
   }
 
-  db, err := buntdb.Open(dbfile)
+  db, err := genji.Open(dbfile)
   if err != nil {
     return nil, err
   }
 
-  db.CreateIndex("group", "*", buntdb.IndexJSON("group"))
+  err = db.Exec("CREATE TABLE groups (id INTEGER PRIMARY KEY, title TEXT NOT NULL, user TEXT NOT NULL, createdAt INTEGER, updatedAt INTEGER)")
+  err = db.Exec("CREATE TABLE feeds")
+  err = db.Exec("CREATE TABLE items")
 
   database := Database{db}
   return &database, nil
 }
 
-func (database *Database) NewID() (string) {
-  id, err := uuid.NewRandom()
+func (database *Database) AddGroup(group Group) (error) {
+  err := database.DB.Exec(`
+    INSERT INTO groups (title, user, createdAt, updatedAt)
+    VALUES (?, ?, ?, ?)
+  `, group.Title, group.User, time.Now().Unix(), time.Now().Unix())
+  return err
+}
+
+func (database *Database) GetGroupByID(groupID uint) (Group, error) {
+  var ret Group
+
+  d, err := database.DB.QueryDocument(`
+    SELECT * FROM groups WHERE id = ?
+  `, &groupID)
+
   if err != nil {
-    log.Fatalln("could not generate UUID: %+v", err)
-  }
-  return id.String()
-}
-
-func (database *Database) GetIncrementID(user string, entity string) (int, error) {
-  var idInt int
-
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    id, dberr := tx.Get(user + ":id:" + entity, false)
-    if dberr != nil {
-      return nil
-    }
-
-    if idInt, dberr = strconv.Atoi(id); dberr != nil {
-      idInt = 0
-    }
-
-    idInt++
-
-    _, _, seterr := tx.Set(user + ":id:" + entity, strconv.Itoa(idInt), nil)
-    if seterr != nil {
-      return seterr
-    }
-
-    return nil
-  })
-
-  return idInt, dberr
-}
-
-func (database *Database) AddItem(user string, item Item) (string, error) {
-  id := database.NewID()
-
-  incID, incerr := database.GetIncrementID(user, "item")
-  if incerr != nil {
-    return "", incerr
-  }
-  item.IncID = incID
-
-  itemJson, jsonerr := json.Marshal(item)
-  if jsonerr != nil {
-    return id, jsonerr
+    return ret, err
   }
 
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    _, _, seterr := tx.Set(user + ":item:" + id, string(itemJson), nil)
-    if seterr != nil {
-      return seterr
-    }
+  err = document.StructScan(d, &ret)
 
-    return nil
-  })
-
-  return id, dberr
+  return ret, err
 }
 
-func (database *Database) GetItem(user string, itemId string) (Item, error) {
-  var item Item
+func (database *Database) GetGroupByTitleAndUser(title string, user string) (Group, error) {
+  var ret Group
+  retFound := false
 
-  dberr := database.DB.View(func(tx *buntdb.Tx) error {
-    value, err := tx.Get(user + ":item:" + itemId, false)
-    if err != nil {
-      return nil
-    }
-
-    json.Unmarshal([]byte(value), &item)
-
-    return nil
-  })
-
-  return item, dberr
-}
-
-func (database *Database) UpdateItem(user string, item Item) (string, error) {
-  itemJson, jsonerr := json.Marshal(item)
-  if jsonerr != nil {
-    return item.ID, jsonerr
+  groups, err := database.ListGroupsByUser(user)
+  if err != nil {
+    return ret, err
   }
 
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    _, _, seerr := tx.Set(user + ":item:" + item.ID, string(itemJson), nil)
-    if seerr != nil {
-      return seerr
-    }
+  unixTitle := GetUnixName(title)
 
-    return nil
-  })
-
-  return item.ID, dberr
-}
-
-func (database *Database) EraseItem(user string, id string) (error) {
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    _, delerr := tx.Delete(user + ":item:" + id)
-    if delerr != nil {
-      return delerr
-    }
-
-    return nil
-  })
-
-  return dberr
-}
-
-func (database *Database) ListItems(user string) ([]Item, error) {
-  var items []Item
-
-  dberr := database.DB.View(func(tx *buntdb.Tx) error {
-    tx.AscendKeys(user + ":item:*", func(key, value string) bool {
-      var item Item
-      json.Unmarshal([]byte(value), &item)
-
-      item.SetIDFromDatabaseKey(key)
-
-      items = append(items, item)
-      return true
-    })
-
-    return nil
-  })
-
-  sort.Slice(items, func(i, j int) bool { return items[i].CreatedAt.Before(items[j].CreatedAt) })
-  return items, dberr
-}
-
-func (database *Database) AddGroup(user string, group Group) (string, error) {
-  id := database.NewID()
-
-  incID, incerr := database.GetIncrementID(user, "group")
-  if incerr != nil {
-    return "", incerr
-  }
-  group.IncID = incID
-
-  groupJson, jsonerr := json.Marshal(group)
-  if jsonerr != nil {
-    return id, jsonerr
-  }
-
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    _, _, seterr := tx.Set(user + ":group:" + id, string(groupJson), nil)
-    if seterr != nil {
-      return seterr
-    }
-
-    return nil
-  })
-
-  return id, dberr
-}
-
-func (database *Database) ListGroups(user string) ([]Group, error) {
-  var groups []Group
-
-  dberr := database.DB.View(func(tx *buntdb.Tx) error {
-    tx.AscendKeys(user + ":group:*", func(key, value string) bool {
-      var group Group
-      json.Unmarshal([]byte(value), &group)
-
-      group.SetIDFromDatabaseKey(key)
-
-      groups = append(groups, group)
-      return true
-    })
-
-    return nil
-  })
-
-  sort.Slice(groups, func(i, j int) bool { return groups[i].IncID < groups[j].IncID })
-  return groups, dberr
-}
-
-func (database *Database) UpdateGroup(user string, groupName string, group Group) (error) {
-  groupJson, jsonerr := json.Marshal(group)
-  if jsonerr != nil {
-    return jsonerr
-  }
-
-  foundGroup, founderr := database.GetGroup(user, groupName)
-  if founderr != nil {
-    return founderr
-  }
-
-  groupId := foundGroup.ID
-
-  dberr := database.DB.Update(func(tx *buntdb.Tx) error {
-    _, _, sperr := tx.Set(user + ":group:" + groupId, string(groupJson), nil)
-    if sperr != nil {
-      return sperr
-    }
-
-    return nil
-  })
-
-  return dberr
-}
-
-func (database *Database) GetGroup(user string, groupName string) (Group, error) {
-  var group Group
-  found := false
-  groupUnixName := GetUnixName(groupName)
-
-  groups, dberr := database.ListGroups(user)
-  if dberr != nil {
-    return group, dberr
-  }
-
-  for _, g := range groups {
-    if GetUnixName(g.Title) == groupUnixName {
-      group = g
-      found = true
+  for _, group := range groups {
+    if GetUnixName(group.Title) == unixTitle {
+      fmt.Printf("Found group! %v\n", group.ID)
+      ret = group
+      retFound = true
       break
     }
   }
 
-  if found == false {
-    return group, errors.New("No group found")
+  if retFound == false {
+    return ret, errors.New("Not found")
   }
 
-  return group, dberr
+  return ret, nil
 }
 
-func GetIDFromDatabaseKey(key string) (string, error) {
-  splitKey := strings.Split(key, ":")
+func (database *Database) UpdateGroup(group Group) (error) {
+  err := database.DB.Exec(`
+    UPDATE groups SET ? WHERE id = ?
+  `, &group, group.ID)
+  return err
+}
 
-  if len(splitKey) < 3 || len(splitKey) > 3 {
-    return "", errors.New("not a valid database key")
+func (database *Database) EraseGroup(group Group) (error) {
+  err := database.DB.Exec(`
+    DELETE FROM groups WHERE id = ?
+  `, group.ID)
+  return err
+}
+
+func (database *Database) ListGroupsByUser(user string) ([]Group, error) {
+  var ret []Group
+
+  res, err := database.DB.Query(`
+    SELECT * FROM groups WHERE user = ?
+  `, &user)
+  defer res.Close()
+
+  if err != nil {
+    return ret, err
   }
 
-  return splitKey[2], nil
+  err = res.Iterate(func(d document.Document) (error) {
+    var group Group
+    err = document.StructScan(d, &group)
+    if err != nil {
+      return err
+    }
+
+    ret = append(ret, group)
+    return nil
+  })
+
+  return ret, err
 }
+
+// func (database *Database) AddFeed(feed Feed) (string, error) {
+// }
+
+// func (database *Database) GetFeed(feed Feed) (Feed, error) {
+// }
+
+// func (database *Database) UpdateFeed(feed Feed) (string, error) {
+// }
+
+// func (database *Database) EraseFeed(feed Feed) (error) {
+// }
+
+// func (database *Database) ListFeedsByUser(user string) ([]Feed, error) {
+// }
+
+// func (database *Database) AddItem(item Item) (string, error) {
+// }
+
+// func (database *Database) GetItem(item Item) (Item, error) {
+// }
+
+// func (database *Database) UpdateItem(item Item) (string, error) {
+// }
+
+// func (database *Database) EraseItem(item Item) (error) {
+// }
+
+// func (database *Database) ListItemsByUser(user string) ([]Item, error) {
+// }
 
 func GetUnixName(name string) string {
   reg, regerr := regexp.Compile("[^a-zA-Z0-9]+")

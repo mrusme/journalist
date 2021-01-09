@@ -4,6 +4,7 @@ import (
   "os"
   "fmt"
   "log"
+  "time"
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
@@ -30,17 +31,21 @@ var subscribeCmd = &cobra.Command{
 
     var group db.Group
     var grouperr error
-    group, grouperr = database.GetGroup(user, flagGroup)
+    group, grouperr = database.GetGroupByTitleAndUser(flagGroup, user)
     if grouperr != nil {
-      _, grouperr = database.AddGroup(user, db.Group{
+      log.Println("No group found, adding new one ...")
+      grouperr = database.AddGroup(db.Group{
         Title: flagGroup,
+        User: user,
+        CreatedAt: time.Now().Unix(),
+        UpdatedAt: time.Now().Unix(),
       })
 
       if grouperr != nil {
         log.Fatal(grouperr)
       }
 
-      group, grouperr = database.GetGroup(user, flagGroup)
+      group, grouperr = database.GetGroupByTitleAndUser(flagGroup, user)
       if grouperr != nil {
         log.Fatal(grouperr)
       }
@@ -48,7 +53,7 @@ var subscribeCmd = &cobra.Command{
 
     rss.LoadFeed(feedUrl.String())
 
-    fmt.Printf("%v\n", group.IncID)
+    fmt.Printf("%v\n", group.ID)
     return
   },
 }

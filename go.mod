@@ -3,6 +3,7 @@ module github.com/mrusme/journalist
 go 1.15
 
 require (
+	github.com/genjidb/genji v0.9.0
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/mux v1.8.0
 	github.com/mmcdole/gofeed v1.1.0

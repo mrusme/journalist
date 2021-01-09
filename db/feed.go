@@ -5,8 +5,7 @@ import (
 )
 
 type Feed struct {
-  ID                string          `json:"-"`
-  IncID             int             `json:"inc_id,omitempty"`
+  ID                uint            `json:"id,omitempty"`
   Title             string          `json:"title,omitempty"`
   Description       string          `json:"description,omitempty"`
   Link              string          `json:"link,omitempty"`
@@ -17,11 +16,7 @@ type Feed struct {
   Copyright         string          `json:"copyright,omitempty"`
   Generator         string          `json:"generator,omitempty"`
   Categories        string          `json:"categories,omitempty"`
+  User              string          `json:"user,omitempty"`
+  CreatedAt         time.Time       `json:"created_at,omitempty"`
   UpdatedAt         time.Time       `json:"update_at,omitempty"`
-}
-
-func (feed *Feed) SetIDFromDatabaseKey(key string) (error) {
-  var err error
-  feed.ID, err = GetIDFromDatabaseKey(key)
-  return err
 }

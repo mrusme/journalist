@@ -13,16 +13,16 @@ var database *db.Database
 
 type ApiFeedsGroup struct {
   FeedIDs             string          `json:"feed_ids,omitempty"`
-  GroupID             int             `json:"group_id,omitempty"`
+  GroupID             uint            `json:"group_id,omitempty"`
 }
 
 type ApiGroup struct {
-  ID                  int             `json:"id,omitempty"`
+  ID                  uint            `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
 }
 
 type ApiFeed struct {
-  ID                  int             `json:"id,omitempty"`
+  ID                  uint            `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
   SiteURL             string          `json:"site_url,omitempty"`
   URL                 string          `json:"url,omitempty"`
@@ -31,13 +31,13 @@ type ApiFeed struct {
 }
 
 type ApiFavicon struct {
-  ID                  int             `json:"id,omitempty"`
+  ID                  uint            `json:"id,omitempty"`
   Data                string          `json:"data,omitempty"`
 }
 
 type ApiItem struct {
-  ID                  int             `json:"id,omitempty"`
-  FeedID              int             `json:"feed_id,omitempty"`
+  ID                  uint            `json:"id,omitempty"`
+  FeedID              uint            `json:"feed_id,omitempty"`
   Title               string          `json:"title,omitempty"`
   URL                 string          `json:"url,omitempty"`
   Author              string          `json:"author,omitempty"`
@@ -64,11 +64,11 @@ type ApiResponse struct {
 func (apiResponse *ApiResponse) processGroups(r *http.Request) (bool, error) {
   _, hasGroups := r.Form["groups"]
   if hasGroups == true {
-    groups, err := database.ListGroups(r.FormValue("api_key"))
+    groups, err := database.ListGroupsByUser(r.FormValue("api_key"))
     for _, group := range groups {
       apiResponse.Groups = append(apiResponse.Groups,
         ApiGroup{
-          ID: group.IncID,
+          ID: group.ID,
           Title: group.Title,
         })
     }
