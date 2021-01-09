@@ -2,7 +2,7 @@ package api
 
 import (
   "net/http"
-  "log"
+  log "github.com/sirupsen/logrus"
   "errors"
   "encoding/json"
   "github.com/gorilla/mux"
@@ -61,10 +61,14 @@ type ApiResponse struct {
   LastRefreshedOnTime int             `json:"last_refreshed_on_time,omitempty"`
 }
 
-func (apiResponse *ApiResponse) processGroups(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (bool, error) {
   _, hasGroups := r.Form["groups"]
   if hasGroups == true {
-    groups, err := database.ListGroupsByUser(r.FormValue("api_key"))
+    groups, err := database.ListGroupsByUser(user)
+    if err != nil {
+      log.Error(err)
+    }
+
     for _, group := range groups {
       apiResponse.Groups = append(apiResponse.Groups,
         ApiGroup{
@@ -78,7 +82,7 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request) (bool, error) {
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processFeeds(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool, error) {
   _, hasFeeds := r.Form["feeds"]
   if hasFeeds == true {
     // TODO
@@ -88,7 +92,7 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request) (bool, error) {
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processItems(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool, error) {
   _, hasItems := r.Form["items"]
   if hasItems == true {
     // TODO
@@ -98,7 +102,7 @@ func (apiResponse *ApiResponse) processItems(r *http.Request) (bool, error) {
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user string) (bool, error) {
   _, hasUnreadItemIDs := r.Form["unread_item_ids"]
   if hasUnreadItemIDs == true {
     apiResponse.UnreadItemIDs = "1,2,3"
@@ -108,7 +112,7 @@ func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request) (bool, err
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request, user string) (bool, error) {
   _, hasSavedItemIDs := r.Form["saved_item_ids"]
   if hasSavedItemIDs == true {
     apiResponse.SavedItemIDs = "1,2,3"
@@ -118,7 +122,7 @@ func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request) (bool, erro
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processMark(r *http.Request) (bool, error) {
+func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool, error) {
   _, hasMark := r.Form["mark"]
   if hasMark == true {
     mark := r.FormValue("mark")
@@ -164,8 +168,8 @@ func api(w http.ResponseWriter, r *http.Request) {
   log.Printf("%+v", r.Form)
   log.Printf("%+v", r.PostForm)
 
-  apiKey := r.PostFormValue("api_key")
-  if apiKey == "" {
+  user := r.PostFormValue("api_key")
+  if user == "" {
     w.WriteHeader(http.StatusUnauthorized)
     return
   }
@@ -184,42 +188,42 @@ func api(w http.ResponseWriter, r *http.Request) {
   var processError error
 
   // Groups
-  _, processError = apiResponse.processGroups(r)
+  _, processError = apiResponse.processGroups(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
   }
 
   // Feeds
-  _, processError = apiResponse.processFeeds(r)
+  _, processError = apiResponse.processFeeds(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
   }
 
   // Items
-  _, processError = apiResponse.processItems(r)
+  _, processError = apiResponse.processItems(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
   }
 
   // Unread item IDs
-  _, processError = apiResponse.processUnreadItemIDs(r)
+  _, processError = apiResponse.processUnreadItemIDs(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
   }
 
   // Saved item IDs
-  _, processError = apiResponse.processSavedItemIDs(r)
+  _, processError = apiResponse.processSavedItemIDs(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
   }
 
   // Mark ... as ...
-  _, processError = apiResponse.processMark(r)
+  _, processError = apiResponse.processMark(r, user)
   if processError != nil {
     w.WriteHeader(http.StatusInternalServerError)
     return
