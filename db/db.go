@@ -4,10 +4,9 @@ import (
   "os"
   "strings"
   "regexp"
-  // "fmt"
   "time"
   "errors"
-  // "encoding/json"
+  log "github.com/sirupsen/logrus"
 
   _ "database/sql"
   "github.com/jmoiron/sqlx"
@@ -213,7 +212,8 @@ func (database *Database) AddFeed(feed Feed, groupID int64) (int64, error) {
     groupID,
     feed.User,
     feed.CreatedAt,
-    feed.UpdatedAt).Scan(&id)
+    feed.UpdatedAt,
+  ).Scan(&id)
   if err != nil {
     return -1, err
   }
@@ -233,9 +233,78 @@ func (database *Database) GetFeedByFeedLinkAndUser(feedLink string, user string)
 
 func (database *Database) UpdateFeed(feed Feed) (error) {
   _, err := database.DB.Exec(`
-    UPDATE feeds SET ? WHERE "id" = ?
-  `, &feed, feed.ID)
+    UPDATE feeds SET
+      "title" = $1,
+      "description" = $2,
+      "link" = $3,
+      "feed_link" = $4,
+      "author" = $5,
+      "language" = $6,
+      "image" = $7,
+      "copyright" = $8,
+      "generator" = $9,
+      "categories" = $10,
+      "group" = $11,
+      "user" = $12,
+      "updated_at" = $13
+    WHERE "id" = $14
+  `,
+    feed.Title,
+    feed.Description,
+    feed.Link,
+    feed.FeedLink,
+    feed.Author,
+    feed.Language,
+    feed.Image,
+    feed.Copyright,
+    feed.Generator,
+    feed.Categories,
+    feed.Group,
+    feed.User,
+    feed.UpdatedAt,
+    feed.ID,
+  )
   return err
+}
+
+func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
+  var feedID int64
+  existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, feed.User)
+  if feederr != nil || existingFeed.ID <= 0 {
+    log.Debug(feederr)
+    log.Debug("Subscribing to feed ...")
+    feedID, feederr = database.AddFeed(feed, feed.Group)
+
+    if feederr != nil {
+      return []int64{}, feederr
+    }
+  } else {
+    feedID = existingFeed.ID
+    feed.ID = existingFeed.ID
+    feed.Group = existingFeed.Group
+
+    log.Debug("Already subscribed to feed, updating ...")
+    updateerr := database.UpdateFeed(feed)
+    if updateerr != nil {
+      log.Debug(updateerr)
+    }
+  }
+  log.Debug("Feed ID: ", feedID)
+  log.Debug("Refreshing items ...")
+
+  var itemIDs []int64
+  for _, item := range items {
+    itemID, itemerr := database.AddItem(item, feedID)
+
+    if itemerr != nil {
+      log.Debug(itemerr)
+    } else {
+      log.Debug("Added new item with ID:", itemID)
+      itemIDs = append(itemIDs, itemID)
+    }
+  }
+
+  return itemIDs, nil
 }
 
 // func (database *Database) EraseFeed(feed Feed) (error) {
@@ -293,7 +362,8 @@ func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
     feedId,
     item.User,
     item.CreatedAt,
-    item.UpdatedAt).Scan(&id)
+    item.UpdatedAt,
+  ).Scan(&id)
   if err != nil {
     return -1, err
   }

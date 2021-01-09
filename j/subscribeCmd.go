@@ -53,28 +53,12 @@ var subscribeCmd = &cobra.Command{
       log.Fatal(feederr)
     }
 
-    var feedId int64
-    existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, user)
-    if feederr != nil || existingFeed.ID <= 0 {
-      log.Println("subscribing to feed ...")
-      feedId, feederr = database.AddFeed(feed, group.ID)
-
-      if feederr != nil {
-        log.Fatal(feederr)
-      }
-    } else {
-      feedId = existingFeed.ID
+    itemIDs, upserterr := database.UpsertFeed(feed, items)
+    if upserterr != nil {
+      log.Fatal(upserterr)
     }
 
-    for _, item := range items {
-      _, itemerr := database.AddItem(item, feedId)
-
-      if itemerr != nil {
-        log.Debug(itemerr)
-      }
-    }
-
-    fmt.Printf("%v, %v\n", group.ID, feedId)
+    fmt.Printf("%v, %v, %+v\n", group.ID, feed.ID, itemIDs)
     return
   },
 }
