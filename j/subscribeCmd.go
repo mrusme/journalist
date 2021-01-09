@@ -32,7 +32,7 @@ var subscribeCmd = &cobra.Command{
     var grouperr error
     group, grouperr = database.GetGroupByTitleAndUser(flagGroup, user)
     if grouperr != nil {
-      log.Println("No group found, adding new one ...")
+      log.Println("no group found, adding new one ...")
       grouperr = database.AddGroup(db.Group{
         Title: flagGroup,
         User: user,
@@ -48,7 +48,10 @@ var subscribeCmd = &cobra.Command{
       }
     }
 
-    rss.LoadFeed(feedUrl.String())
+    _, _, feederr := rss.LoadFeed(feedUrl.String(), user)
+    if feederr != nil {
+      log.Fatal(feederr)
+    }
 
     fmt.Printf("%v\n", group.ID)
     return
