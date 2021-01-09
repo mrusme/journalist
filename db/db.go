@@ -297,6 +297,23 @@ func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
     itemID, itemerr := database.AddItem(item, feedID)
 
     if itemerr != nil {
+      existingItem, geterr := database.GetItemByGUIDAndUser(item.GUID, item.User)
+      if geterr != nil {
+        log.Debug(geterr)
+      } else {
+        item.ID = existingItem.ID
+        item.Feed = existingItem.Feed
+        if item.UpdatedAt.After(existingItem.UpdatedAt) {
+          item.IsRead = false
+        } else {
+          item.IsRead = existingItem.IsRead
+        }
+        item.IsSaved = existingItem.IsSaved
+        updateerr := database.UpdateItem(item)
+        if updateerr != nil {
+          log.Debug(updateerr)
+        }
+      }
       log.Debug(itemerr)
     } else {
       log.Debug("Added new item with ID:", itemID)
@@ -371,11 +388,61 @@ func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
   return id, err
 }
 
-// func (database *Database) GetItem(item Item) (Item, error) {
-// }
+func (database *Database) GetItemByGUIDAndUser(itemGUID string, user string) (Item, error) {
+  var ret Item
 
-// func (database *Database) UpdateItem(item Item) (string, error) {
-// }
+  err := database.DB.Get(&ret, `
+    SELECT * FROM items WHERE
+      "guid" = $1
+    AND
+      "user" = $2
+  `,
+    itemGUID,
+    user,
+  )
+
+  if err != nil {
+    return ret, err
+  }
+
+  return ret, err
+}
+
+func (database *Database) UpdateItem(item Item) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE items SET
+      "guid" = $1,
+      "title" = $2,
+      "description" = $3,
+      "content" = $4,
+      "link" = $5,
+      "author" = $6,
+      "image" = $7,
+      "categories" = $8,
+      "is_read" = $9,
+      "is_saved" = $10,
+      "feed" = $11,
+      "user" = $12,
+      "updated_at" = $13
+    WHERE "id" = $14
+  `,
+    item.GUID,
+    item.Title,
+    item.Description,
+    item.Content,
+    item.Link,
+    item.Author,
+    item.Image,
+    item.Categories,
+    item.IsRead,
+    item.IsSaved,
+    item.Feed,
+    item.User,
+    item.UpdatedAt,
+    item.ID,
+  )
+  return err
+}
 
 // func (database *Database) EraseItem(item Item) (error) {
 // }
