@@ -469,8 +469,30 @@ func (database *Database) UpdateItem(item Item) (error) {
 // func (database *Database) EraseItem(item Item) (error) {
 // }
 
-// func (database *Database) ListItemsByUser(user string) ([]Item, error) {
-// }
+func (database *Database) ListItemsByUser(user string) ([]Item, error) {
+  var ret []Item
+
+  res, err := database.DB.Queryx(`
+    SELECT * FROM items WHERE "user" = $1
+  `, user)
+
+  if err != nil {
+    return ret, err
+  }
+
+  for res.Next() {
+    var item Item
+
+    err := res.StructScan(&item)
+    if err != nil {
+      return ret, err
+    }
+
+    ret = append(ret, item)
+  }
+
+  return ret, err
+}
 
 func GetUnixName(name string) string {
   reg, regerr := regexp.Compile("[^a-zA-Z0-9]+")

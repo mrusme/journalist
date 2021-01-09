@@ -110,7 +110,25 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
 func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool, error) {
   _, hasItems := r.Form["items"]
   if hasItems == true {
-    // TODO
+    items, err := database.ListItemsByUser(user)
+    if err != nil {
+      log.Error(err)
+    }
+
+    for _, item := range items {
+      apiResponse.Items = append(apiResponse.Items,
+        ApiItem{
+          ID: item.ID,
+          FeedID: item.Feed,
+          Title: item.Title,
+          URL: item.Link,
+          Author: item.Author,
+          HTML: item.Content,
+          CreatedOnTime: int(item.UpdatedAt.Unix()),
+          IsRead: item.IsRead,
+          IsSaved: item.IsSaved,
+        })
+    }
     return true, nil
   }
 
