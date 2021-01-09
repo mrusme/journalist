@@ -85,8 +85,23 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
 func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool, error) {
   _, hasFeeds := r.Form["feeds"]
   if hasFeeds == true {
-    // TODO
-    return true, nil
+    feeds, err := database.ListFeedsByUser(user)
+    if err != nil {
+      log.Error(err)
+    }
+
+    for _, feed := range feeds {
+      apiResponse.Feeds = append(apiResponse.Feeds,
+        ApiFeed{
+          ID: feed.ID,
+          Title: feed.Title,
+          SiteURL: feed.Link,
+          URL: feed.FeedLink,
+          LastUpdatedOnTime: int(feed.UpdatedAt.Unix()),
+          IsSpark: false,
+        })
+    }
+    return true, err
   }
 
   return false, nil
