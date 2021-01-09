@@ -231,8 +231,12 @@ func (database *Database) GetFeedByFeedLinkAndUser(feedLink string, user string)
   return ret, err
 }
 
-// func (database *Database) UpdateFeed(feed Feed) (string, error) {
-// }
+func (database *Database) UpdateFeed(feed Feed) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE feeds SET ? WHERE "id" = ?
+  `, &feed, feed.ID)
+  return err
+}
 
 // func (database *Database) EraseFeed(feed Feed) (error) {
 // }
