@@ -215,10 +215,9 @@ func (database *Database) AddFeed(feed Feed, groupID int64) (int64, error) {
     feed.CreatedAt,
     feed.UpdatedAt).Scan(&id)
   if err != nil {
-    return 0, err
+    return -1, err
   }
 
-  // id, err = res.LastInsertId()
   return id, err
 }
 
