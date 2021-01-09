@@ -195,7 +195,7 @@ func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user strin
 func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request, user string) (bool, error) {
   _, hasSavedItemIDs := r.Form["saved_item_ids"]
   if hasSavedItemIDs == true {
-    apiResponse.SavedItemIDs = "1,2,3"
+    apiResponse.SavedItemIDs = ""
     return true, nil
   }
 
