@@ -4,7 +4,7 @@ import (
   "os"
   "strings"
   "regexp"
-  "fmt"
+  // "fmt"
   "time"
   "errors"
   // "encoding/json"
@@ -18,6 +18,7 @@ var schema = `
 CREATE TABLE IF NOT EXISTS groups (
     "id" SERIAL PRIMARY KEY,
     "title" TEXT NOT NULL,
+    "title_unix" TEXT NOT NULL,
     "user" TEXT NOT NULL,
     "created_at" TIMESTAMP NOT NULL,
     "updated_at" TIMESTAMP NOT NULL
@@ -53,9 +54,9 @@ func InitDatabase() (*Database, error) {
 
 func (database *Database) AddGroup(group Group) (error) {
   _, err := database.DB.Exec(`
-    INSERT INTO groups ("title", "user", "created_at", "updated_at")
-    VALUES ($1, $2, $3, $4)
-  `, group.Title, group.User, time.Now(), time.Now())
+    INSERT INTO groups ("title", "title_unix", "user", "created_at", "updated_at")
+    VALUES ($1, $2, $3, $4, $5)
+  `, group.Title, GetUnixName(group.Title), group.User, time.Now(), time.Now())
   return err
 }
 
@@ -75,29 +76,16 @@ func (database *Database) GetGroupByID(groupID uint) (Group, error) {
 
 func (database *Database) GetGroupByTitleAndUser(title string, user string) (Group, error) {
   var ret Group
-  retFound := false
 
-  groups, err := database.ListGroupsByUser(user)
+  err := database.DB.Get(&ret, `
+    SELECT * FROM groups WHERE "title_unix" = $1 AND "user" = $2
+  `, GetUnixName(title), user)
+
   if err != nil {
     return ret, err
   }
 
-  unixTitle := GetUnixName(title)
-
-  for _, group := range groups {
-    if GetUnixName(group.Title) == unixTitle {
-      fmt.Printf("Found group! %v\n", group.ID)
-      ret = group
-      retFound = true
-      break
-    }
-  }
-
-  if retFound == false {
-    return ret, errors.New("Not found")
-  }
-
-  return ret, nil
+  return ret, err
 }
 
 func (database *Database) UpdateGroup(group Group) (error) {
