@@ -244,8 +244,62 @@ func (database *Database) UpdateFeed(feed Feed) (error) {
 // func (database *Database) ListFeedsByUser(user string) ([]Feed, error) {
 // }
 
-// func (database *Database) AddItem(item Item) (string, error) {
-// }
+func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
+  var id int64
+  err := database.DB.QueryRow(`
+    INSERT INTO items (
+      "guid",
+      "title",
+      "description",
+      "content",
+      "link",
+      "author",
+      "image",
+      "categories",
+      "is_read",
+      "is_saved",
+      "feed",
+      "user",
+      "created_at",
+      "updated_at"
+    )
+    VALUES (
+      $1,
+      $2,
+      $3,
+      $4,
+      $5,
+      $6,
+      $7,
+      $8,
+      $9,
+      $10,
+      $11,
+      $12,
+      $13,
+      $14
+    ) RETURNING "id"
+  `,
+    item.GUID,
+    item.Title,
+    item.Description,
+    item.Content,
+    item.Link,
+    item.Author,
+    item.Image,
+    item.Categories,
+    item.IsRead,
+    item.IsSaved,
+    feedId,
+    item.User,
+    item.CreatedAt,
+    item.UpdatedAt).Scan(&id)
+  if err != nil {
+    return -1, err
+  }
+
+  return id, err
+}
 
 // func (database *Database) GetItem(item Item) (Item, error) {
 // }
