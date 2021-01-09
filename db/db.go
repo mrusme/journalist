@@ -161,15 +161,64 @@ func (database *Database) ListGroupsByUser(user string) ([]Group, error) {
   return ret, err
 }
 
-// func (database *Database) AddFeed(feed Feed) (string, error) {
-// }
+func (database *Database) AddFeed(feed Feed, groupID uint) (error) {
+  _, err := database.DB.Exec(`
+    INSERT INTO feeds (
+      "title",
+      "description",
+      "link",
+      "feed_link",
+      "author",
+      "language",
+      "image",
+      "copyright",
+      "generator",
+      "categories",
+      "group",
+      "user",
+      "created_at",
+      "updated_at"
+    )
+    VALUES (
+      $1,
+      $2,
+      $3,
+      $4,
+      $5,
+      $6,
+      $7,
+      $8,
+      $9,
+      $10,
+      $11,
+      $12,
+      $13,
+      $14
+    )
+  `,
+    feed.Title,
+    feed.Description,
+    feed.Link,
+    feed.FeedLink,
+    feed.Author,
+    feed.Language,
+    feed.Image,
+    feed.Copyright,
+    feed.Generator,
+    feed.Categories,
+    groupID,
+    feed.User,
+    feed.CreatedAt,
+    feed.UpdatedAt)
+  return err
+}
 
-func (database *Database) GetFeedByLinkAndUser(link string, user string) (Feed, error) {
+func (database *Database) GetFeedByFeedLinkAndUser(feedLink string, user string) (Feed, error) {
   var ret Feed
 
   err := database.DB.Get(&ret, `
-    SELECT * FROM feeds WHERE "link" = $1 AND "user" = $2
-  `, link, user)
+    SELECT * FROM feeds WHERE "feed_link" = $1 AND "user" = $2
+  `, feedLink, user)
 
   return ret, err
 }

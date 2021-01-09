@@ -48,9 +48,19 @@ var subscribeCmd = &cobra.Command{
       }
     }
 
-    _, _, feederr := rss.LoadFeed(feedUrl.String(), user)
+    feed, _, feederr := rss.LoadFeed(feedUrl.String(), user)
     if feederr != nil {
       log.Fatal(feederr)
+    }
+
+    existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, user)
+    if feederr != nil || existingFeed.ID <= 0 {
+      log.Println("subscribing to feed ...")
+      feederr = database.AddFeed(feed, group.ID)
+
+      if feederr != nil {
+        log.Fatal(feederr)
+      }
     }
 
     fmt.Printf("%v\n", group.ID)
