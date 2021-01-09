@@ -25,5 +25,6 @@ var serverCmd = &cobra.Command{
     }
 
     api.Server(database)
+    database.DB.Close()
   },
 }

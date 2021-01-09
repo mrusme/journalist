@@ -1,12 +1,13 @@
 package db
 
 import (
+  "time"
 )
 
 type Group struct {
-  ID                uint            `json:"id,omitempty"`
-  Title             string          `json:"title,omitempty"`
-  User              string          `json:"user,omitempty"`
-  CreatedAt         int64           `json:"created_at,omitempty"`
-  UpdatedAt         int64           `json:"update_at,omitempty"`
+  ID                uint            `db:"id",json:"id,omitempty"`
+  Title             string          `db:"title",json:"title,omitempty"`
+  User              string          `db:"user",json:"user,omitempty"`
+  CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
+  UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
 }

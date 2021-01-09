@@ -8,53 +8,67 @@ import (
   "time"
   "errors"
   // "encoding/json"
-  "github.com/genjidb/genji"
-  "github.com/genjidb/genji/document"
+
+  _ "database/sql"
+  "github.com/jmoiron/sqlx"
+  _ "github.com/jackc/pgx/v4/stdlib"
 )
 
+var schema = `
+CREATE TABLE IF NOT EXISTS groups (
+    "id" SERIAL PRIMARY KEY,
+    "title" TEXT NOT NULL,
+    "user" TEXT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL,
+    "updated_at" TIMESTAMP NOT NULL
+);
+`
+
 type Database struct {
-  DB *genji.DB
+  DB *sqlx.DB
 }
 
 func InitDatabase() (*Database, error) {
-  dbfile, ok := os.LookupEnv("JOURNALIST_DB")
-  if ok == false || dbfile == "" {
-    return nil, errors.New("please `export JOURNALIST_DB` to the location the geld database should be stored at")
+  dbconnection, ok := os.LookupEnv("JOURNALIST_DB")
+  if ok == false || dbconnection == "" {
+    return nil, errors.New("please `export JOURNALIST_DB` with the database connection string, e.g. 'postgres://user:secret@localhost:5432/journalist?sslmode=disable'")
   }
 
-  db, err := genji.Open(dbfile)
+  db, err := sqlx.Open("pgx", dbconnection)
   if err != nil {
     return nil, err
   }
 
-  err = db.Exec("CREATE TABLE groups (id INTEGER PRIMARY KEY, title TEXT NOT NULL, user TEXT NOT NULL, createdAt INTEGER, updatedAt INTEGER)")
-  err = db.Exec("CREATE TABLE feeds")
-  err = db.Exec("CREATE TABLE items")
+  err = db.Ping()
+  if err != nil {
+    db.Close()
+    return nil, err
+  }
+
+  db.MustExec(schema)
 
   database := Database{db}
   return &database, nil
 }
 
 func (database *Database) AddGroup(group Group) (error) {
-  err := database.DB.Exec(`
-    INSERT INTO groups (title, user, createdAt, updatedAt)
-    VALUES (?, ?, ?, ?)
-  `, group.Title, group.User, time.Now().Unix(), time.Now().Unix())
+  _, err := database.DB.Exec(`
+    INSERT INTO groups ("title", "user", "created_at", "updated_at")
+    VALUES ($1, $2, $3, $4)
+  `, group.Title, group.User, time.Now(), time.Now())
   return err
 }
 
 func (database *Database) GetGroupByID(groupID uint) (Group, error) {
   var ret Group
 
-  d, err := database.DB.QueryDocument(`
-    SELECT * FROM groups WHERE id = ?
-  `, &groupID)
+  err := database.DB.Get(&ret, `
+    SELECT * FROM groups WHERE "id" = $1
+  `, groupID)
 
   if err != nil {
     return ret, err
   }
-
-  err = document.StructScan(d, &ret)
 
   return ret, err
 }
@@ -87,15 +101,15 @@ func (database *Database) GetGroupByTitleAndUser(title string, user string) (Gro
 }
 
 func (database *Database) UpdateGroup(group Group) (error) {
-  err := database.DB.Exec(`
-    UPDATE groups SET ? WHERE id = ?
+  _, err := database.DB.Exec(`
+    UPDATE groups SET ? WHERE "id" = ?
   `, &group, group.ID)
   return err
 }
 
 func (database *Database) EraseGroup(group Group) (error) {
-  err := database.DB.Exec(`
-    DELETE FROM groups WHERE id = ?
+  _, err := database.DB.Exec(`
+    DELETE FROM groups WHERE "id" = ?
   `, group.ID)
   return err
 }
@@ -103,25 +117,24 @@ func (database *Database) EraseGroup(group Group) (error) {
 func (database *Database) ListGroupsByUser(user string) ([]Group, error) {
   var ret []Group
 
-  res, err := database.DB.Query(`
-    SELECT * FROM groups WHERE user = ?
-  `, &user)
-  defer res.Close()
+  res, err := database.DB.Queryx(`
+    SELECT * FROM groups WHERE "user" = $1
+  `, user)
 
   if err != nil {
     return ret, err
   }
 
-  err = res.Iterate(func(d document.Document) (error) {
+  for res.Next() {
     var group Group
-    err = document.StructScan(d, &group)
+
+    err := res.StructScan(&group)
     if err != nil {
-      return err
+      return ret, err
     }
 
     ret = append(ret, group)
-    return nil
-  })
+  }
 
   return ret, err
 }

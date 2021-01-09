@@ -4,7 +4,6 @@ import (
   "os"
   "fmt"
   "log"
-  "time"
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
@@ -37,8 +36,6 @@ var subscribeCmd = &cobra.Command{
       grouperr = database.AddGroup(db.Group{
         Title: flagGroup,
         User: user,
-        CreatedAt: time.Now().Unix(),
-        UpdatedAt: time.Now().Unix(),
       })
 
       if grouperr != nil {
