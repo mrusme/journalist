@@ -469,12 +469,19 @@ func (database *Database) UpdateItem(item Item) (error) {
 // func (database *Database) EraseItem(item Item) (error) {
 // }
 
-func (database *Database) ListItemsByUser(user string) ([]Item, error) {
+func (database *Database) ListItemsByUser(user string, sinceID int64) ([]Item, error) {
   var ret []Item
 
   res, err := database.DB.Queryx(`
-    SELECT * FROM items WHERE "user" = $1
-  `, user)
+    SELECT * FROM items
+    WHERE
+      "user" = $1
+    AND
+      "id" >= $2
+  `,
+    user,
+    sinceID,
+  )
 
   if err != nil {
     return ret, err
@@ -494,7 +501,43 @@ func (database *Database) ListItemsByUser(user string) ([]Item, error) {
   return ret, err
 }
 
-func (database *Database) ListUnreadItemsByUser(user string) ([]Item, error) {
+func (database *Database) ListItemsByIDsAndUser(ids []int64, user string) ([]Item, error) {
+  var ret []Item
+
+  query, args, err := sqlx.In(`
+    SELECT * FROM items
+    WHERE
+      "id" IN (?)
+    AND
+      "user" = ?
+  `,
+    ids,
+    user,
+  )
+
+  res, err := database.DB.Queryx(
+    database.DB.Rebind(query), args...
+  )
+
+  if err != nil {
+    return ret, err
+  }
+
+  for res.Next() {
+    var item Item
+
+    err := res.StructScan(&item)
+    if err != nil {
+      return ret, err
+    }
+
+    ret = append(ret, item)
+  }
+
+  return ret, err
+}
+
+func (database *Database) ListUnreadItemsByUser(user string, sinceID int64) ([]Item, error) {
   var ret []Item
 
   res, err := database.DB.Queryx(`
@@ -502,8 +545,13 @@ func (database *Database) ListUnreadItemsByUser(user string) ([]Item, error) {
     WHERE
       "user" = $1
     AND
+      "id" >= $2
+    AND
       "is_read" = FALSE
-  `, user)
+  `,
+    user,
+    sinceID,
+  )
 
   if err != nil {
     return ret, err
