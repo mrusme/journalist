@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS groups (
     "created_at" TIMESTAMP NOT NULL,
     "updated_at" TIMESTAMP NOT NULL
 );
+CREATE UNIQUE INDEX IF NOT EXISTS "groups_title_unix" ON "groups"("title_unix","user");
 
 CREATE TABLE IF NOT EXISTS feeds (
     "id" SERIAL PRIMARY KEY,
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS feeds (
     "updated_at" TIMESTAMP NOT NULL,
     CONSTRAINT fk_group FOREIGN KEY("group") REFERENCES groups("id")
 );
+CREATE UNIQUE INDEX IF NOT EXISTS "feeds_feed_link" ON "feeds"("feed_link","user");
 
 CREATE TABLE IF NOT EXISTS items (
     "id" SERIAL PRIMARY KEY,
@@ -61,6 +63,7 @@ CREATE TABLE IF NOT EXISTS items (
     "updated_at" TIMESTAMP NOT NULL,
     CONSTRAINT fk_feed FOREIGN KEY("feed") REFERENCES feeds("id")
 );
+CREATE UNIQUE INDEX IF NOT EXISTS "items_guid" ON "items"("guid","user");
 `
 
 type Database struct {
