@@ -15,7 +15,7 @@ var database *db.Database
 
 type ApiFeedsGroup struct {
   FeedIDs             string          `json:"feed_ids,omitempty"`
-  GroupID             uint            `json:"group_id,omitempty"`
+  GroupID             int64           `json:"group_id,omitempty"`
 }
 
 type ApiGroup struct {
@@ -45,8 +45,8 @@ type ApiItem struct {
   Author              string          `json:"author,omitempty"`
   HTML                string          `json:"html,omitempty"`
   CreatedOnTime       int             `json:"created_on_time,omitempty"`
-  IsRead              bool            `json:"is_read,omitempty"`
-  IsSaved             bool            `json:"is_saved,omitempty"`
+  IsRead              int             `json:"is_read"`
+  IsSaved             int             `json:"is_saved"`
 }
 
 type ApiResponse struct {
@@ -94,6 +94,7 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
     }
 
     for _, feed := range feeds {
+      log.Debug(feed.UpdatedAt.Unix())
       apiResponse.Feeds = append(apiResponse.Feeds,
         ApiFeed{
           ID: feed.ID,
@@ -120,6 +121,16 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
     }
 
     for _, item := range items {
+      isRead := 0
+      if item.IsRead == true {
+        isRead = 1
+      }
+
+      isSaved := 0
+      if item.IsSaved == true {
+        isSaved = 1
+      }
+
       apiResponse.Items = append(apiResponse.Items,
         ApiItem{
           ID: item.ID,
@@ -127,10 +138,10 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
           Title: item.Title,
           URL: item.Link,
           Author: item.Author,
-          HTML: item.Content,
-          CreatedOnTime: int(item.UpdatedAt.Unix()),
-          IsRead: item.IsRead,
-          IsSaved: item.IsSaved,
+          HTML: item.Description,
+          CreatedOnTime: int(item.CreatedAt.Unix()),
+          IsRead: isRead,
+          IsSaved: isSaved,
         })
     }
     log.Debug("Returning items ...")
