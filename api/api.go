@@ -3,6 +3,8 @@ package api
 import (
   "net/http"
   log "github.com/sirupsen/logrus"
+  "strings"
+  "strconv"
   "errors"
   "encoding/json"
   "github.com/gorilla/mux"
@@ -76,6 +78,7 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
           Title: group.Title,
         })
     }
+    log.Debug("Returning groups ...")
     return true, err
   }
 
@@ -101,6 +104,7 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
           IsSpark: false,
         })
     }
+    log.Debug("Returning feeds ...")
     return true, err
   }
 
@@ -129,6 +133,7 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
           IsSaved: item.IsSaved,
         })
     }
+    log.Debug("Returning items ...")
     return true, nil
   }
 
@@ -138,7 +143,18 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
 func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user string) (bool, error) {
   _, hasUnreadItemIDs := r.Form["unread_item_ids"]
   if hasUnreadItemIDs == true {
-    apiResponse.UnreadItemIDs = "1,2,3"
+    items, err := database.ListUnreadItemsByUser(user)
+    if err != nil {
+      log.Error(err)
+    }
+
+    var itemIDs []string
+    for _, item := range items {
+      itemIDs = append(itemIDs, strconv.FormatInt(item.ID, 10))
+    }
+
+    apiResponse.UnreadItemIDs = strings.Join(itemIDs, ",")
+    log.Debug("Returning unread item IDs ...")
     return true, nil
   }
 
