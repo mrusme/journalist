@@ -5,7 +5,7 @@ import (
 )
 
 type Group struct {
-  ID                uint            `db:"id",json:"id,omitempty"`
+  ID                int64           `db:"id",json:"id,omitempty"`
   Title             string          `db:"title",json:"title,omitempty"`
   TitleUnix         string          `db:"title_unix",json:"title_unix,omitempty"`
   User              string          `db:"user",json:"user,omitempty"`

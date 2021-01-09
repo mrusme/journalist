@@ -161,8 +161,9 @@ func (database *Database) ListGroupsByUser(user string) ([]Group, error) {
   return ret, err
 }
 
-func (database *Database) AddFeed(feed Feed, groupID uint) (error) {
-  _, err := database.DB.Exec(`
+func (database *Database) AddFeed(feed Feed, groupID int64) (int64, error) {
+  var id int64
+  err := database.DB.QueryRow(`
     INSERT INTO feeds (
       "title",
       "description",
@@ -194,7 +195,7 @@ func (database *Database) AddFeed(feed Feed, groupID uint) (error) {
       $12,
       $13,
       $14
-    )
+    ) RETURNING "id"
   `,
     feed.Title,
     feed.Description,
@@ -209,8 +210,13 @@ func (database *Database) AddFeed(feed Feed, groupID uint) (error) {
     groupID,
     feed.User,
     feed.CreatedAt,
-    feed.UpdatedAt)
-  return err
+    feed.UpdatedAt).Scan(&id)
+  if err != nil {
+    return 0, err
+  }
+
+  // id, err = res.LastInsertId()
+  return id, err
 }
 
 func (database *Database) GetFeedByFeedLinkAndUser(feedLink string, user string) (Feed, error) {

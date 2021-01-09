@@ -5,7 +5,7 @@ import (
 )
 
 type Feed struct {
-  ID                uint            `db:"id",json:"id,omitempty"`
+  ID                int64           `db:"id",json:"id,omitempty"`
   Title             string          `db:"title",json:"title,omitempty"`
   Description       string          `db:"description",json:"description,omitempty"`
   Link              string          `db:"link",json:"link,omitempty"`
@@ -16,7 +16,7 @@ type Feed struct {
   Copyright         string          `db:"copyright",json:"copyright,omitempty"`
   Generator         string          `db:"generator",json:"generator,omitempty"`
   Categories        string          `db:"categories",json:"categories,omitempty"`
-  Group             uint            `db:"group",json:"group,omitempty"`
+  Group             int64           `db:"group",json:"group,omitempty"`
   User              string          `db:"user",json:"user,omitempty"`
   CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
   UpdatedAt         time.Time       `db:"updated_at",json:"update_at,omitempty"`

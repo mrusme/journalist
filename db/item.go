@@ -5,7 +5,7 @@ import (
 )
 
 type Item struct {
-  ID                uint            `db:"id",json:"id,omitempty"`
+  ID                int64           `db:"id",json:"id,omitempty"`
   GUID              string          `db:"guid",json:"guid,omitempty"`
   Title             string          `db:"title",json:"title,omitempty"`
   Description       string          `db:"description",json:"description,omitempty"`
@@ -16,7 +16,7 @@ type Item struct {
   Categories        string          `db:"categories",json:"categories,omitempty"`
   IsRead            bool            `db:"is_read",json:"is_read,omitempty"`
   IsSaved           bool            `db:"is_saved",json:"is_saved,omitempty"`
-  Feed              uint            `db:"feed",json:"feed,omitempty"`
+  Feed              int64           `db:"feed",json:"feed,omitempty"`
   User              string          `db:"user",json:"user,omitempty"`
   CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
   UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`

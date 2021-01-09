@@ -17,12 +17,12 @@ type ApiFeedsGroup struct {
 }
 
 type ApiGroup struct {
-  ID                  uint            `json:"id,omitempty"`
+  ID                  int64           `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
 }
 
 type ApiFeed struct {
-  ID                  uint            `json:"id,omitempty"`
+  ID                  int64           `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
   SiteURL             string          `json:"site_url,omitempty"`
   URL                 string          `json:"url,omitempty"`
@@ -31,13 +31,13 @@ type ApiFeed struct {
 }
 
 type ApiFavicon struct {
-  ID                  uint            `json:"id,omitempty"`
+  ID                  int64           `json:"id,omitempty"`
   Data                string          `json:"data,omitempty"`
 }
 
 type ApiItem struct {
-  ID                  uint            `json:"id,omitempty"`
-  FeedID              uint            `json:"feed_id,omitempty"`
+  ID                  int64           `json:"id,omitempty"`
+  FeedID              int64           `json:"feed_id,omitempty"`
   Title               string          `json:"title,omitempty"`
   URL                 string          `json:"url,omitempty"`
   Author              string          `json:"author,omitempty"`
