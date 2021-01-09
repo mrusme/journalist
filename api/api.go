@@ -115,9 +115,28 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
 func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool, error) {
   _, hasItems := r.Form["items"]
   if hasItems == true {
-    items, err := database.ListItemsByUser(user)
-    if err != nil {
-      log.Error(err)
+    var items []db.Item
+    var err error
+
+    _, hasWithIDs := r.Form["with_ids"]
+    if hasWithIDs == true {
+      withIDsStr := strings.Split(r.FormValue("with_ids"), ",")
+      var withIDs []int64
+      for _, withIDStr := range withIDsStr {
+        i, _ := strconv.ParseInt(withIDStr, 10, 64)
+        withIDs = append(withIDs, i)
+      }
+
+      items, err = database.ListItemsByIDsAndUser(withIDs, user)
+      if err != nil {
+        log.Error(err)
+      }
+    } else {
+      sinceID := GetSinceIDFromReq(r)
+      items, err = database.ListItemsByUser(user, sinceID)
+      if err != nil {
+        log.Error(err)
+      }
     }
 
     for _, item := range items {
@@ -154,7 +173,8 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
 func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user string) (bool, error) {
   _, hasUnreadItemIDs := r.Form["unread_item_ids"]
   if hasUnreadItemIDs == true {
-    items, err := database.ListUnreadItemsByUser(user)
+    sinceID := GetSinceIDFromReq(r)
+    items, err := database.ListUnreadItemsByUser(user, sinceID)
     if err != nil {
       log.Error(err)
     }
