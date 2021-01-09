@@ -3,7 +3,7 @@ package j
 import (
   "os"
   "fmt"
-  "log"
+  log "github.com/sirupsen/logrus"
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
@@ -48,7 +48,7 @@ var subscribeCmd = &cobra.Command{
       }
     }
 
-    feed, _, feederr := rss.LoadFeed(feedUrl.String(), user)
+    feed, items, feederr := rss.LoadFeed(feedUrl.String(), user)
     if feederr != nil {
       log.Fatal(feederr)
     }
@@ -64,6 +64,14 @@ var subscribeCmd = &cobra.Command{
       }
     } else {
       feedId = existingFeed.ID
+    }
+
+    for _, item := range items {
+      _, itemerr := database.AddItem(item, feedId)
+
+      if itemerr != nil {
+        log.Debug(itemerr)
+      }
     }
 
     fmt.Printf("%v, %v\n", group.ID, feedId)
