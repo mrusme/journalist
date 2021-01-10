@@ -6,6 +6,7 @@ import (
   "strings"
   "strconv"
   "errors"
+  "time"
   "encoding/json"
   "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
@@ -77,8 +78,24 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
           ID: group.ID,
           Title: group.Title,
         })
+
+      feeds, err := database.ListFeedsByGroupAndUser(group.ID, user)
+      if err != nil {
+        return false, err
+      }
+
+      var feedIDsStr []string
+      for _, feed := range feeds {
+        feedIDsStr = append(feedIDsStr, strconv.FormatInt(feed.ID, 10))
+      }
+
+      apiResponse.FeedsGroups = append(apiResponse.FeedsGroups,
+        ApiFeedsGroup{
+          GroupID: group.ID,
+          FeedIDs: strings.Join(feedIDsStr, ","),
+        })
     }
-    log.Debug("Returning groups ...")
+
     return true, err
   }
 
@@ -216,8 +233,8 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
     }
 
     as := r.FormValue("as")
-    if as != "read" && as != "saved" && as != "unsaved" {
-      return false, errors.New("`as` parameter must be either `read`, `saved` or `unsaved`")
+    if as != "read" && as != "unread" && as != "saved" && as != "unsaved" {
+      return false, errors.New("`as` parameter must be either `read`, `unread`, `saved` or `unsaved`")
     }
 
     _, hasId := r.Form["id"]
@@ -225,12 +242,45 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
       return false, errors.New("`id` parameter missing")
     }
 
+    idStr := r.FormValue("id")
+    id, _ := strconv.ParseInt(idStr, 10, 64)
+
     _, hasBefore := r.Form["before"]
     if (mark == "feed" || mark == "group") && hasBefore == false {
       return false, errors.New("`before` parameter missing")
     }
 
-    // TODO
+    var before time.Time
+    if hasBefore == true {
+      beforeStr := r.FormValue("before")
+      beforeInt, _ := strconv.ParseInt(beforeStr, 10, 64)
+      before = time.Unix(beforeInt, 0)
+    }
+
+    var err error
+    // Mark item with ID x as read
+    if mark == "item" && hasId == true {
+      switch(as) {
+      case "read":
+        err = database.UpdateItemByIDAsRead(id, true, user)
+      case "unread":
+        err = database.UpdateItemByIDAsRead(id, false, user)
+      case "saved":
+        err = database.UpdateItemByIDAsSaved(id, true, user)
+      case "unsaved":
+        err = database.UpdateItemByIDAsSaved(id, false, user)
+      }
+    } else if mark == "group" && hasBefore == true {
+      switch(as) {
+      case "read":
+        err = database.UpdateItemsByGroupAndBeforeAsRead(id, before, true, user)
+      }
+    }
+
+    if err != nil {
+      log.Debug(err)
+      return false, err
+    }
 
     return true, nil
   }

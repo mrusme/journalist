@@ -352,6 +352,38 @@ func (database *Database) ListFeedsByUser(user string) ([]Feed, error) {
   return ret, err
 }
 
+func (database *Database) ListFeedsByGroupAndUser(groupID int64, user string) ([]Feed, error) {
+  var ret []Feed
+
+  res, err := database.DB.Queryx(`
+    SELECT * FROM feeds
+    WHERE
+      "group" = $1
+    AND
+      "user" = $2
+  `,
+    groupID,
+    user,
+  )
+
+  if err != nil {
+    return ret, err
+  }
+
+  for res.Next() {
+    var feed Feed
+
+    err := res.StructScan(&feed)
+    if err != nil {
+      return ret, err
+    }
+
+    ret = append(ret, feed)
+  }
+
+  return ret, err
+}
+
 func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
   var id int64
   err := database.DB.QueryRow(`
@@ -466,6 +498,76 @@ func (database *Database) UpdateItem(item Item) (error) {
   return err
 }
 
+func (database *Database) UpdateItemByIDAsRead(itemID int64, read bool, user string) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE items SET
+      "is_read" = $2
+    WHERE
+      "id" = $1
+    AND
+      "user" = $3
+  `,
+    itemID,
+    read,
+    user,
+  )
+  return err
+}
+
+func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user string) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE items SET
+      "is_saved" = $2
+    WHERE
+      "id" = $1
+    AND
+      "user" = $3
+  `,
+    itemID,
+    saved,
+    user,
+  )
+  return err
+}
+
+func (database *Database) UpdateItemsByGroupAndBeforeAsRead(groupID int64, before time.Time, read bool, user string) (error) {
+  feeds, err := database.ListFeedsByGroupAndUser(groupID, user)
+  if err != nil {
+    return err
+  }
+
+  var feedIDs []int64
+  for _, feed := range feeds {
+    feedIDs = append(feedIDs, feed.ID)
+  }
+
+  query, args, err := sqlx.In(`
+    UPDATE items SET
+      "is_read" = ?
+    WHERE
+      "group" IN (?)
+    AND
+      "created_at" < ?
+    AND
+      "user" = ?
+  `,
+    read,
+    feedIDs,
+    before,
+    user,
+  )
+  if err != nil {
+    return err
+  }
+
+  _, err = database.DB.Exec(
+    database.DB.Rebind(query), args...
+  )
+
+  return err
+}
+
+
 // func (database *Database) EraseItem(item Item) (error) {
 // }
 
@@ -514,6 +616,9 @@ func (database *Database) ListItemsByIDsAndUser(ids []int64, user string) ([]Ite
     ids,
     user,
   )
+  if err != nil {
+    return []Item{}, err
+  }
 
   res, err := database.DB.Queryx(
     database.DB.Rebind(query), args...
