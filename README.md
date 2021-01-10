@@ -50,7 +50,15 @@ managed PostgreSQL instance. For example on
 [DigitalOcean](https://m.do.co/c/9d1b223a47bc) you can get a PostgreSQL single
 node cluster for as little as $15 per month.
 
-### Subscribing to a feed
+
+### CLI
+
+The `journalist` binary is a daemon as well as a CLI client for managing 
+subscriptions and service configuration. There is no way (yet) to manage
+subscriptions through the Fever API / a RSS client connecting to it.
+
+
+#### Subscribing to a feed
 
 You can subscribe to a feed by using the `subscribe` command:
 
@@ -68,7 +76,7 @@ By default this command would subscribe as the user `nobody`
 (password) flags in order to subscribe to a feed under an individual account.
 
 
-### Unsubscribing from a feed
+#### Unsubscribing from a feed
 
 You can unsubscribe from a feed by using the `unsubscribe` command:
 
@@ -86,7 +94,7 @@ By default this command would unsubscribe as the user `nobody`
 account.
 
 
-### Running the RSS server
+#### Running the RSS server
 
 In order to be able to connect using any Fever API capable client you'll need
 to run `journalist` in server mode:
