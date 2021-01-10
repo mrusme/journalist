@@ -186,8 +186,19 @@ func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error)
   return itemIDs, nil
 }
 
-// func (database *Database) EraseFeed(feed Feed) (error) {
-// }
+func (database *Database) EraseFeedByIDAndUser(feedID int64, user string) (error) {
+  _, err := database.DB.Exec(`
+    DELETE FROM feeds
+    WHERE
+      "id" = $1
+    AND
+      "user" = $2
+  `,
+    feedID,
+    user,
+  )
+  return err
+}
 
 func (database *Database) ListFeeds() ([]Feed, error) {
   var ret []Feed
