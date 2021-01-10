@@ -52,10 +52,17 @@ func (database *Database) UpdateGroup(group *Group) (error) {
   return err
 }
 
-func (database *Database) EraseGroup(group *Group) (error) {
+func (database *Database) EraseGroupByID(groupID int64, user string) (error) {
   _, err := database.DB.Exec(`
-    DELETE FROM groups WHERE "id" = ?
-  `, group.ID)
+    DELETE FROM groups
+    WHERE
+      "id" = $1
+    AND
+      "user" = $2
+  `,
+    groupID,
+    user,
+  )
   return err
 }
 
