@@ -1,8 +1,6 @@
 package j
 
 import (
-  "os"
-  "fmt"
   log "github.com/sirupsen/logrus"
   "net/url"
   "github.com/spf13/cobra"
@@ -19,7 +17,6 @@ var subscribeCmd = &cobra.Command{
     user := GetApiKey(flagUser, flagPassword)
 
     feedUrl, err := url.Parse(args[0])
-    fmt.Printf("%s\n", feedUrl)
     if err != nil {
       log.Fatal(err)
     }
@@ -28,7 +25,7 @@ var subscribeCmd = &cobra.Command{
     var grouperr error
     group, grouperr = database.GetGroupByTitleAndUser(flagGroup, user)
     if grouperr != nil {
-      log.Println("no group found, adding new one ...")
+      log.Info("Group not found, adding ...")
       grouperr = database.AddGroup(&db.Group{
         Title: flagGroup,
         User: user,
@@ -49,12 +46,12 @@ var subscribeCmd = &cobra.Command{
       log.Fatal(feederr)
     }
 
-    itemIDs, upserterr := database.UpsertFeed(&feed, &items)
+    _, upserterr := database.UpsertFeed(&feed, &items)
     if upserterr != nil {
       log.Fatal(upserterr)
     }
 
-    fmt.Printf("%v, %v, %+v\n", group.ID, feed.ID, itemIDs)
+    log.Info("Subscribed to ", feedUrl.String())
     return
   },
 }
@@ -68,7 +65,6 @@ func init() {
   var err error
   database, err = db.InitDatabase()
   if err != nil {
-    fmt.Printf("%+v\n", err)
-    os.Exit(1)
+    log.Fatal(err)
   }
 }

@@ -4,8 +4,7 @@ import (
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
   "github.com/mrusme/journalist/api"
-  "fmt"
-  "os"
+  log "github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -20,8 +19,7 @@ var serverCmd = &cobra.Command{
     var err error
     database, err = db.InitDatabase()
     if err != nil {
-      fmt.Printf("%+v\n", err)
-      os.Exit(1)
+      log.Fatal(err)
     }
 
     api.Server(database)

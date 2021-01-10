@@ -1,10 +1,9 @@
 package j
 
 import (
-  "fmt"
+  log "github.com/sirupsen/logrus"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
-  "os"
 )
 
 var database *db.Database
@@ -21,8 +20,7 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
   if err := rootCmd.Execute(); err != nil {
-    fmt.Printf("%+v\n", err)
-    os.Exit(-1)
+    log.Fatal(err)
   }
 }
 

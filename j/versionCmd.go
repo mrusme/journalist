@@ -1,8 +1,7 @@
 package j
 
 import (
-  "fmt"
-
+  log "github.com/sirupsen/logrus"
   "github.com/spf13/cobra"
 )
 
@@ -17,6 +16,6 @@ var versionCmd = &cobra.Command{
   Short: "Display version of journalist",
   Long:  `The version of journalist.`,
   Run: func(cmd *cobra.Command, args []string) {
-    fmt.Println("journalist", VERSION)
+    log.Info("journalist ", VERSION)
   },
 }
