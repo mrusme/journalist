@@ -67,6 +67,25 @@ By default this command would subscribe as the user `nobody`
 (password: `nobody`). It's possible to specify `-u` (username) and `-p` 
 (password) flags in order to subscribe to a feed under an individual account.
 
+
+### Unsubscribing from a feed
+
+You can unsubscribe from a feed by using the `unsubscribe` command:
+
+```sh
+JOURNALIST_LOG_LEVEL=10 \
+JOURNALIST_DB=postgres://postgres:postgres@127.0.0.1:5432/journalist \
+journalist unsubscribe https://xn--gckvb8fzb.com/index.xml
+```
+
+If the feed was the last one in its group, the group is also being removed.
+
+By default this command would unsubscribe as the user `nobody` 
+(password: `nobody`). It's possible to specify `-u` (username) and `-p` 
+(password) flags in order to unsubscribe from a feed under an individual 
+account.
+
+
 ### Running the RSS server
 
 In order to be able to connect using any Fever API capable client you'll need
