@@ -9,6 +9,10 @@ import (
 
 var database *db.Database
 
+var flagGroup string
+var flagUser string
+var flagPassword string
+
 var rootCmd = &cobra.Command{
   Use:   "journalist",
   Short: "RSS aggregator",

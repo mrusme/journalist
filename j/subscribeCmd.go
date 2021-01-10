@@ -10,10 +10,6 @@ import (
   "github.com/mrusme/journalist/rss"
 )
 
-var flagGroup string
-var flagUser string
-var flagPassword string
-
 var subscribeCmd = &cobra.Command{
   Use:   "subscribe [feed url]",
   Short: "Subscribe to feed",
