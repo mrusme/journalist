@@ -244,8 +244,19 @@ func (database *Database) UpdateItemsByGroupAsRead(groupID int64, read bool, use
 }
 
 
-// func (database *Database) EraseItem(item Item) (error) {
-// }
+func (database *Database) EraseItemsByFeedAndUser(feedID int64, user string) (error) {
+  _, err := database.DB.Exec(`
+    DELETE FROM items
+    WHERE
+      "feed" = $1
+    AND
+      "user" = $2
+  `,
+    feedID,
+    user,
+  )
+  return err
+}
 
 func (database *Database) ListItemsByUser(user string, sinceID int64) ([]Item, error) {
   var ret []Item
