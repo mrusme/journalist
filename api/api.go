@@ -273,7 +273,11 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
     } else if mark == "group" && hasBefore == true {
       switch(as) {
       case "read":
-        err = database.UpdateItemsByGroupAndBeforeAsRead(id, before, true, user)
+        if id > 0 {
+          err = database.UpdateItemsByGroupAsRead(id, true, user)
+        } else {
+          err = database.UpdateItemsByBeforeAsRead(before, true, user)
+        }
       }
     }
 

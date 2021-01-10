@@ -530,7 +530,23 @@ func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user s
   return err
 }
 
-func (database *Database) UpdateItemsByGroupAndBeforeAsRead(groupID int64, before time.Time, read bool, user string) (error) {
+func (database *Database) UpdateItemsByBeforeAsRead(before time.Time, read bool, user string) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE items SET
+      "is_read" = $2
+    WHERE
+      "created_at" < $1
+    AND
+      "user" = $3
+  `,
+    before,
+    read,
+    user,
+  )
+  return err
+}
+
+func (database *Database) UpdateItemsByGroupAsRead(groupID int64, read bool, user string) (error) {
   feeds, err := database.ListFeedsByGroupAndUser(groupID, user)
   if err != nil {
     return err
@@ -547,13 +563,10 @@ func (database *Database) UpdateItemsByGroupAndBeforeAsRead(groupID int64, befor
     WHERE
       "group" IN (?)
     AND
-      "created_at" < ?
-    AND
       "user" = ?
   `,
     read,
     feedIDs,
-    before,
     user,
   )
   if err != nil {
