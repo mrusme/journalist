@@ -49,7 +49,7 @@ var unsubscribeCmd = &cobra.Command{
 
 func init() {
   rootCmd.AddCommand(unsubscribeCmd)
-  unsubscribeCmd.Flags().StringVarP(&flagUser, "user", "u", "nobody", "User the feed should be assigned to")
+  unsubscribeCmd.Flags().StringVarP(&flagUser, "user", "u", "nobody", "User the feed was assigned to")
   unsubscribeCmd.Flags().StringVarP(&flagPassword, "password", "p", "nobody", "Password of user")
 
   var err error
