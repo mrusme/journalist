@@ -347,7 +347,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 
   _, hasRefresh := r.Form["refresh"]
   if hasRefresh == true {
-    go refresh(database)
+    refresh(database)
     w.WriteHeader(http.StatusNoContent)
     return
   }
