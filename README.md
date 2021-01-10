@@ -22,6 +22,8 @@ the version in `journalist --help` to be a different one.
 
 ## Usage
 
+<iframe src="https://player.vimeo.com/video/498907228" width="640" height="400" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+
 Please make sure to 
 `export JOURNALIST_DB="postgres://postgres:postgres@127.0.0.1:5432/journalist"` 
 or however your PostgreSQL connection string might look.
