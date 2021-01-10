@@ -60,7 +60,9 @@ func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
       $12,
       $13,
       $14
-    ) RETURNING "id"
+    )
+    ON CONFLICT ("guid", "user") DO NOTHING
+    RETURNING "id"
   `,
     item.GUID,
     item.Title,
