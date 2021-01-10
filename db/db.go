@@ -327,6 +327,31 @@ func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
 // func (database *Database) EraseFeed(feed Feed) (error) {
 // }
 
+func (database *Database) ListFeeds() ([]Feed, error) {
+  var ret []Feed
+
+  res, err := database.DB.Queryx(`
+    SELECT * FROM feeds
+  `)
+
+  if err != nil {
+    return ret, err
+  }
+
+  for res.Next() {
+    var feed Feed
+
+    err := res.StructScan(&feed)
+    if err != nil {
+      return ret, err
+    }
+
+    ret = append(ret, feed)
+  }
+
+  return ret, err
+}
+
 func (database *Database) ListFeedsByUser(user string) ([]Feed, error) {
   var ret []Feed
 

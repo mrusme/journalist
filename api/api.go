@@ -10,6 +10,7 @@ import (
   "encoding/json"
   "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
+  "github.com/mrusme/journalist/rss"
 )
 
 var database *db.Database
@@ -292,10 +293,40 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
   return false, nil
 }
 
+func refreshLoop(db *db.Database) {
+  interval := time.Second * 300
+
+  for {
+    refresh(db)
+    time.Sleep(interval)
+  }
+}
+
 func refresh(db *db.Database) {
-  log.Debug("Refreshing ...")
-  // TODO
-  time.Sleep(time.Second * 10)
+
+  log.Debug("Refreshing feeds ...")
+  feeds, err := db.ListFeeds()
+  if err != nil {
+    log.Error(err)
+    return
+  }
+
+  for _, feed := range feeds {
+    log.Debug("Refreshing ", feed.FeedLink, " ...")
+
+    feed, items, feederr := rss.LoadFeed(feed.FeedLink, feed.User)
+    if feederr != nil {
+      log.Error(feederr)
+      return
+    }
+
+    _, upserterr := database.UpsertFeed(feed, items)
+    if upserterr != nil {
+      log.Error(upserterr)
+      return
+    }
+  }
+
   log.Debug("Refresh completed")
 }
 
@@ -385,6 +416,9 @@ func api(w http.ResponseWriter, r *http.Request) {
 
 func Server(db *db.Database) {
   database = db
+
+  go refreshLoop(db)
+
   r := mux.NewRouter()
   r.HandleFunc("/", api)
   r.Use(mux.CORSMethodMiddleware(r))
