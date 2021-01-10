@@ -56,7 +56,7 @@ jobs:
 
       - name: Changelog
         run: |
-          export CHANGELOG=`git log $(git tag --sort=-version:refname | head -n 2 | tail -n 1)...${{ github.ref }} --pretty=format:'<li> <a href="http://github.com/jerel/<project>/commit/%H">view commit &bull;</a> %s</li> ' --reverse`
+          export CHANGELOG=`git log $(git tag --sort=-version:refname | head -n 2 | tail -n 1)...${{ github.ref }} --pretty=format:'<li> <a href="http://github.com/mrusme/journalist/commit/%H">view commit &bull;</a> %s</li> ' --reverse`
           echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
 
       - name: Create Release
