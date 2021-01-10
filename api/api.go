@@ -292,6 +292,13 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
   return false, nil
 }
 
+func refresh(db *db.Database) {
+  log.Debug("Refreshing ...")
+  // TODO
+  time.Sleep(time.Second * 10)
+  log.Debug("Refresh completed")
+}
+
 func api(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   if r.Method == http.MethodOptions {
@@ -301,6 +308,13 @@ func api(w http.ResponseWriter, r *http.Request) {
   r.ParseMultipartForm(8192)
   log.Printf("%+v", r.Form)
   log.Printf("%+v", r.PostForm)
+
+  _, hasRefresh := r.Form["refresh"]
+  if hasRefresh == true {
+    go refresh(database)
+    w.WriteHeader(http.StatusNoContent)
+    return
+  }
 
   user := r.PostFormValue("api_key")
   if user == "" {
