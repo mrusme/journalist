@@ -48,7 +48,7 @@ var subscribeCmd = &cobra.Command{
       }
     }
 
-    feed, items, feederr := rss.LoadFeed(feedUrl.String(), user)
+    feed, items, feederr := rss.LoadFeed(feedUrl.String(), group.ID, user)
     if feederr != nil {
       log.Fatal(feederr)
     }

@@ -4,9 +4,8 @@ import (
   "os"
   "strings"
   "regexp"
-  "time"
   "errors"
-  log "github.com/sirupsen/logrus"
+  // log "github.com/sirupsen/logrus"
 
   _ "database/sql"
   "github.com/jmoiron/sqlx"

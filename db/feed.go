@@ -2,6 +2,7 @@ package db
 
 import (
   "time"
+  log "github.com/sirupsen/logrus"
 )
 
 type Feed struct {
@@ -128,10 +129,12 @@ func (database *Database) UpdateFeed(feed Feed) (error) {
 
 func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
   var feedID int64
+  log.Debug("Checking if feed was already subscribed to ...")
   existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, feed.User)
   if feederr != nil || existingFeed.ID <= 0 {
     log.Debug(feederr)
     log.Debug("Subscribing to feed ...")
+    log.Debug(feed)
     feedID, feederr = database.AddFeed(feed, feed.Group)
 
     if feederr != nil {

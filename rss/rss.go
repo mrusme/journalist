@@ -5,12 +5,13 @@ import (
   "context"
   "time"
   "strings"
+  "strconv"
   "github.com/mmcdole/gofeed"
   // "github.com/mmcdole/gofeed/rss"
   "github.com/mrusme/journalist/db"
 )
 
-func LoadFeed(feedUrl string, user string) (db.Feed, []db.Item, error) {
+func LoadFeed(feedUrl string, groupID int64, user string) (db.Feed, []db.Item, error) {
   ctx, cancel := context.WithTimeout(context.Background(), 60 * time.Second)
   defer cancel()
 
@@ -20,15 +21,21 @@ func LoadFeed(feedUrl string, user string) (db.Feed, []db.Item, error) {
     return db.Feed{}, []db.Item{}, err
   }
 
+  feedLink := feedUrl
+  if gfeed.FeedLink != "" {
+    feedLink = gfeed.FeedLink
+  }
+
   feed := db.Feed{
     Title: gfeed.Title,
     Description: gfeed.Description,
     Link: gfeed.Link,
-    FeedLink: gfeed.FeedLink,
+    FeedLink: feedLink,
     Language: gfeed.Language,
     Copyright: gfeed.Copyright,
     Generator: gfeed.Generator,
     Categories: strings.Join(gfeed.Categories, ","),
+    Group: groupID,
     User: user,
   }
 
@@ -51,7 +58,6 @@ func LoadFeed(feedUrl string, user string) (db.Feed, []db.Item, error) {
   var items []db.Item
   for _, gitem := range gfeed.Items {
     item := db.Item{
-      GUID: gitem.GUID,
       Title: gitem.Title,
       Description: gitem.Description,
       Content: gitem.Content,
@@ -77,6 +83,8 @@ func LoadFeed(feedUrl string, user string) (db.Feed, []db.Item, error) {
     if gitem.UpdatedParsed != nil {
       item.UpdatedAt = *gitem.UpdatedParsed
     }
+
+    item.GUID = GetGUID(gitem.Link + strconv.FormatInt(item.CreatedAt.Unix(), 10))
 
     items = append(items, item)
   }
