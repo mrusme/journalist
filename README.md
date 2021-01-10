@@ -58,6 +58,23 @@ subscriptions and service configuration. There is no way (yet) to manage
 subscriptions through the Fever API / a RSS client connecting to it.
 
 
+#### Listing subscriptions
+
+You can list all feeds a user is subscribed to using the `subscriptions`
+command:
+
+```sh
+JOURNALIST_LOG_LEVEL=10 \
+JOURNALIST_DB=postgres://postgres:postgres@127.0.0.1:5432/journalist \
+journalist subscriptions
+```
+
+By default this command would list subscriptions for the user `nobody` 
+(password: `nobody`). It's possible to specify `-u` (username) and `-p` 
+(password) flags in order to list subscriptions for an individual 
+account.
+
+
 #### Subscribing to a feed
 
 You can subscribe to a feed by using the `subscribe` command:
