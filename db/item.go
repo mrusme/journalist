@@ -172,6 +172,25 @@ func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user s
   return err
 }
 
+func (database *Database) UpdateItemsByFeedAndBeforeAsRead(feedID int64, before time.Time, read bool, user string) (error) {
+  _, err := database.DB.Exec(`
+    UPDATE items SET
+      "is_read" = $3
+    WHERE
+      "feed" = $1
+    AND
+      "created_at" < $2
+    AND
+      "user" = $4
+  `,
+    feedID,
+    before,
+    read,
+    user,
+  )
+  return err
+}
+
 func (database *Database) UpdateItemsByBeforeAsRead(before time.Time, read bool, user string) (error) {
   _, err := database.DB.Exec(`
     UPDATE items SET

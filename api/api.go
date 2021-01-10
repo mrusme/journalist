@@ -271,6 +271,11 @@ func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool,
       case "unsaved":
         err = database.UpdateItemByIDAsSaved(id, false, user)
       }
+    } else if mark == "feed" && hasBefore == true {
+      switch(as) {
+      case "read":
+        err = database.UpdateItemsByFeedAndBeforeAsRead(id, before, true, user)
+      }
     } else if mark == "group" && hasBefore == true {
       switch(as) {
       case "read":
