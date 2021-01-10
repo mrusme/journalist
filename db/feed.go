@@ -23,7 +23,7 @@ type Feed struct {
   UpdatedAt         time.Time       `db:"updated_at",json:"update_at,omitempty"`
 }
 
-func (database *Database) AddFeed(feed Feed, groupID int64) (int64, error) {
+func (database *Database) AddFeed(feed *Feed, groupID int64) (int64, error) {
   var id int64
   err := database.DB.QueryRow(`
     INSERT INTO feeds (
@@ -91,7 +91,7 @@ func (database *Database) GetFeedByFeedLinkAndUser(feedLink string, user string)
   return ret, err
 }
 
-func (database *Database) UpdateFeed(feed Feed) (error) {
+func (database *Database) UpdateFeed(feed *Feed) (error) {
   _, err := database.DB.Exec(`
     UPDATE feeds SET
       "title" = $1,
@@ -127,7 +127,7 @@ func (database *Database) UpdateFeed(feed Feed) (error) {
   return err
 }
 
-func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
+func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error) {
   var feedID int64
   log.Debug("Checking if feed was already subscribed to ...")
   existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, feed.User)
@@ -155,8 +155,8 @@ func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
   log.Debug("Refreshing items ...")
 
   var itemIDs []int64
-  for _, item := range items {
-    itemID, itemerr := database.AddItem(item, feedID)
+  for _, item := range *items {
+    itemID, itemerr := database.AddItem(&item, feedID)
 
     if itemerr != nil {
       existingItem, geterr := database.GetItemByGUIDAndUser(item.GUID, item.User)
@@ -171,7 +171,7 @@ func (database *Database) UpsertFeed(feed Feed, items []Item) ([]int64, error) {
           item.IsRead = existingItem.IsRead
         }
         item.IsSaved = existingItem.IsSaved
-        updateerr := database.UpdateItem(item)
+        updateerr := database.UpdateItem(&item)
         if updateerr != nil {
           log.Debug(updateerr)
         }

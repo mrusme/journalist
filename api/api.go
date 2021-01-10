@@ -325,7 +325,7 @@ func refresh(db *db.Database) {
       return
     }
 
-    _, upserterr := database.UpsertFeed(refreshedFeed, items)
+    _, upserterr := database.UpsertFeed(&refreshedFeed, &items)
     if upserterr != nil {
       log.Error(upserterr)
       return

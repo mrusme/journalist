@@ -26,7 +26,7 @@ type Item struct {
   UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
 }
 
-func (database *Database) AddItem(item Item, feedId int64) (int64, error) {
+func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {
   var id int64
   err := database.DB.QueryRow(`
     INSERT INTO items (
@@ -106,7 +106,7 @@ func (database *Database) GetItemByGUIDAndUser(itemGUID string, user string) (It
   return ret, err
 }
 
-func (database *Database) UpdateItem(item Item) (error) {
+func (database *Database) UpdateItem(item *Item) (error) {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "guid" = $1,

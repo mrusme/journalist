@@ -13,7 +13,7 @@ type Group struct {
   UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
 }
 
-func (database *Database) AddGroup(group Group) (error) {
+func (database *Database) AddGroup(group *Group) (error) {
   _, err := database.DB.Exec(`
     INSERT INTO groups ("title", "title_unix", "user", "created_at", "updated_at")
     VALUES ($1, $2, $3, $4, $5)
@@ -45,14 +45,14 @@ func (database *Database) GetGroupByTitleAndUser(title string, user string) (Gro
   return ret, err
 }
 
-func (database *Database) UpdateGroup(group Group) (error) {
+func (database *Database) UpdateGroup(group *Group) (error) {
   _, err := database.DB.Exec(`
     UPDATE groups SET ? WHERE "id" = ?
   `, &group, group.ID)
   return err
 }
 
-func (database *Database) EraseGroup(group Group) (error) {
+func (database *Database) EraseGroup(group *Group) (error) {
   _, err := database.DB.Exec(`
     DELETE FROM groups WHERE "id" = ?
   `, group.ID)

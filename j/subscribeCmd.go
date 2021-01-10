@@ -33,7 +33,7 @@ var subscribeCmd = &cobra.Command{
     group, grouperr = database.GetGroupByTitleAndUser(flagGroup, user)
     if grouperr != nil {
       log.Println("no group found, adding new one ...")
-      grouperr = database.AddGroup(db.Group{
+      grouperr = database.AddGroup(&db.Group{
         Title: flagGroup,
         User: user,
       })
@@ -53,7 +53,7 @@ var subscribeCmd = &cobra.Command{
       log.Fatal(feederr)
     }
 
-    itemIDs, upserterr := database.UpsertFeed(feed, items)
+    itemIDs, upserterr := database.UpsertFeed(&feed, &items)
     if upserterr != nil {
       log.Fatal(upserterr)
     }
