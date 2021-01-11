@@ -42,7 +42,15 @@ func Server(db *db.Database) {
   feverAPI(feverAPIRouter)
 
   log.Info("Starting server on port " + portStr + " ...")
-  log.Fatal(http.ListenAndServe(":" + portStr, r))
+
+  server := &http.Server{
+    Addr:         "0.0.0.0:" + portStr,
+    WriteTimeout: time.Second * 60,
+    ReadTimeout:  time.Second * 60,
+    IdleTimeout:  time.Second * 80,
+    Handler: r,
+  }
+  log.Fatal(server.ListenAndServe())
 }
 
 func refreshLoop(db *db.Database, interval int64) {
