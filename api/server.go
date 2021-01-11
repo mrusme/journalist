@@ -41,6 +41,9 @@ func Server(db *db.Database) {
   feverAPIRouter := r.PathPrefix("/fever").Subrouter()
   feverAPI(feverAPIRouter)
 
+  greaderAPIRouter := r.PathPrefix("/greader").Subrouter()
+  greaderAPI(greaderAPIRouter)
+
   log.Info("Starting server on port " + portStr + " ...")
 
   server := &http.Server{
