@@ -11,6 +11,18 @@ Journalist. A RSS aggregator.
 Don't rely on it and expect changes in data structures, with no 
 possibility to migrate existing data at the moment.***
 
+## What is `journalist`?
+
+[Get more information here](https://マリウス.com/journalist-a-rss-aggregator/).
+
+## Repository
+
+This repository contains the source code of `journalist`. The code is being 
+actively developed in the `develop` branch and only merged into `master` and 
+tagged with a version as soon as it's stable enough for a release. 
+
+If you intend to create **PRs**, please do so **against develop**.
+
 ## Build
 
 ```sh
@@ -25,6 +37,8 @@ the version in `journalist --help` to be a different one.
 ## Usage
 
 <iframe src="https://player.vimeo.com/video/498907228" width="640" height="400" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+ \
+ 
 
 Please make sure to 
 `export JOURNALIST_DB="postgres://postgres:postgres@127.0.0.1:5432/journalist"` 
@@ -139,6 +153,18 @@ your own.
 - `JOURNALIST_DB`: The PostgreSQL connection string
 
 ### Docker
+
+Official images are available on Docker Hub at 
+[mrusme/journalist](https://hub.docker.com/r/mrusme/journalist) 
+and can be pulled using the following command:
+
+```sh
+docker pull mrusme/journalist
+```
+
+GitHub release versions are available as Docker image tags (e.g. `0.0.1`). 
+The `latest` image tag contains the latest code of the `main` branch, while the
+`develop` tag contains the latest code of the `develop` branch.
 
 It's possible to build journalist locally as a Docker container like this:
 
