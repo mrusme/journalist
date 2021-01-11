@@ -135,3 +135,21 @@ your own.
   server should update subscriptions, default: `0` (disabled)
 - `JOURNALIST_LOG_LEVEL`: The log level, `0` being the lowest, `10` the highest
 - `JOURNALIST_DB`: The PostgreSQL connection string
+
+### Docker
+
+It's possible to build journalist locally as a Docker container like this:
+
+```sh
+docker build -t journalist:latest . 
+```
+
+It can then be run using the following command:
+
+```sh
+docker run -it --rm --name journalist \
+  -e JOURNALIST_LOG_LEVEL=10 \
+  -e JOURNALIST_DB="postgres://postgres:postgres@172.17.0.2:5432/journalist" \
+  -p 0.0.0.0:8000:8000
+  journalist:latest
+```
