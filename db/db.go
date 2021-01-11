@@ -1,15 +1,15 @@
 package db
 
 import (
-  "os"
   "strings"
   "regexp"
   "errors"
-  // log "github.com/sirupsen/logrus"
+  log "github.com/sirupsen/logrus"
 
   _ "database/sql"
   "github.com/jmoiron/sqlx"
   _ "github.com/jackc/pgx/v4/stdlib"
+  "github.com/mrusme/journalist/common"
 )
 
 var schema = `
@@ -69,22 +69,25 @@ type Database struct {
 }
 
 func InitDatabase() (*Database, error) {
-  dbconnection, ok := os.LookupEnv("JOURNALIST_DB")
-  if ok == false || dbconnection == "" {
+  dbconnection := common.LookupStrEnv("JOURNALIST_DB", "")
+  if dbconnection == "" {
     return nil, errors.New("please `export JOURNALIST_DB` with the database connection string, e.g. 'postgres://user:secret@localhost:5432/journalist?sslmode=disable'")
   }
 
+  log.Debug("Opening database connection ...")
   db, err := sqlx.Open("pgx", dbconnection)
   if err != nil {
     return nil, err
   }
 
+  log.Debug("Connecting to database ...")
   err = db.Ping()
   if err != nil {
     db.Close()
     return nil, err
   }
 
+  log.Debug("Creating database schema ...")
   db.MustExec(schema)
 
   database := Database{db}

@@ -1,13 +1,27 @@
 ![journalist](documentation/journalist.png)
 -------------------------------------------
 
-Journalist. A RSS aggregator.
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mrusme/journalist)
+
+Journalist. An RSS aggregator.
 
 [Download the latest version for macOS, Linux, FreeBSD, NetBSD, OpenBSD & Plan9 here](https://github.com/mrusme/journalist/releases/latest).
 
 ***WARNING: `journalist` is highly experimental software and not ready for use. 
 Don't rely on it and expect changes in data structures, with no 
 possibility to migrate existing data at the moment.***
+
+## What is `journalist`?
+
+[Get more information here](https://マリウス.com/journalist-an-rss-aggregator/).
+
+## Repository
+
+This repository contains the source code of `journalist`. The code is being 
+actively developed in the `develop` branch and only merged into `master` and 
+tagged with a version as soon as it's stable enough for a release. 
+
+If you intend to create **PRs**, please do so **against develop**.
 
 ## Build
 
@@ -23,6 +37,8 @@ the version in `journalist --help` to be a different one.
 ## Usage
 
 <iframe src="https://player.vimeo.com/video/498907228" width="640" height="400" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+ \
+ 
 
 Please make sure to 
 `export JOURNALIST_DB="postgres://postgres:postgres@127.0.0.1:5432/journalist"` 
@@ -123,7 +139,53 @@ journalist server
 ```
 
 You can then connect to it using your favourite Fever API client (e.g. Reeder
-for macOS/iOS). Simply specify `http://localhost:8000` (or the machine you're
+for macOS/iOS). Simply specify `http://localhost:8000/fever/` (or the machine you're
 running `journalist server` on) and either use `nobody` and `nobody` as 
 credentials or – if you've subscribed to feeds using custom credentials – use
 your own.
+
+#### Environment Variables
+
+**General (CLI & server)**
+- `JOURNALIST_LOG_LEVEL`: The log level, `0` being the lowest, `10` the highest
+- `JOURNALIST_DB`: The PostgreSQL connection string
+
+**Server only**
+- `JOURNALIST_SERVER_BINDIP`: The IP to bind the server to, default: `0.0.0.0`
+- `JOURNALIST_SERVER_PORT`: The port the server should run on, default: `8000`
+- `JOURNALIST_SERVER_REFRESH`: The refresh interval (in seconds) at which the 
+  server should update subscriptions, default: `0` (disabled)
+- `JOURNALIST_SERVER_API_FEVER`: The Fever API, boolean value, default: `true` 
+  (enabled)
+- `JOURNALIST_SERVER_API_GREADER`: The Google Reader API, boolean value, 
+  default: `false` (disabled) *NOT YET AVAILABLE*
+
+### Docker
+
+Official images are available on Docker Hub at 
+[mrusme/journalist](https://hub.docker.com/r/mrusme/journalist) 
+and can be pulled using the following command:
+
+```sh
+docker pull mrusme/journalist
+```
+
+GitHub release versions are available as Docker image tags (e.g. `0.0.1`). 
+The `latest` image tag contains the latest code of the `main` branch, while the
+`develop` tag contains the latest code of the `develop` branch.
+
+It's possible to build journalist locally as a Docker container like this:
+
+```sh
+docker build -t journalist:latest . 
+```
+
+It can then be run using the following command:
+
+```sh
+docker run -it --rm --name journalist \
+  -e JOURNALIST_LOG_LEVEL=10 \
+  -e JOURNALIST_DB="postgres://postgres:postgres@172.17.0.2:5432/journalist" \
+  -p 0.0.0.0:8000:8000
+  journalist:latest
+```
