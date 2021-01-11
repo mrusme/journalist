@@ -1,14 +1,13 @@
 package api
 
 import (
-  "os"
-  "strconv"
   "net/http"
   "time"
   log "github.com/sirupsen/logrus"
   "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
   "github.com/mrusme/journalist/rss"
+  "github.com/mrusme/journalist/common"
 )
 
 var database *db.Database
@@ -16,20 +15,9 @@ var database *db.Database
 func Server(db *db.Database) {
   database = db
 
-  portStr, ok := os.LookupEnv("JOURNALIST_SERVER_PORT")
-  if ok == false {
-    portStr = "8000"
-  }
-
-  refreshStr, ok := os.LookupEnv("JOURNALIST_SERVER_REFRESH")
-  if ok == false {
-    refreshStr = "0"
-  }
-
-  refresh, parseerr := strconv.ParseInt(refreshStr, 10, 64)
-  if parseerr != nil {
-    log.Fatal(parseerr)
-  }
+  bindIPStr := common.LookupStrEnv("JOURNALIST_SERVER_BINDIP", "0.0.0.0")
+  portStr := common.LookupStrEnv("JOURNALIST_SERVER_BINDIP", "8000")
+  refresh := common.LookupIntEnv("JOURNALIST_SERVER_REFRESH", 0)
 
   if refresh > 0 {
     go refreshLoop(db, refresh)
@@ -38,16 +26,22 @@ func Server(db *db.Database) {
   r := mux.NewRouter()
   r.Use(mux.CORSMethodMiddleware(r))
 
-  feverAPIRouter := r.PathPrefix("/fever").Subrouter()
-  feverAPI(feverAPIRouter)
+  if common.LookupBooleanEnv("JOURNALIST_SERVER_API_FEVER", true) == true {
+    log.Info("Enabling Fever API ...")
+    feverAPIRouter := r.PathPrefix("/fever").Subrouter()
+    feverAPI(feverAPIRouter)
+  }
 
-  greaderAPIRouter := r.PathPrefix("/greader").Subrouter()
-  greaderAPI(greaderAPIRouter)
+  if common.LookupBooleanEnv("JOURNALIST_SERVER_API_GREADER", false) == true {
+    log.Info("Enabling Google Reader API ...")
+    greaderAPIRouter := r.PathPrefix("/greader").Subrouter()
+    greaderAPI(greaderAPIRouter)
+  }
 
-  log.Info("Starting server on port " + portStr + " ...")
+  log.Info("Starting server on " + bindIPStr + ":" + portStr + " ...")
 
   server := &http.Server{
-    Addr:         "0.0.0.0:" + portStr,
+    Addr:         bindIPStr + ":" + portStr,
     WriteTimeout: time.Second * 60,
     ReadTimeout:  time.Second * 60,
     IdleTimeout:  time.Second * 80,
