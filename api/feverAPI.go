@@ -9,7 +9,6 @@ import (
   "time"
   "encoding/json"
   "github.com/mrusme/journalist/db"
-  "github.com/mrusme/journalist/rss"
 )
 
 type FeverAPIFeedsGroup struct {
@@ -293,43 +292,6 @@ func (apiResponse *FeverAPIResponse) processMark(r *http.Request, user string) (
   }
 
   return false, nil
-}
-
-func refreshLoop(db *db.Database) {
-  interval := time.Second * 300
-
-  for {
-    refresh(db)
-    time.Sleep(interval)
-  }
-}
-
-func refresh(db *db.Database) {
-
-  log.Debug("Refreshing feeds ...")
-  feeds, err := db.ListFeeds()
-  if err != nil {
-    log.Error(err)
-    return
-  }
-
-  for _, feed := range feeds {
-    log.Debug("Refreshing ", feed.FeedLink, " ...")
-
-    refreshedFeed, items, feederr := rss.LoadFeed(feed.FeedLink, feed.Group, feed.User)
-    if feederr != nil {
-      log.Error(feederr)
-      return
-    }
-
-    _, upserterr := database.UpsertFeed(&refreshedFeed, &items)
-    if upserterr != nil {
-      log.Error(upserterr)
-      return
-    }
-  }
-
-  log.Debug("Refresh completed")
 }
 
 func feverAPI(w http.ResponseWriter, r *http.Request) {
