@@ -193,7 +193,7 @@ It can then be run using the following command:
 docker run -it --rm --name journalist \
   -e JOURNALIST_LOG_LEVEL=10 \
   -e JOURNALIST_DB="postgres://postgres:postgres@172.17.0.2:5432/journalist" \
-  -p 0.0.0.0:8000:8000
+  -p 0.0.0.0:8000:8000 \
   journalist:latest
 ```
 
