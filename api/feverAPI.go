@@ -8,24 +8,21 @@ import (
   "errors"
   "time"
   "encoding/json"
-  "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
   "github.com/mrusme/journalist/rss"
 )
 
-var database *db.Database
-
-type ApiFeedsGroup struct {
+type FeverAPIFeedsGroup struct {
   FeedIDs             string          `json:"feed_ids,omitempty"`
   GroupID             int64           `json:"group_id,omitempty"`
 }
 
-type ApiGroup struct {
+type FeverAPIGroup struct {
   ID                  int64           `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
 }
 
-type ApiFeed struct {
+type FeverAPIFeed struct {
   ID                  int64           `json:"id,omitempty"`
   Title               string          `json:"title,omitempty"`
   SiteURL             string          `json:"site_url,omitempty"`
@@ -34,12 +31,12 @@ type ApiFeed struct {
   IsSpark             bool            `json:"is_spark,omitempty"`
 }
 
-type ApiFavicon struct {
+type FeverAPIFavicon struct {
   ID                  int64           `json:"id,omitempty"`
   Data                string          `json:"data,omitempty"`
 }
 
-type ApiItem struct {
+type FeverAPIItem struct {
   ID                  int64           `json:"id,omitempty"`
   FeedID              int64           `json:"feed_id,omitempty"`
   Title               string          `json:"title,omitempty"`
@@ -51,21 +48,21 @@ type ApiItem struct {
   IsSaved             int             `json:"is_saved"`
 }
 
-type ApiResponse struct {
+type FeverAPIResponse struct {
   ApiVersion          string          `json:"api_version,omitempty"`
   Auth                int             `json:"auth,omitempty"`
-  FeedsGroups         []ApiFeedsGroup `json:"feeds_groups,omitempty"`
-  Groups              []ApiGroup      `json:"groups,omitempty"`
-  Feeds               []ApiFeed       `json:"feeds,omitempty"`
-  Favicons            []ApiFavicon    `json:"favicons,omitempty"`
-  Items               []ApiItem       `json:"items,omitempty"`
+  FeedsGroups         []FeverAPIFeedsGroup `json:"feeds_groups,omitempty"`
+  Groups              []FeverAPIGroup      `json:"groups,omitempty"`
+  Feeds               []FeverAPIFeed       `json:"feeds,omitempty"`
+  Favicons            []FeverAPIFavicon    `json:"favicons,omitempty"`
+  Items               []FeverAPIItem       `json:"items,omitempty"`
   TotalItems          int             `json:"total_items,omitempty"`
   UnreadItemIDs       string          `json:"unread_item_ids,omitempty"`
   SavedItemIDs        string          `json:"saved_item_ids,omitempty"`
   LastRefreshedOnTime int             `json:"last_refreshed_on_time,omitempty"`
 }
 
-func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processGroups(r *http.Request, user string) (bool, error) {
   _, hasGroups := r.Form["groups"]
   if hasGroups == true {
     groups, err := database.ListGroupsByUser(user)
@@ -75,7 +72,7 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
 
     for _, group := range groups {
       apiResponse.Groups = append(apiResponse.Groups,
-        ApiGroup{
+        FeverAPIGroup{
           ID: group.ID,
           Title: group.Title,
         })
@@ -91,7 +88,7 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
       }
 
       apiResponse.FeedsGroups = append(apiResponse.FeedsGroups,
-        ApiFeedsGroup{
+        FeverAPIFeedsGroup{
           GroupID: group.ID,
           FeedIDs: strings.Join(feedIDsStr, ","),
         })
@@ -103,7 +100,7 @@ func (apiResponse *ApiResponse) processGroups(r *http.Request, user string) (boo
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processFeeds(r *http.Request, user string) (bool, error) {
   _, hasFeeds := r.Form["feeds"]
   if hasFeeds == true {
     feeds, err := database.ListFeedsByUser(user)
@@ -114,7 +111,7 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
     for _, feed := range feeds {
       log.Debug(feed.UpdatedAt.Unix())
       apiResponse.Feeds = append(apiResponse.Feeds,
-        ApiFeed{
+        FeverAPIFeed{
           ID: feed.ID,
           Title: feed.Title,
           SiteURL: feed.Link,
@@ -130,7 +127,7 @@ func (apiResponse *ApiResponse) processFeeds(r *http.Request, user string) (bool
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processItems(r *http.Request, user string) (bool, error) {
   _, hasItems := r.Form["items"]
   if hasItems == true {
     var items []db.Item
@@ -169,7 +166,7 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
       }
 
       apiResponse.Items = append(apiResponse.Items,
-        ApiItem{
+        FeverAPIItem{
           ID: item.ID,
           FeedID: item.Feed,
           Title: item.Title,
@@ -188,7 +185,7 @@ func (apiResponse *ApiResponse) processItems(r *http.Request, user string) (bool
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processUnreadItemIDs(r *http.Request, user string) (bool, error) {
   _, hasUnreadItemIDs := r.Form["unread_item_ids"]
   if hasUnreadItemIDs == true {
     sinceID := GetSinceIDFromReq(r)
@@ -210,7 +207,7 @@ func (apiResponse *ApiResponse) processUnreadItemIDs(r *http.Request, user strin
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processSavedItemIDs(r *http.Request, user string) (bool, error) {
   _, hasSavedItemIDs := r.Form["saved_item_ids"]
   if hasSavedItemIDs == true {
     apiResponse.SavedItemIDs = ""
@@ -220,7 +217,7 @@ func (apiResponse *ApiResponse) processSavedItemIDs(r *http.Request, user string
   return false, nil
 }
 
-func (apiResponse *ApiResponse) processMark(r *http.Request, user string) (bool, error) {
+func (apiResponse *FeverAPIResponse) processMark(r *http.Request, user string) (bool, error) {
   _, hasMark := r.Form["mark"]
   if hasMark == true {
     mark := r.FormValue("mark")
@@ -335,7 +332,7 @@ func refresh(db *db.Database) {
   log.Debug("Refresh completed")
 }
 
-func api(w http.ResponseWriter, r *http.Request) {
+func feverAPI(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   if r.Method == http.MethodOptions {
       return
@@ -364,7 +361,7 @@ func api(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  apiResponse := ApiResponse{}
+  apiResponse := FeverAPIResponse{}
   apiResponse.ApiVersion = "4"
   apiResponse.Auth = 1
 
@@ -417,15 +414,4 @@ func api(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
 
   json.NewEncoder(w).Encode(apiResponse)
-}
-
-func Server(db *db.Database) {
-  database = db
-
-  go refreshLoop(db)
-
-  r := mux.NewRouter()
-  r.HandleFunc("/", api)
-  r.Use(mux.CORSMethodMiddleware(r))
-  log.Fatal(http.ListenAndServe(":8000", r))
 }

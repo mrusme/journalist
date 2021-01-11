@@ -123,7 +123,7 @@ journalist server
 ```
 
 You can then connect to it using your favourite Fever API client (e.g. Reeder
-for macOS/iOS). Simply specify `http://localhost:8000` (or the machine you're
+for macOS/iOS). Simply specify `http://localhost:8000/fever/` (or the machine you're
 running `journalist server` on) and either use `nobody` and `nobody` as 
 credentials or – if you've subscribed to feeds using custom credentials – use
 your own.
