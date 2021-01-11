@@ -127,3 +127,11 @@ for macOS/iOS). Simply specify `http://localhost:8000/fever/` (or the machine yo
 running `journalist server` on) and either use `nobody` and `nobody` as 
 credentials or – if you've subscribed to feeds using custom credentials – use
 your own.
+
+#### Environment Variables
+
+- `JOURNALIST_SERVER_PORT`: The port the server should run on, default: `8000`
+- `JOURNALIST_SERVER_REFRESH`: The refresh interval (in seconds) at which the 
+  server should update subscriptions, default: `0` (disabled)
+- `JOURNALIST_LOG_LEVEL`: The log level, `0` being the lowest, `10` the highest
+- `JOURNALIST_DB`: The PostgreSQL connection string
