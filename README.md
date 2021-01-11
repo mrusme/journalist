@@ -3,7 +3,7 @@
 
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mrusme/journalist)
 
-Journalist. A RSS aggregator.
+Journalist. An RSS aggregator.
 
 [Download the latest version for macOS, Linux, FreeBSD, NetBSD, OpenBSD & Plan9 here](https://github.com/mrusme/journalist/releases/latest).
 
@@ -13,7 +13,7 @@ possibility to migrate existing data at the moment.***
 
 ## What is `journalist`?
 
-[Get more information here](https://マリウス.com/journalist-a-rss-aggregator/).
+[Get more information here](https://マリウス.com/journalist-an-rss-aggregator/).
 
 ## Repository
 
