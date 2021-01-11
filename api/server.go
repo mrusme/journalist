@@ -36,8 +36,11 @@ func Server(db *db.Database) {
   }
 
   r := mux.NewRouter()
-  r.HandleFunc("/fever/", feverAPI)
   r.Use(mux.CORSMethodMiddleware(r))
+
+  feverAPIRouter := r.PathPrefix("/fever").Subrouter()
+  feverAPI(feverAPIRouter)
+
   log.Info("Starting server on port " + portStr + " ...")
   log.Fatal(http.ListenAndServe(":" + portStr, r))
 }

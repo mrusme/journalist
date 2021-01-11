@@ -8,6 +8,7 @@ import (
   "errors"
   "time"
   "encoding/json"
+  "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
 )
 
@@ -294,7 +295,7 @@ func (apiResponse *FeverAPIResponse) processMark(r *http.Request, user string) (
   return false, nil
 }
 
-func feverAPI(w http.ResponseWriter, r *http.Request) {
+func feverAPIHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Access-Control-Allow-Origin", "*")
   if r.Method == http.MethodOptions {
       return
@@ -376,4 +377,8 @@ func feverAPI(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
 
   json.NewEncoder(w).Encode(apiResponse)
+}
+
+func feverAPI(r *mux.Router) {
+  r.HandleFunc("/", feverAPIHandler)
 }
