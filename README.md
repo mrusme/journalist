@@ -146,11 +146,19 @@ your own.
 
 #### Environment Variables
 
+**General (CLI & server)**
+- `JOURNALIST_LOG_LEVEL`: The log level, `0` being the lowest, `10` the highest
+- `JOURNALIST_DB`: The PostgreSQL connection string
+
+**Server only**
+- `JOURNALIST_SERVER_BINDIP`: The IP to bind the server to, default: `0.0.0.0`
 - `JOURNALIST_SERVER_PORT`: The port the server should run on, default: `8000`
 - `JOURNALIST_SERVER_REFRESH`: The refresh interval (in seconds) at which the 
   server should update subscriptions, default: `0` (disabled)
-- `JOURNALIST_LOG_LEVEL`: The log level, `0` being the lowest, `10` the highest
-- `JOURNALIST_DB`: The PostgreSQL connection string
+- `JOURNALIST_SERVER_API_FEVER`: The Fever API, boolean value, default: `true` 
+  (enabled)
+- `JOURNALIST_SERVER_API_GREADER`: The Google Reader API, boolean value, 
+  default: `false` (disabled) *NOT YET AVAILABLE*
 
 ### Docker
 
