@@ -5,7 +5,7 @@ import (
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
-  "github.com/mrusme/journalist/rss"
+  "github.com/mrusme/journalist/api"
 )
 
 var subscribeCmd = &cobra.Command{
@@ -41,15 +41,19 @@ var subscribeCmd = &cobra.Command{
       }
     }
 
-    feed, items, feederr := rss.LoadFeed(feedUrl.String(), group.ID, user)
-    if feederr != nil {
-      log.Fatal(feederr)
+    err = api.AddOrUpdateFeed(database, feedUrl.String(), group.ID, user)
+    if err != nil {
+      log.Fatal(err)
     }
+    // feed, items, feederr := rss.LoadFeed(feedUrl.String(), group.ID, user)
+    // if feederr != nil {
+    //   log.Fatal(feederr)
+    // }
 
-    _, upserterr := database.UpsertFeed(&feed, &items)
-    if upserterr != nil {
-      log.Fatal(upserterr)
-    }
+    // _, upserterr := database.UpsertFeed(&feed, items)
+    // if upserterr != nil {
+    //   log.Fatal(upserterr)
+    // }
 
     log.Info("Subscribed to ", feedUrl.String())
     return

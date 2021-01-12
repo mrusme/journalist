@@ -6,6 +6,7 @@ import (
   _ "database/sql"
   "github.com/jmoiron/sqlx"
   _ "github.com/jackc/pgx/v4/stdlib"
+  readability "github.com/go-shiori/go-readability"
 )
 
 type Item struct {
@@ -31,6 +32,16 @@ type Item struct {
   User              string          `db:"user",json:"user,omitempty"`
   CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
   UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
+}
+
+func (item *Item) AssignReadableFromArticle(article *readability.Article) {
+  item.ReadableTitle = article.Title
+  item.ReadableAuthor = article.Byline
+  item.ReadableExcerpt = article.Excerpt
+  item.ReadableSiteName = article.SiteName
+  item.ReadableImage = article.Image
+  item.ReadableContent = article.Content
+  item.ReadableText = article.TextContent
 }
 
 func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {

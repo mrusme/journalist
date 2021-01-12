@@ -6,7 +6,6 @@ import (
   log "github.com/sirupsen/logrus"
   "github.com/gorilla/mux"
   "github.com/mrusme/journalist/db"
-  "github.com/mrusme/journalist/rss"
   "github.com/mrusme/journalist/common"
 )
 
@@ -71,17 +70,7 @@ func refresh(db *db.Database) {
   for _, feed := range feeds {
     log.Debug("Refreshing ", feed.FeedLink, " ...")
 
-    refreshedFeed, items, feederr := rss.LoadFeed(feed.FeedLink, feed.Group, feed.User)
-    if feederr != nil {
-      log.Error(feederr)
-      return
-    }
-
-    _, upserterr := database.UpsertFeed(&refreshedFeed, &items)
-    if upserterr != nil {
-      log.Error(upserterr)
-      return
-    }
+    AddOrUpdateFeed(db, feed.FeedLink, feed.Group, feed.User)
   }
 
   log.Debug("Refresh completed")

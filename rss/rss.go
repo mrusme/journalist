@@ -1,7 +1,7 @@
 package rss
 
 import (
-  log "github.com/sirupsen/logrus"
+  // log "github.com/sirupsen/logrus"
   "context"
   "time"
   "strings"
@@ -9,7 +9,6 @@ import (
   "github.com/mmcdole/gofeed"
   // "github.com/mmcdole/gofeed/rss"
   "github.com/mrusme/journalist/db"
-  "github.com/mrusme/journalist/web"
 )
 
 func LoadFeed(feedUrl string, groupID int64, user string) (db.Feed, []db.Item, error) {
@@ -58,24 +57,19 @@ func LoadFeed(feedUrl string, groupID int64, user string) (db.Feed, []db.Item, e
 
   var items []db.Item
   for _, gitem := range gfeed.Items {
-    readable, readerr := web.LoadReadablePage(gitem.Link)
-    if readerr != nil {
-      log.Debug("Could not make " + gitem.Link + " readable!")
-    }
-
     item := db.Item{
       Title: gitem.Title,
       Description: gitem.Description,
       Content: gitem.Content,
       Link: gitem.Link,
       Categories: strings.Join(gitem.Categories, ","),
-      ReadableTitle: readable.Title,
-      ReadableAuthor: readable.Byline,
-      ReadableExcerpt: readable.Excerpt,
-      ReadableSiteName: readable.SiteName,
-      ReadableImage: readable.Image,
-      ReadableContent: readable.Content,
-      ReadableText: readable.TextContent,
+      ReadableTitle: "",
+      ReadableAuthor: "",
+      ReadableExcerpt: "",
+      ReadableSiteName: "",
+      ReadableImage: "",
+      ReadableContent: "",
+      ReadableText: "",
       IsRead: false,
       IsSaved: false,
       User: user,
