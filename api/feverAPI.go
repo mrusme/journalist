@@ -165,6 +165,15 @@ func (apiResponse *FeverAPIResponse) processItems(r *http.Request, user string) 
         isSaved = 1
       }
 
+      var html *string
+      ReadableContentLen := len(item.ReadableContent)
+      DescriptionLen := len(item.Description)
+      if item.ReadableContent != "" && ReadableContentLen >= DescriptionLen {
+        html = &item.ReadableContent
+      } else {
+        html = &item.Description
+      }
+
       apiResponse.Items = append(apiResponse.Items,
         FeverAPIItem{
           ID: item.ID,
@@ -172,7 +181,7 @@ func (apiResponse *FeverAPIResponse) processItems(r *http.Request, user string) 
           Title: item.Title,
           URL: item.Link,
           Author: item.Author,
-          HTML: item.Description,
+          HTML: *html,
           CreatedOnTime: int(item.CreatedAt.Unix()),
           IsRead: isRead,
           IsSaved: isSaved,
