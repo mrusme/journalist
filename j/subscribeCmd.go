@@ -14,7 +14,7 @@ var subscribeCmd = &cobra.Command{
   Long: "Subscribe to a new feed",
   Args: cobra.MinimumNArgs(1),
   Run: func(cmd *cobra.Command, args []string) {
-    user := GetApiKey(flagUser, flagPassword)
+    user := api.GetApiKey(flagUser, flagPassword)
 
     feedUrl, err := url.Parse(args[0])
     if err != nil {

@@ -3,6 +3,8 @@ package api
 import (
   "net/http"
   "strconv"
+  "crypto/md5"
+  "encoding/hex"
   log "github.com/sirupsen/logrus"
   "github.com/mrusme/journalist/db"
   "github.com/mrusme/journalist/rss"
@@ -55,4 +57,9 @@ func GetSinceIDFromReq(r *http.Request) (int64) {
   }
 
   return sinceID
+}
+
+func GetApiKey(username string, password string) (string) {
+  hash := md5.Sum([]byte(username + ":" + password))
+  return hex.EncodeToString(hash[:])
 }

@@ -5,6 +5,7 @@ import (
   "net/url"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
+  "github.com/mrusme/journalist/api"
 )
 
 var unsubscribeCmd = &cobra.Command{
@@ -13,7 +14,7 @@ var unsubscribeCmd = &cobra.Command{
   Long: "Unsubscribe from a feed",
   Args: cobra.MinimumNArgs(1),
   Run: func(cmd *cobra.Command, args []string) {
-    user := GetApiKey(flagUser, flagPassword)
+    user := api.GetApiKey(flagUser, flagPassword)
 
     feedUrl, err := url.Parse(args[0])
     if err != nil {

@@ -4,6 +4,7 @@ import (
   log "github.com/sirupsen/logrus"
   "github.com/spf13/cobra"
   "github.com/mrusme/journalist/db"
+  "github.com/mrusme/journalist/api"
 )
 
 var subscriptionsCmd = &cobra.Command{
@@ -11,7 +12,7 @@ var subscriptionsCmd = &cobra.Command{
   Short: "List subscriptions",
   Long: "List all subscriptions",
   Run: func(cmd *cobra.Command, args []string) {
-    user := GetApiKey(flagUser, flagPassword)
+    user := api.GetApiKey(flagUser, flagPassword)
 
     feeds, err := database.ListFeedsByUser(user)
     if err != nil {
