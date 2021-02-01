@@ -39,12 +39,17 @@ func Server(db *db.Database) {
 
   log.Info("Starting server on " + bindIPStr + ":" + portStr + " ...")
 
+  handler := http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+    log.Println(req.Method + " " + req.URL.String())
+    r.ServeHTTP(w, req)
+  })
+
   server := &http.Server{
     Addr:         bindIPStr + ":" + portStr,
     WriteTimeout: time.Second * 60,
     ReadTimeout:  time.Second * 60,
     IdleTimeout:  time.Second * 80,
-    Handler: r,
+    Handler: handler,
   }
   log.Fatal(server.ListenAndServe())
 }
