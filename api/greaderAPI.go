@@ -8,6 +8,9 @@ import (
   "github.com/gorilla/mux"
 )
 
+// Main reference
+// https://github.com/theoldreader/api
+
 type GreaderAPIAccountsClientLoginResponse struct {
   SID                 string          `json:"SID,omitempty"`
   LSID                string          `json:"LSID,omitempty"`
