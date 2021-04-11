@@ -15,7 +15,7 @@ func Server(db *db.Database) {
   database = db
 
   bindIPStr := common.LookupStrEnv("JOURNALIST_SERVER_BINDIP", "0.0.0.0")
-  portStr := common.LookupStrEnv("JOURNALIST_SERVER_BINDIP", "8000")
+  portStr := common.LookupStrEnv("JOURNALIST_SERVER_PORT", "8000")
   refresh := common.LookupIntEnv("JOURNALIST_SERVER_REFRESH", 0)
 
   if refresh > 0 {
