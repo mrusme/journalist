@@ -127,7 +127,7 @@ func (database *Database) UpdateFeed(feed *Feed) (error) {
   return err
 }
 
-func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error) {
+func (database *Database) UpsertFeed(feed *Feed, items []Item) ([]*Item, error) {
   var feedID int64
   log.Debug("Checking if feed was already subscribed to ...")
   existingFeed, feederr := database.GetFeedByFeedLinkAndUser(feed.FeedLink, feed.User)
@@ -138,7 +138,7 @@ func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error)
     feedID, feederr = database.AddFeed(feed, feed.Group)
 
     if feederr != nil {
-      return []int64{}, feederr
+      return nil, feederr
     }
   } else {
     feedID = existingFeed.ID
@@ -154,11 +154,13 @@ func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error)
   log.Debug("Feed ID: ", feedID)
   log.Debug("Refreshing items ...")
 
-  var itemIDs []int64
-  for _, item := range *items {
+  var newItems []*Item
+  for i := range items {
+    item := items[i]
     itemID, itemerr := database.AddItem(&item, feedID)
 
     if itemerr != nil {
+      log.Debug(itemerr)
       existingItem, geterr := database.GetItemByGUIDAndUser(item.GUID, item.User)
       if geterr != nil {
         log.Debug(geterr)
@@ -176,14 +178,15 @@ func (database *Database) UpsertFeed(feed *Feed, items *[]Item) ([]int64, error)
           log.Debug(updateerr)
         }
       }
-      log.Debug(itemerr)
     } else {
       log.Debug("Added new item with ID:", itemID)
-      itemIDs = append(itemIDs, itemID)
+      item.ID = itemID
+      item.Feed = feedID
+      newItems = append(newItems, &item)
     }
   }
 
-  return itemIDs, nil
+  return newItems, nil
 }
 
 func (database *Database) EraseFeedByIDAndUser(feedID int64, user string) (error) {

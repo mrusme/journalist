@@ -6,6 +6,7 @@ import (
   _ "database/sql"
   "github.com/jmoiron/sqlx"
   _ "github.com/jackc/pgx/v4/stdlib"
+  readability "github.com/go-shiori/go-readability"
 )
 
 type Item struct {
@@ -18,12 +19,29 @@ type Item struct {
   Author            string          `db:"author",json:"author,omitempty"`
   Image             string          `db:"image",json:"image,omitempty"`
   Categories        string          `db:"categories",json:"categories,omitempty"`
+  ReadableTitle     string          `db:"readable_title",json:"readable_title,omitempty"`
+  ReadableAuthor    string          `db:"readable_author",json:"readable_author,omitempty"`
+  ReadableExcerpt   string          `db:"readable_excerpt",json:"readable_excerpt,omitempty"`
+  ReadableSiteName  string          `db:"readable_site_name",json:"readable_site_name,omitempty"`
+  ReadableImage     string          `db:"readable_image",json:"readable_image,omitempty"`
+  ReadableContent   string          `db:"readable_content",json:"readable_content,omitempty"`
+  ReadableText      string          `db:"readable_text",json:"readable_text,omitempty"`
   IsRead            bool            `db:"is_read",json:"is_read,omitempty"`
   IsSaved           bool            `db:"is_saved",json:"is_saved,omitempty"`
   Feed              int64           `db:"feed",json:"feed,omitempty"`
   User              string          `db:"user",json:"user,omitempty"`
   CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
   UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
+}
+
+func (item *Item) AssignReadableFromArticle(article *readability.Article) {
+  item.ReadableTitle = article.Title
+  item.ReadableAuthor = article.Byline
+  item.ReadableExcerpt = article.Excerpt
+  item.ReadableSiteName = article.SiteName
+  item.ReadableImage = article.Image
+  item.ReadableContent = article.Content
+  item.ReadableText = article.TextContent
 }
 
 func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {
@@ -38,6 +56,13 @@ func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {
       "author",
       "image",
       "categories",
+      "readable_title",
+      "readable_author",
+      "readable_excerpt",
+      "readable_site_name",
+      "readable_image",
+      "readable_content",
+      "readable_text",
       "is_read",
       "is_saved",
       "feed",
@@ -59,7 +84,14 @@ func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {
       $11,
       $12,
       $13,
-      $14
+      $14,
+      $15,
+      $16,
+      $17,
+      $18,
+      $19,
+      $20,
+      $21
     )
     ON CONFLICT ("guid", "user") DO NOTHING
     RETURNING "id"
@@ -72,6 +104,13 @@ func (database *Database) AddItem(item *Item, feedId int64) (int64, error) {
     item.Author,
     item.Image,
     item.Categories,
+    item.ReadableTitle,
+    item.ReadableAuthor,
+    item.ReadableExcerpt,
+    item.ReadableSiteName,
+    item.ReadableImage,
+    item.ReadableContent,
+    item.ReadableText,
     item.IsRead,
     item.IsSaved,
     feedId,
@@ -117,12 +156,19 @@ func (database *Database) UpdateItem(item *Item) (error) {
       "author" = $6,
       "image" = $7,
       "categories" = $8,
-      "is_read" = $9,
-      "is_saved" = $10,
-      "feed" = $11,
-      "user" = $12,
-      "updated_at" = $13
-    WHERE "id" = $14
+      "readable_title" = $9,
+      "readable_author" = $10,
+      "readable_excerpt" = $11,
+      "readable_site_name" = $12,
+      "readable_image" = $13,
+      "readable_content" = $14,
+      "readable_text" = $15,
+      "is_read" = $16,
+      "is_saved" = $17,
+      "feed" = $18,
+      "user" = $19,
+      "updated_at" = $20
+    WHERE "id" = $21
   `,
     item.GUID,
     item.Title,
@@ -132,6 +178,13 @@ func (database *Database) UpdateItem(item *Item) (error) {
     item.Author,
     item.Image,
     item.Categories,
+    item.ReadableTitle,
+    item.ReadableAuthor,
+    item.ReadableExcerpt,
+    item.ReadableSiteName,
+    item.ReadableImage,
+    item.ReadableContent,
+    item.ReadableText,
     item.IsRead,
     item.IsSaved,
     item.Feed,

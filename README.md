@@ -64,7 +64,10 @@ docker run -it --name postgres \
 There are also plenty of cloud platforms where you can easily launch a fully-
 managed PostgreSQL instance. For example on 
 [DigitalOcean](https://m.do.co/c/9d1b223a47bc) you can get a PostgreSQL single
-node cluster for as little as $15 per month.
+node cluster for as little as $15 per month or, if you use their App Platform,
+you could get `journalist` up and running for only $12 per month (including 
+the *development* database). See [Deployment](#deployment) down below for more
+info.
 
 
 ### CLI
@@ -160,7 +163,11 @@ your own.
 - `JOURNALIST_SERVER_API_GREADER`: The Google Reader API, boolean value, 
   default: `false` (disabled) *NOT YET AVAILABLE*
 
-### Docker
+
+### Deployment
+
+
+#### Docker
 
 Official images are available on Docker Hub at 
 [mrusme/journalist](https://hub.docker.com/r/mrusme/journalist) 
@@ -186,6 +193,40 @@ It can then be run using the following command:
 docker run -it --rm --name journalist \
   -e JOURNALIST_LOG_LEVEL=10 \
   -e JOURNALIST_DB="postgres://postgres:postgres@172.17.0.2:5432/journalist" \
-  -p 0.0.0.0:8000:8000
+  -p 0.0.0.0:8000:8000 \
   journalist:latest
+```
+
+#### DigitalOcean App Platform
+
+You can use the following App Spec to deploy `journalist` for as little as $12
+per month on [DigitalOcean's App Platform](https://m.do.co/c/9d1b223a47bc). 
+Simply fork this repo into your GitHub account, connect that with DO and 
+replace `$$ACCOUNT$$` with your account's name in the App Spec:
+
+```yaml
+databases:
+- engine: PG
+  name: journalist
+  num_nodes: 1
+  size: db-s-dev-database
+  version: "12"
+name: journalist
+region: nyc
+services:
+- dockerfile_path: Dockerfile
+  envs:
+  - key: JOURNALIST_DB
+    scope: RUN_TIME
+    value: ${journalist.DATABASE_URL}
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: $$ACCOUNT$$/journalist
+  http_port: 8000
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: journalist
+  routes:
+  - path: /
 ```
