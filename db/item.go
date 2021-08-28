@@ -1,37 +1,38 @@
 package db
 
 import (
-  "time"
+	"time"
 
-  _ "database/sql"
-  "github.com/jmoiron/sqlx"
-  _ "github.com/jackc/pgx/v4/stdlib"
-  readability "github.com/go-shiori/go-readability"
+	_ "database/sql"
+
+	readability "github.com/go-shiori/go-readability"
+	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/jmoiron/sqlx"
 )
 
 type Item struct {
-  ID                int64           `db:"id",json:"id,omitempty"`
-  GUID              string          `db:"guid",json:"guid,omitempty"`
-  Title             string          `db:"title",json:"title,omitempty"`
-  Description       string          `db:"description",json:"description,omitempty"`
-  Content           string          `db:"content",json:"content,omitempty"`
-  Link              string          `db:"link",json:"link,omitempty"`
-  Author            string          `db:"author",json:"author,omitempty"`
-  Image             string          `db:"image",json:"image,omitempty"`
-  Categories        string          `db:"categories",json:"categories,omitempty"`
-  ReadableTitle     string          `db:"readable_title",json:"readable_title,omitempty"`
-  ReadableAuthor    string          `db:"readable_author",json:"readable_author,omitempty"`
-  ReadableExcerpt   string          `db:"readable_excerpt",json:"readable_excerpt,omitempty"`
-  ReadableSiteName  string          `db:"readable_site_name",json:"readable_site_name,omitempty"`
-  ReadableImage     string          `db:"readable_image",json:"readable_image,omitempty"`
-  ReadableContent   string          `db:"readable_content",json:"readable_content,omitempty"`
-  ReadableText      string          `db:"readable_text",json:"readable_text,omitempty"`
-  IsRead            bool            `db:"is_read",json:"is_read,omitempty"`
-  IsSaved           bool            `db:"is_saved",json:"is_saved,omitempty"`
-  Feed              int64           `db:"feed",json:"feed,omitempty"`
-  User              string          `db:"user",json:"user,omitempty"`
-  CreatedAt         time.Time       `db:"created_at",json:"created_at,omitempty"`
-  UpdatedAt         time.Time       `db:"updated_at",json:"updated_at,omitempty"`
+  ID               int64     `db:"id",json:"id,omitempty"`
+  GUID             string    `db:"guid",json:"guid,omitempty"`
+  Title            string    `db:"title",json:"title,omitempty"`
+  Description      string    `db:"description",json:"description,omitempty"`
+  Content          string    `db:"content",json:"content,omitempty"`
+  Link             string    `db:"link",json:"link,omitempty"`
+  Author           string    `db:"author",json:"author,omitempty"`
+  Image            string    `db:"image",json:"image,omitempty"`
+  Categories       string    `db:"categories",json:"categories,omitempty"`
+  ReadableTitle    string    `db:"readable_title",json:"readable_title,omitempty"`
+  ReadableAuthor   string    `db:"readable_author",json:"readable_author,omitempty"`
+  ReadableExcerpt  string    `db:"readable_excerpt",json:"readable_excerpt,omitempty"`
+  ReadableSiteName string    `db:"readable_site_name",json:"readable_site_name,omitempty"`
+  ReadableImage    string    `db:"readable_image",json:"readable_image,omitempty"`
+  ReadableContent  string    `db:"readable_content",json:"readable_content,omitempty"`
+  ReadableText     string    `db:"readable_text",json:"readable_text,omitempty"`
+  IsRead           bool      `db:"is_read",json:"is_read,omitempty"`
+  IsSaved          bool      `db:"is_saved",json:"is_saved,omitempty"`
+  Feed             int64     `db:"feed",json:"feed,omitempty"`
+  User             string    `db:"user",json:"user,omitempty"`
+  CreatedAt        time.Time `db:"created_at",json:"created_at,omitempty"`
+  UpdatedAt        time.Time `db:"updated_at",json:"updated_at,omitempty"`
 }
 
 func (item *Item) AssignReadableFromArticle(article *readability.Article) {
@@ -145,7 +146,7 @@ func (database *Database) GetItemByGUIDAndUser(itemGUID string, user string) (It
   return ret, err
 }
 
-func (database *Database) UpdateItem(item *Item) (error) {
+func (database *Database) UpdateItem(item *Item) error {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "guid" = $1,
@@ -195,7 +196,7 @@ func (database *Database) UpdateItem(item *Item) (error) {
   return err
 }
 
-func (database *Database) UpdateItemByIDAsRead(itemID int64, read bool, user string) (error) {
+func (database *Database) UpdateItemByIDAsRead(itemID int64, read bool, user string) error {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "is_read" = $2
@@ -211,7 +212,7 @@ func (database *Database) UpdateItemByIDAsRead(itemID int64, read bool, user str
   return err
 }
 
-func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user string) (error) {
+func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user string) error {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "is_saved" = $2
@@ -227,7 +228,7 @@ func (database *Database) UpdateItemByIDAsSaved(itemID int64, saved bool, user s
   return err
 }
 
-func (database *Database) UpdateItemsByFeedAndBeforeAsRead(feedID int64, before time.Time, read bool, user string) (error) {
+func (database *Database) UpdateItemsByFeedAndBeforeAsRead(feedID int64, before time.Time, read bool, user string) error {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "is_read" = $3
@@ -246,7 +247,7 @@ func (database *Database) UpdateItemsByFeedAndBeforeAsRead(feedID int64, before 
   return err
 }
 
-func (database *Database) UpdateItemsByBeforeAsRead(before time.Time, read bool, user string) (error) {
+func (database *Database) UpdateItemsByBeforeAsRead(before time.Time, read bool, user string) error {
   _, err := database.DB.Exec(`
     UPDATE items SET
       "is_read" = $2
@@ -262,7 +263,7 @@ func (database *Database) UpdateItemsByBeforeAsRead(before time.Time, read bool,
   return err
 }
 
-func (database *Database) UpdateItemsByGroupAsRead(groupID int64, read bool, user string) (error) {
+func (database *Database) UpdateItemsByGroupAsRead(groupID int64, read bool, user string) error {
   feeds, err := database.ListFeedsByGroupAndUser(groupID, user)
   if err != nil {
     return err
@@ -290,14 +291,13 @@ func (database *Database) UpdateItemsByGroupAsRead(groupID int64, read bool, use
   }
 
   _, err = database.DB.Exec(
-    database.DB.Rebind(query), args...
+    database.DB.Rebind(query), args...,
   )
 
   return err
 }
 
-
-func (database *Database) EraseItemsByFeedAndUser(feedID int64, user string) (error) {
+func (database *Database) EraseItemsByFeedAndUser(feedID int64, user string) error {
   _, err := database.DB.Exec(`
     DELETE FROM items
     WHERE
@@ -320,6 +320,7 @@ func (database *Database) ListItemsByUser(user string, sinceID int64) ([]Item, e
       "user" = $1
     AND
       "id" >= $2
+    ORDER BY "created_at" DESC
   `,
     user,
     sinceID,
@@ -352,6 +353,7 @@ func (database *Database) ListItemsByIDsAndUser(ids []int64, user string) ([]Ite
       "id" IN (?)
     AND
       "user" = ?
+    ORDER BY "created_at" DESC
   `,
     ids,
     user,
@@ -361,7 +363,7 @@ func (database *Database) ListItemsByIDsAndUser(ids []int64, user string) ([]Ite
   }
 
   res, err := database.DB.Queryx(
-    database.DB.Rebind(query), args...
+    database.DB.Rebind(query), args...,
   )
 
   if err != nil {
@@ -393,6 +395,7 @@ func (database *Database) ListUnreadItemsByUser(user string, sinceID int64) ([]I
       "id" >= $2
     AND
       "is_read" = FALSE
+    ORDER BY "created_at" DESC
   `,
     user,
     sinceID,
