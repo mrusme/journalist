@@ -1,13 +1,13 @@
 package db
 
 import (
-	"time"
+  "time"
 
-	_ "database/sql"
+  _ "database/sql"
 
-	readability "github.com/go-shiori/go-readability"
-	_ "github.com/jackc/pgx/v4/stdlib"
-	"github.com/jmoiron/sqlx"
+  readability "github.com/go-shiori/go-readability"
+  _ "github.com/jackc/pgx/v4/stdlib"
+  "github.com/jmoiron/sqlx"
 )
 
 type Item struct {
