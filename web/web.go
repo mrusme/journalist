@@ -3,6 +3,7 @@ package web
 import (
   log "github.com/sirupsen/logrus"
   "net/http"
+  "net/url"
   readability "github.com/go-shiori/go-readability"
   "github.com/mrusme/journalist/db"
 )
@@ -18,7 +19,12 @@ func MakeItemReadable(item *db.Item) (error) {
   }
   defer resp.Body.Close()
 
-  article, err := readability.FromReader(resp.Body, pageUrl)
+  urlUrl, err := url.Parse(pageUrl)
+  if err != nil {
+    return err
+  }
+
+  article, err := readability.FromReader(resp.Body, urlUrl)
   if err != nil {
     return err
   }
