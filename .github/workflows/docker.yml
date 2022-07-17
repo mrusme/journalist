@@ -1,0 +1,27 @@
+name: Docker image
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v2
+      - name: setup buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: build image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" \
+            | docker login \
+              -u "${{ secrets.DOCKER_USERNAME }}" \
+              --password-stdin
+          docker buildx build \
+            --tag mrusme/journalist:latest \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 .
+

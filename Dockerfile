@@ -1,11 +1,12 @@
-FROM golang:alpine AS builder
+ARG ARCH=
+FROM ${ARCH}golang:alpine AS builder
 
 WORKDIR /go/src/app
 COPY . .
 
 RUN go build
 
-FROM alpine:latest AS container
+FROM ${ARCH}alpine:latest AS container
 
 COPY --from=builder /go/src/app/journalist /usr/bin/journalist
 
