@@ -3,6 +3,8 @@
 package subscription
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -10,11 +12,15 @@ const (
 	// Label holds the string label denoting the subscription type in the database.
 	Label = "subscription"
 	// FieldID holds the string denoting the id field in the database.
-	FieldID = "oid"
+	FieldID = "id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// FieldFeedID holds the string denoting the feed_id field in the database.
 	FieldFeedID = "feed_id"
+	// FieldGroup holds the string denoting the group field in the database.
+	FieldGroup = "group"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgeFeed holds the string denoting the feed edge name in mutations.
@@ -42,6 +48,8 @@ var Columns = []string{
 	FieldID,
 	FieldUserID,
 	FieldFeedID,
+	FieldGroup,
+	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -55,6 +63,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// GroupValidator is a validator for the "group" field. It is called by the builders before save.
+	GroupValidator func(string) error
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

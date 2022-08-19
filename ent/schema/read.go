@@ -1,7 +1,7 @@
 package schema
 
 import (
-	// "regexp"
+  "time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
@@ -18,10 +18,12 @@ type Read struct {
 func (Read) Fields() []ent.Field {
   return []ent.Field{
     field.UUID("id", uuid.UUID{}).
-      Default(uuid.New).
-      StorageKey("oid"),
+      Default(uuid.New),
+      // StorageKey("oid"),
     field.UUID("user_id", uuid.UUID{}),
     field.UUID("item_id", uuid.UUID{}),
+    field.Time("created_at").
+      Default(time.Now),
   }
 }
 

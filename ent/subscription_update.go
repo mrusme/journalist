@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -39,6 +40,26 @@ func (su *SubscriptionUpdate) SetUserID(u uuid.UUID) *SubscriptionUpdate {
 // SetFeedID sets the "feed_id" field.
 func (su *SubscriptionUpdate) SetFeedID(u uuid.UUID) *SubscriptionUpdate {
 	su.mutation.SetFeedID(u)
+	return su
+}
+
+// SetGroup sets the "group" field.
+func (su *SubscriptionUpdate) SetGroup(s string) *SubscriptionUpdate {
+	su.mutation.SetGroup(s)
+	return su
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (su *SubscriptionUpdate) SetCreatedAt(t time.Time) *SubscriptionUpdate {
+	su.mutation.SetCreatedAt(t)
+	return su
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (su *SubscriptionUpdate) SetNillableCreatedAt(t *time.Time) *SubscriptionUpdate {
+	if t != nil {
+		su.SetCreatedAt(*t)
+	}
 	return su
 }
 
@@ -131,6 +152,11 @@ func (su *SubscriptionUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (su *SubscriptionUpdate) check() error {
+	if v, ok := su.mutation.Group(); ok {
+		if err := subscription.GroupValidator(v); err != nil {
+			return &ValidationError{Name: "group", err: fmt.Errorf(`ent: validator failed for field "Subscription.group": %w`, err)}
+		}
+	}
 	if _, ok := su.mutation.UserID(); su.mutation.UserCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Subscription.user"`)
 	}
@@ -157,6 +183,20 @@ func (su *SubscriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := su.mutation.Group(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldGroup,
+		})
+	}
+	if value, ok := su.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: subscription.FieldCreatedAt,
+		})
 	}
 	if su.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -256,6 +296,26 @@ func (suo *SubscriptionUpdateOne) SetUserID(u uuid.UUID) *SubscriptionUpdateOne 
 // SetFeedID sets the "feed_id" field.
 func (suo *SubscriptionUpdateOne) SetFeedID(u uuid.UUID) *SubscriptionUpdateOne {
 	suo.mutation.SetFeedID(u)
+	return suo
+}
+
+// SetGroup sets the "group" field.
+func (suo *SubscriptionUpdateOne) SetGroup(s string) *SubscriptionUpdateOne {
+	suo.mutation.SetGroup(s)
+	return suo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (suo *SubscriptionUpdateOne) SetCreatedAt(t time.Time) *SubscriptionUpdateOne {
+	suo.mutation.SetCreatedAt(t)
+	return suo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (suo *SubscriptionUpdateOne) SetNillableCreatedAt(t *time.Time) *SubscriptionUpdateOne {
+	if t != nil {
+		suo.SetCreatedAt(*t)
+	}
 	return suo
 }
 
@@ -361,6 +421,11 @@ func (suo *SubscriptionUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (suo *SubscriptionUpdateOne) check() error {
+	if v, ok := suo.mutation.Group(); ok {
+		if err := subscription.GroupValidator(v); err != nil {
+			return &ValidationError{Name: "group", err: fmt.Errorf(`ent: validator failed for field "Subscription.group": %w`, err)}
+		}
+	}
 	if _, ok := suo.mutation.UserID(); suo.mutation.UserCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Subscription.user"`)
 	}
@@ -404,6 +469,20 @@ func (suo *SubscriptionUpdateOne) sqlSave(ctx context.Context) (_node *Subscript
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := suo.mutation.Group(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldGroup,
+		})
+	}
+	if value, ok := suo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: subscription.FieldCreatedAt,
+		})
 	}
 	if suo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

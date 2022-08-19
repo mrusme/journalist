@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -39,6 +40,20 @@ func (ru *ReadUpdate) SetUserID(u uuid.UUID) *ReadUpdate {
 // SetItemID sets the "item_id" field.
 func (ru *ReadUpdate) SetItemID(u uuid.UUID) *ReadUpdate {
 	ru.mutation.SetItemID(u)
+	return ru
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (ru *ReadUpdate) SetCreatedAt(t time.Time) *ReadUpdate {
+	ru.mutation.SetCreatedAt(t)
+	return ru
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ru *ReadUpdate) SetNillableCreatedAt(t *time.Time) *ReadUpdate {
+	if t != nil {
+		ru.SetCreatedAt(*t)
+	}
 	return ru
 }
 
@@ -158,6 +173,13 @@ func (ru *ReadUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := ru.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: read.FieldCreatedAt,
+		})
+	}
 	if ru.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -256,6 +278,20 @@ func (ruo *ReadUpdateOne) SetUserID(u uuid.UUID) *ReadUpdateOne {
 // SetItemID sets the "item_id" field.
 func (ruo *ReadUpdateOne) SetItemID(u uuid.UUID) *ReadUpdateOne {
 	ruo.mutation.SetItemID(u)
+	return ruo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (ruo *ReadUpdateOne) SetCreatedAt(t time.Time) *ReadUpdateOne {
+	ruo.mutation.SetCreatedAt(t)
+	return ruo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ruo *ReadUpdateOne) SetNillableCreatedAt(t *time.Time) *ReadUpdateOne {
+	if t != nil {
+		ruo.SetCreatedAt(*t)
+	}
 	return ruo
 }
 
@@ -404,6 +440,13 @@ func (ruo *ReadUpdateOne) sqlSave(ctx context.Context) (_node *Read, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := ruo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: read.FieldCreatedAt,
+		})
 	}
 	if ruo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -31,6 +32,20 @@ func (rc *ReadCreate) SetUserID(u uuid.UUID) *ReadCreate {
 // SetItemID sets the "item_id" field.
 func (rc *ReadCreate) SetItemID(u uuid.UUID) *ReadCreate {
 	rc.mutation.SetItemID(u)
+	return rc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (rc *ReadCreate) SetCreatedAt(t time.Time) *ReadCreate {
+	rc.mutation.SetCreatedAt(t)
+	return rc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (rc *ReadCreate) SetNillableCreatedAt(t *time.Time) *ReadCreate {
+	if t != nil {
+		rc.SetCreatedAt(*t)
+	}
 	return rc
 }
 
@@ -135,6 +150,10 @@ func (rc *ReadCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (rc *ReadCreate) defaults() {
+	if _, ok := rc.mutation.CreatedAt(); !ok {
+		v := read.DefaultCreatedAt()
+		rc.mutation.SetCreatedAt(v)
+	}
 	if _, ok := rc.mutation.ID(); !ok {
 		v := read.DefaultID()
 		rc.mutation.SetID(v)
@@ -148,6 +167,9 @@ func (rc *ReadCreate) check() error {
 	}
 	if _, ok := rc.mutation.ItemID(); !ok {
 		return &ValidationError{Name: "item_id", err: errors.New(`ent: missing required field "Read.item_id"`)}
+	}
+	if _, ok := rc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Read.created_at"`)}
 	}
 	if _, ok := rc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Read.user"`)}
@@ -190,6 +212,14 @@ func (rc *ReadCreate) createSpec() (*Read, *sqlgraph.CreateSpec) {
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := rc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: read.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
 	}
 	if nodes := rc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

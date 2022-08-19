@@ -359,6 +359,19 @@ func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQu
 
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Title string `json:"title,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Feed.Query().
+//		GroupBy(feed.FieldTitle).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 	grbuild := &FeedGroupBy{config: fq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -375,6 +388,17 @@ func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 
 // Select allows the selection one or more fields/columns for the given query,
 // instead of selecting all fields in the entity.
+//
+// Example:
+//
+//	var v []struct {
+//		Title string `json:"title,omitempty"`
+//	}
+//
+//	client.Feed.Query().
+//		Select(feed.FieldTitle).
+//		Scan(ctx, &v)
+//
 func (fq *FeedQuery) Select(fields ...string) *FeedSelect {
 	fq.fields = append(fq.fields, fields...)
 	selbuild := &FeedSelect{FeedQuery: fq}

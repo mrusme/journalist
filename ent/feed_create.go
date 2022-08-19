@@ -4,7 +4,9 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -20,6 +22,108 @@ type FeedCreate struct {
 	config
 	mutation *FeedMutation
 	hooks    []Hook
+}
+
+// SetTitle sets the "title" field.
+func (fc *FeedCreate) SetTitle(s string) *FeedCreate {
+	fc.mutation.SetTitle(s)
+	return fc
+}
+
+// SetDescription sets the "description" field.
+func (fc *FeedCreate) SetDescription(s string) *FeedCreate {
+	fc.mutation.SetDescription(s)
+	return fc
+}
+
+// SetSiteURL sets the "site_url" field.
+func (fc *FeedCreate) SetSiteURL(s string) *FeedCreate {
+	fc.mutation.SetSiteURL(s)
+	return fc
+}
+
+// SetFeedURL sets the "feed_url" field.
+func (fc *FeedCreate) SetFeedURL(s string) *FeedCreate {
+	fc.mutation.SetFeedURL(s)
+	return fc
+}
+
+// SetAuthor sets the "author" field.
+func (fc *FeedCreate) SetAuthor(s string) *FeedCreate {
+	fc.mutation.SetAuthor(s)
+	return fc
+}
+
+// SetLanguage sets the "language" field.
+func (fc *FeedCreate) SetLanguage(s string) *FeedCreate {
+	fc.mutation.SetLanguage(s)
+	return fc
+}
+
+// SetImage sets the "image" field.
+func (fc *FeedCreate) SetImage(s string) *FeedCreate {
+	fc.mutation.SetImage(s)
+	return fc
+}
+
+// SetCopyright sets the "copyright" field.
+func (fc *FeedCreate) SetCopyright(s string) *FeedCreate {
+	fc.mutation.SetCopyright(s)
+	return fc
+}
+
+// SetGenerator sets the "generator" field.
+func (fc *FeedCreate) SetGenerator(s string) *FeedCreate {
+	fc.mutation.SetGenerator(s)
+	return fc
+}
+
+// SetCategories sets the "categories" field.
+func (fc *FeedCreate) SetCategories(s string) *FeedCreate {
+	fc.mutation.SetCategories(s)
+	return fc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (fc *FeedCreate) SetCreatedAt(t time.Time) *FeedCreate {
+	fc.mutation.SetCreatedAt(t)
+	return fc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableCreatedAt(t *time.Time) *FeedCreate {
+	if t != nil {
+		fc.SetCreatedAt(*t)
+	}
+	return fc
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (fc *FeedCreate) SetUpdatedAt(t time.Time) *FeedCreate {
+	fc.mutation.SetUpdatedAt(t)
+	return fc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableUpdatedAt(t *time.Time) *FeedCreate {
+	if t != nil {
+		fc.SetUpdatedAt(*t)
+	}
+	return fc
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (fc *FeedCreate) SetDeletedAt(t time.Time) *FeedCreate {
+	fc.mutation.SetDeletedAt(t)
+	return fc
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableDeletedAt(t *time.Time) *FeedCreate {
+	if t != nil {
+		fc.SetDeletedAt(*t)
+	}
+	return fc
 }
 
 // SetID sets the "id" field.
@@ -158,6 +262,14 @@ func (fc *FeedCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fc *FeedCreate) defaults() {
+	if _, ok := fc.mutation.CreatedAt(); !ok {
+		v := feed.DefaultCreatedAt()
+		fc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := fc.mutation.UpdatedAt(); !ok {
+		v := feed.DefaultUpdatedAt()
+		fc.mutation.SetUpdatedAt(v)
+	}
 	if _, ok := fc.mutation.ID(); !ok {
 		v := feed.DefaultID()
 		fc.mutation.SetID(v)
@@ -166,6 +278,52 @@ func (fc *FeedCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (fc *FeedCreate) check() error {
+	if _, ok := fc.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Feed.title"`)}
+	}
+	if _, ok := fc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Feed.description"`)}
+	}
+	if _, ok := fc.mutation.SiteURL(); !ok {
+		return &ValidationError{Name: "site_url", err: errors.New(`ent: missing required field "Feed.site_url"`)}
+	}
+	if v, ok := fc.mutation.SiteURL(); ok {
+		if err := feed.SiteURLValidator(v); err != nil {
+			return &ValidationError{Name: "site_url", err: fmt.Errorf(`ent: validator failed for field "Feed.site_url": %w`, err)}
+		}
+	}
+	if _, ok := fc.mutation.FeedURL(); !ok {
+		return &ValidationError{Name: "feed_url", err: errors.New(`ent: missing required field "Feed.feed_url"`)}
+	}
+	if v, ok := fc.mutation.FeedURL(); ok {
+		if err := feed.FeedURLValidator(v); err != nil {
+			return &ValidationError{Name: "feed_url", err: fmt.Errorf(`ent: validator failed for field "Feed.feed_url": %w`, err)}
+		}
+	}
+	if _, ok := fc.mutation.Author(); !ok {
+		return &ValidationError{Name: "author", err: errors.New(`ent: missing required field "Feed.author"`)}
+	}
+	if _, ok := fc.mutation.Language(); !ok {
+		return &ValidationError{Name: "language", err: errors.New(`ent: missing required field "Feed.language"`)}
+	}
+	if _, ok := fc.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Feed.image"`)}
+	}
+	if _, ok := fc.mutation.Copyright(); !ok {
+		return &ValidationError{Name: "copyright", err: errors.New(`ent: missing required field "Feed.copyright"`)}
+	}
+	if _, ok := fc.mutation.Generator(); !ok {
+		return &ValidationError{Name: "generator", err: errors.New(`ent: missing required field "Feed.generator"`)}
+	}
+	if _, ok := fc.mutation.Categories(); !ok {
+		return &ValidationError{Name: "categories", err: errors.New(`ent: missing required field "Feed.categories"`)}
+	}
+	if _, ok := fc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Feed.created_at"`)}
+	}
+	if _, ok := fc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Feed.updated_at"`)}
+	}
 	return nil
 }
 
@@ -201,6 +359,110 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 	if id, ok := fc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := fc.mutation.Title(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldTitle,
+		})
+		_node.Title = value
+	}
+	if value, ok := fc.mutation.Description(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldDescription,
+		})
+		_node.Description = value
+	}
+	if value, ok := fc.mutation.SiteURL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldSiteURL,
+		})
+		_node.SiteURL = value
+	}
+	if value, ok := fc.mutation.FeedURL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedURL,
+		})
+		_node.FeedURL = value
+	}
+	if value, ok := fc.mutation.Author(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldAuthor,
+		})
+		_node.Author = value
+	}
+	if value, ok := fc.mutation.Language(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldLanguage,
+		})
+		_node.Language = value
+	}
+	if value, ok := fc.mutation.Image(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldImage,
+		})
+		_node.Image = value
+	}
+	if value, ok := fc.mutation.Copyright(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldCopyright,
+		})
+		_node.Copyright = value
+	}
+	if value, ok := fc.mutation.Generator(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldGenerator,
+		})
+		_node.Generator = value
+	}
+	if value, ok := fc.mutation.Categories(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldCategories,
+		})
+		_node.Categories = value
+	}
+	if value, ok := fc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: feed.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := fc.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: feed.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
+	if value, ok := fc.mutation.DeletedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: feed.FieldDeletedAt,
+		})
+		_node.DeletedAt = &value
 	}
 	if nodes := fc.mutation.ItemsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -3,6 +3,8 @@
 package feed
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -10,7 +12,33 @@ const (
 	// Label holds the string label denoting the feed type in the database.
 	Label = "feed"
 	// FieldID holds the string denoting the id field in the database.
-	FieldID = "oid"
+	FieldID = "id"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
+	// FieldSiteURL holds the string denoting the site_url field in the database.
+	FieldSiteURL = "site_url"
+	// FieldFeedURL holds the string denoting the feed_url field in the database.
+	FieldFeedURL = "feed_url"
+	// FieldAuthor holds the string denoting the author field in the database.
+	FieldAuthor = "author"
+	// FieldLanguage holds the string denoting the language field in the database.
+	FieldLanguage = "language"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
+	// FieldCopyright holds the string denoting the copyright field in the database.
+	FieldCopyright = "copyright"
+	// FieldGenerator holds the string denoting the generator field in the database.
+	FieldGenerator = "generator"
+	// FieldCategories holds the string denoting the categories field in the database.
+	FieldCategories = "categories"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// EdgeItems holds the string denoting the items edge name in mutations.
 	EdgeItems = "items"
 	// EdgeSubscribedUsers holds the string denoting the subscribed_users edge name in mutations.
@@ -43,6 +71,19 @@ const (
 // Columns holds all SQL columns for feed fields.
 var Columns = []string{
 	FieldID,
+	FieldTitle,
+	FieldDescription,
+	FieldSiteURL,
+	FieldFeedURL,
+	FieldAuthor,
+	FieldLanguage,
+	FieldImage,
+	FieldCopyright,
+	FieldGenerator,
+	FieldCategories,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 }
 
 var (
@@ -62,6 +103,16 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// SiteURLValidator is a validator for the "site_url" field. It is called by the builders before save.
+	SiteURLValidator func(string) error
+	// FeedURLValidator is a validator for the "feed_url" field. It is called by the builders before save.
+	FeedURLValidator func(string) error
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

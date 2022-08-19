@@ -1,30 +1,19 @@
 package users
 
 import (
-  "context"
+  "log"
+	"context"
+	"github.com/google/uuid"
+
 	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
+	// "github.com/mrusme/journalist/ent"
 )
 
 func (h *handler) List(ctx *fiber.Ctx) error {
-  username := ctx.Locals("username").(string)
+  role := ctx.Locals("role").(string)
 
-  u, err := h.EntClient.User.
-    Query().
-    Where(user.Username(username)).
-    Only(context.Background())
-  if err != nil {
-    return ctx.
-      Status(fiber.StatusUnauthorized).
-      JSON(&fiber.Map{
-        "success": false,
-        "users": nil,
-        "message": err.Error(),
-      })
-  }
-
-  if u.Role != "admin" {
+  if role != "admin" {
     return ctx.
       Status(fiber.StatusForbidden).
       JSON(&fiber.Map{
@@ -34,9 +23,20 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       })
   }
 
-  list, err := h.EntClient.User.
+  var list[]struct {
+    ID                uuid.UUID     `json:"id"`
+    Username          string        `json:"username"`
+    Role              string        `json:"role"`
+  }
+  log.Println("ID: %s", user.FieldID)
+  err := h.EntClient.User.
     Query().
-    All(context.Background())
+    Select(
+      user.FieldID,
+      user.FieldUsername,
+      user.FieldRole,
+    ).
+    Scan(context.Background(), &list)
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).

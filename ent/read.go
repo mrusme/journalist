@@ -5,7 +5,9 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/read"
@@ -21,6 +23,8 @@ type Read struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// ItemID holds the value of the "item_id" field.
 	ItemID uuid.UUID `json:"item_id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReadQuery when eager-loading is set.
 	Edges ReadEdges `json:"edges"`
@@ -68,6 +72,8 @@ func (*Read) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case read.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		case read.FieldID, read.FieldUserID, read.FieldItemID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -102,6 +108,12 @@ func (r *Read) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field item_id", values[i])
 			} else if value != nil {
 				r.ItemID = *value
+			}
+		case read.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				r.CreatedAt = value.Time
 			}
 		}
 	}
@@ -146,6 +158,9 @@ func (r *Read) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("item_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.ItemID))
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(r.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

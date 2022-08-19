@@ -5,7 +5,9 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/feed"
 	"github.com/mrusme/journalist/ent/subscription"
@@ -21,6 +23,10 @@ type Subscription struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// FeedID holds the value of the "feed_id" field.
 	FeedID uuid.UUID `json:"feed_id,omitempty"`
+	// Group holds the value of the "group" field.
+	Group string `json:"group,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SubscriptionQuery when eager-loading is set.
 	Edges SubscriptionEdges `json:"edges"`
@@ -68,6 +74,10 @@ func (*Subscription) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case subscription.FieldGroup:
+			values[i] = new(sql.NullString)
+		case subscription.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		case subscription.FieldID, subscription.FieldUserID, subscription.FieldFeedID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -102,6 +112,18 @@ func (s *Subscription) assignValues(columns []string, values []interface{}) erro
 				return fmt.Errorf("unexpected type %T for field feed_id", values[i])
 			} else if value != nil {
 				s.FeedID = *value
+			}
+		case subscription.FieldGroup:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field group", values[i])
+			} else if value.Valid {
+				s.Group = value.String
+			}
+		case subscription.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				s.CreatedAt = value.Time
 			}
 		}
 	}
@@ -146,6 +168,12 @@ func (s *Subscription) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("feed_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.FeedID))
+	builder.WriteString(", ")
+	builder.WriteString("group=")
+	builder.WriteString(s.Group)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(s.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

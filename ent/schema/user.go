@@ -1,7 +1,9 @@
 package schema
 
 import (
-	"regexp"
+	"time"
+  "regexp"
+  "github.com/go-playground/validator/v10"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
@@ -16,18 +18,31 @@ type User struct {
 
 // Fields of the User.
 func (User) Fields() []ent.Field {
+  validate := validator.New()
+
   return []ent.Field{
     field.UUID("id", uuid.UUID{}).
-      Default(uuid.New).
-      StorageKey("oid"),
+      Default(uuid.New),
+      // StorageKey("oid"),
     field.String("username").
-      Match(regexp.MustCompile("^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$")).
+      Validate(func(s string) error {
+        return validate.Var(s, "required,alphanum,lt=32")
+      }).
       Unique(),
     field.String("password").
       Sensitive(),
     field.String("role").
       Default("user").
       Match(regexp.MustCompile("^(admin|user)$")),
+    field.Time("created_at").
+      Default(time.Now),
+    field.Time("updated_at").
+      Default(time.Now).
+      UpdateDefault(time.Now),
+    field.Time("deleted_at").
+      Default(nil).
+      Optional().
+      Nillable(),
   }
 }
 

@@ -3,6 +3,8 @@
 package item
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
@@ -77,6 +79,1632 @@ func IDLT(id uuid.UUID) predicate.Item {
 func IDLTE(id uuid.UUID) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
+func Title(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTitle), v))
+	})
+}
+
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDescription), v))
+	})
+}
+
+// Content applies equality check predicate on the "content" field. It's identical to ContentEQ.
+func Content(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContent), v))
+	})
+}
+
+// URL applies equality check predicate on the "url" field. It's identical to URLEQ.
+func URL(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldURL), v))
+	})
+}
+
+// Author applies equality check predicate on the "author" field. It's identical to AuthorEQ.
+func Author(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAuthor), v))
+	})
+}
+
+// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
+func Image(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldImage), v))
+	})
+}
+
+// Categories applies equality check predicate on the "categories" field. It's identical to CategoriesEQ.
+func Categories(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCategories), v))
+	})
+}
+
+// CrawledTitle applies equality check predicate on the "crawled_title" field. It's identical to CrawledTitleEQ.
+func CrawledTitle(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledAuthor applies equality check predicate on the "crawled_author" field. It's identical to CrawledAuthorEQ.
+func CrawledAuthor(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledExcerpt applies equality check predicate on the "crawled_excerpt" field. It's identical to CrawledExcerptEQ.
+func CrawledExcerpt(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledSiteName applies equality check predicate on the "crawled_site_name" field. It's identical to CrawledSiteNameEQ.
+func CrawledSiteName(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledImage applies equality check predicate on the "crawled_image" field. It's identical to CrawledImageEQ.
+func CrawledImage(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledContentHTML applies equality check predicate on the "crawled_content_html" field. It's identical to CrawledContentHTMLEQ.
+func CrawledContentHTML(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentText applies equality check predicate on the "crawled_content_text" field. It's identical to CrawledContentTextEQ.
+func CrawledContentText(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
+func UpdatedAt(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// TitleEQ applies the EQ predicate on the "title" field.
+func TitleEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldTitle), v))
+	})
+}
+
+// TitleNEQ applies the NEQ predicate on the "title" field.
+func TitleNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldTitle), v))
+	})
+}
+
+// TitleIn applies the In predicate on the "title" field.
+func TitleIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldTitle), v...))
+	})
+}
+
+// TitleNotIn applies the NotIn predicate on the "title" field.
+func TitleNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldTitle), v...))
+	})
+}
+
+// TitleGT applies the GT predicate on the "title" field.
+func TitleGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldTitle), v))
+	})
+}
+
+// TitleGTE applies the GTE predicate on the "title" field.
+func TitleGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldTitle), v))
+	})
+}
+
+// TitleLT applies the LT predicate on the "title" field.
+func TitleLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldTitle), v))
+	})
+}
+
+// TitleLTE applies the LTE predicate on the "title" field.
+func TitleLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldTitle), v))
+	})
+}
+
+// TitleContains applies the Contains predicate on the "title" field.
+func TitleContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldTitle), v))
+	})
+}
+
+// TitleHasPrefix applies the HasPrefix predicate on the "title" field.
+func TitleHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldTitle), v))
+	})
+}
+
+// TitleHasSuffix applies the HasSuffix predicate on the "title" field.
+func TitleHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldTitle), v))
+	})
+}
+
+// TitleEqualFold applies the EqualFold predicate on the "title" field.
+func TitleEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldTitle), v))
+	})
+}
+
+// TitleContainsFold applies the ContainsFold predicate on the "title" field.
+func TitleContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldTitle), v))
+	})
+}
+
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldDescription), v...))
+	})
+}
+
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldDescription), v...))
+	})
+}
+
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDescription), v))
+	})
+}
+
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDescription), v))
+	})
+}
+
+// ContentEQ applies the EQ predicate on the "content" field.
+func ContentEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContent), v))
+	})
+}
+
+// ContentNEQ applies the NEQ predicate on the "content" field.
+func ContentNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldContent), v))
+	})
+}
+
+// ContentIn applies the In predicate on the "content" field.
+func ContentIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldContent), v...))
+	})
+}
+
+// ContentNotIn applies the NotIn predicate on the "content" field.
+func ContentNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldContent), v...))
+	})
+}
+
+// ContentGT applies the GT predicate on the "content" field.
+func ContentGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldContent), v))
+	})
+}
+
+// ContentGTE applies the GTE predicate on the "content" field.
+func ContentGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldContent), v))
+	})
+}
+
+// ContentLT applies the LT predicate on the "content" field.
+func ContentLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldContent), v))
+	})
+}
+
+// ContentLTE applies the LTE predicate on the "content" field.
+func ContentLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldContent), v))
+	})
+}
+
+// ContentContains applies the Contains predicate on the "content" field.
+func ContentContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldContent), v))
+	})
+}
+
+// ContentHasPrefix applies the HasPrefix predicate on the "content" field.
+func ContentHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldContent), v))
+	})
+}
+
+// ContentHasSuffix applies the HasSuffix predicate on the "content" field.
+func ContentHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldContent), v))
+	})
+}
+
+// ContentEqualFold applies the EqualFold predicate on the "content" field.
+func ContentEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldContent), v))
+	})
+}
+
+// ContentContainsFold applies the ContainsFold predicate on the "content" field.
+func ContentContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldContent), v))
+	})
+}
+
+// URLEQ applies the EQ predicate on the "url" field.
+func URLEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldURL), v))
+	})
+}
+
+// URLNEQ applies the NEQ predicate on the "url" field.
+func URLNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldURL), v))
+	})
+}
+
+// URLIn applies the In predicate on the "url" field.
+func URLIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldURL), v...))
+	})
+}
+
+// URLNotIn applies the NotIn predicate on the "url" field.
+func URLNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldURL), v...))
+	})
+}
+
+// URLGT applies the GT predicate on the "url" field.
+func URLGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldURL), v))
+	})
+}
+
+// URLGTE applies the GTE predicate on the "url" field.
+func URLGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldURL), v))
+	})
+}
+
+// URLLT applies the LT predicate on the "url" field.
+func URLLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldURL), v))
+	})
+}
+
+// URLLTE applies the LTE predicate on the "url" field.
+func URLLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldURL), v))
+	})
+}
+
+// URLContains applies the Contains predicate on the "url" field.
+func URLContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldURL), v))
+	})
+}
+
+// URLHasPrefix applies the HasPrefix predicate on the "url" field.
+func URLHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldURL), v))
+	})
+}
+
+// URLHasSuffix applies the HasSuffix predicate on the "url" field.
+func URLHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldURL), v))
+	})
+}
+
+// URLEqualFold applies the EqualFold predicate on the "url" field.
+func URLEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldURL), v))
+	})
+}
+
+// URLContainsFold applies the ContainsFold predicate on the "url" field.
+func URLContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldURL), v))
+	})
+}
+
+// AuthorEQ applies the EQ predicate on the "author" field.
+func AuthorEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorNEQ applies the NEQ predicate on the "author" field.
+func AuthorNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorIn applies the In predicate on the "author" field.
+func AuthorIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldAuthor), v...))
+	})
+}
+
+// AuthorNotIn applies the NotIn predicate on the "author" field.
+func AuthorNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldAuthor), v...))
+	})
+}
+
+// AuthorGT applies the GT predicate on the "author" field.
+func AuthorGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorGTE applies the GTE predicate on the "author" field.
+func AuthorGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorLT applies the LT predicate on the "author" field.
+func AuthorLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorLTE applies the LTE predicate on the "author" field.
+func AuthorLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorContains applies the Contains predicate on the "author" field.
+func AuthorContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorHasPrefix applies the HasPrefix predicate on the "author" field.
+func AuthorHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorHasSuffix applies the HasSuffix predicate on the "author" field.
+func AuthorHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorEqualFold applies the EqualFold predicate on the "author" field.
+func AuthorEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldAuthor), v))
+	})
+}
+
+// AuthorContainsFold applies the ContainsFold predicate on the "author" field.
+func AuthorContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldAuthor), v))
+	})
+}
+
+// ImageEQ applies the EQ predicate on the "image" field.
+func ImageEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldImage), v))
+	})
+}
+
+// ImageNEQ applies the NEQ predicate on the "image" field.
+func ImageNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldImage), v))
+	})
+}
+
+// ImageIn applies the In predicate on the "image" field.
+func ImageIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldImage), v...))
+	})
+}
+
+// ImageNotIn applies the NotIn predicate on the "image" field.
+func ImageNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldImage), v...))
+	})
+}
+
+// ImageGT applies the GT predicate on the "image" field.
+func ImageGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldImage), v))
+	})
+}
+
+// ImageGTE applies the GTE predicate on the "image" field.
+func ImageGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldImage), v))
+	})
+}
+
+// ImageLT applies the LT predicate on the "image" field.
+func ImageLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldImage), v))
+	})
+}
+
+// ImageLTE applies the LTE predicate on the "image" field.
+func ImageLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldImage), v))
+	})
+}
+
+// ImageContains applies the Contains predicate on the "image" field.
+func ImageContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldImage), v))
+	})
+}
+
+// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
+func ImageHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldImage), v))
+	})
+}
+
+// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
+func ImageHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldImage), v))
+	})
+}
+
+// ImageEqualFold applies the EqualFold predicate on the "image" field.
+func ImageEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldImage), v))
+	})
+}
+
+// ImageContainsFold applies the ContainsFold predicate on the "image" field.
+func ImageContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldImage), v))
+	})
+}
+
+// CategoriesEQ applies the EQ predicate on the "categories" field.
+func CategoriesEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesNEQ applies the NEQ predicate on the "categories" field.
+func CategoriesNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesIn applies the In predicate on the "categories" field.
+func CategoriesIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCategories), v...))
+	})
+}
+
+// CategoriesNotIn applies the NotIn predicate on the "categories" field.
+func CategoriesNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCategories), v...))
+	})
+}
+
+// CategoriesGT applies the GT predicate on the "categories" field.
+func CategoriesGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesGTE applies the GTE predicate on the "categories" field.
+func CategoriesGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesLT applies the LT predicate on the "categories" field.
+func CategoriesLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesLTE applies the LTE predicate on the "categories" field.
+func CategoriesLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesContains applies the Contains predicate on the "categories" field.
+func CategoriesContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesHasPrefix applies the HasPrefix predicate on the "categories" field.
+func CategoriesHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesHasSuffix applies the HasSuffix predicate on the "categories" field.
+func CategoriesHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesEqualFold applies the EqualFold predicate on the "categories" field.
+func CategoriesEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCategories), v))
+	})
+}
+
+// CategoriesContainsFold applies the ContainsFold predicate on the "categories" field.
+func CategoriesContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCategories), v))
+	})
+}
+
+// CrawledTitleEQ applies the EQ predicate on the "crawled_title" field.
+func CrawledTitleEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleNEQ applies the NEQ predicate on the "crawled_title" field.
+func CrawledTitleNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleIn applies the In predicate on the "crawled_title" field.
+func CrawledTitleIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledTitle), v...))
+	})
+}
+
+// CrawledTitleNotIn applies the NotIn predicate on the "crawled_title" field.
+func CrawledTitleNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledTitle), v...))
+	})
+}
+
+// CrawledTitleGT applies the GT predicate on the "crawled_title" field.
+func CrawledTitleGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleGTE applies the GTE predicate on the "crawled_title" field.
+func CrawledTitleGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleLT applies the LT predicate on the "crawled_title" field.
+func CrawledTitleLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleLTE applies the LTE predicate on the "crawled_title" field.
+func CrawledTitleLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleContains applies the Contains predicate on the "crawled_title" field.
+func CrawledTitleContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleHasPrefix applies the HasPrefix predicate on the "crawled_title" field.
+func CrawledTitleHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleHasSuffix applies the HasSuffix predicate on the "crawled_title" field.
+func CrawledTitleHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleEqualFold applies the EqualFold predicate on the "crawled_title" field.
+func CrawledTitleEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledTitleContainsFold applies the ContainsFold predicate on the "crawled_title" field.
+func CrawledTitleContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledTitle), v))
+	})
+}
+
+// CrawledAuthorEQ applies the EQ predicate on the "crawled_author" field.
+func CrawledAuthorEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorNEQ applies the NEQ predicate on the "crawled_author" field.
+func CrawledAuthorNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorIn applies the In predicate on the "crawled_author" field.
+func CrawledAuthorIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledAuthor), v...))
+	})
+}
+
+// CrawledAuthorNotIn applies the NotIn predicate on the "crawled_author" field.
+func CrawledAuthorNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledAuthor), v...))
+	})
+}
+
+// CrawledAuthorGT applies the GT predicate on the "crawled_author" field.
+func CrawledAuthorGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorGTE applies the GTE predicate on the "crawled_author" field.
+func CrawledAuthorGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorLT applies the LT predicate on the "crawled_author" field.
+func CrawledAuthorLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorLTE applies the LTE predicate on the "crawled_author" field.
+func CrawledAuthorLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorContains applies the Contains predicate on the "crawled_author" field.
+func CrawledAuthorContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorHasPrefix applies the HasPrefix predicate on the "crawled_author" field.
+func CrawledAuthorHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorHasSuffix applies the HasSuffix predicate on the "crawled_author" field.
+func CrawledAuthorHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorEqualFold applies the EqualFold predicate on the "crawled_author" field.
+func CrawledAuthorEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledAuthorContainsFold applies the ContainsFold predicate on the "crawled_author" field.
+func CrawledAuthorContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledAuthor), v))
+	})
+}
+
+// CrawledExcerptEQ applies the EQ predicate on the "crawled_excerpt" field.
+func CrawledExcerptEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptNEQ applies the NEQ predicate on the "crawled_excerpt" field.
+func CrawledExcerptNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptIn applies the In predicate on the "crawled_excerpt" field.
+func CrawledExcerptIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledExcerpt), v...))
+	})
+}
+
+// CrawledExcerptNotIn applies the NotIn predicate on the "crawled_excerpt" field.
+func CrawledExcerptNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledExcerpt), v...))
+	})
+}
+
+// CrawledExcerptGT applies the GT predicate on the "crawled_excerpt" field.
+func CrawledExcerptGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptGTE applies the GTE predicate on the "crawled_excerpt" field.
+func CrawledExcerptGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptLT applies the LT predicate on the "crawled_excerpt" field.
+func CrawledExcerptLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptLTE applies the LTE predicate on the "crawled_excerpt" field.
+func CrawledExcerptLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptContains applies the Contains predicate on the "crawled_excerpt" field.
+func CrawledExcerptContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptHasPrefix applies the HasPrefix predicate on the "crawled_excerpt" field.
+func CrawledExcerptHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptHasSuffix applies the HasSuffix predicate on the "crawled_excerpt" field.
+func CrawledExcerptHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptEqualFold applies the EqualFold predicate on the "crawled_excerpt" field.
+func CrawledExcerptEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledExcerptContainsFold applies the ContainsFold predicate on the "crawled_excerpt" field.
+func CrawledExcerptContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledExcerpt), v))
+	})
+}
+
+// CrawledSiteNameEQ applies the EQ predicate on the "crawled_site_name" field.
+func CrawledSiteNameEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameNEQ applies the NEQ predicate on the "crawled_site_name" field.
+func CrawledSiteNameNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameIn applies the In predicate on the "crawled_site_name" field.
+func CrawledSiteNameIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledSiteName), v...))
+	})
+}
+
+// CrawledSiteNameNotIn applies the NotIn predicate on the "crawled_site_name" field.
+func CrawledSiteNameNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledSiteName), v...))
+	})
+}
+
+// CrawledSiteNameGT applies the GT predicate on the "crawled_site_name" field.
+func CrawledSiteNameGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameGTE applies the GTE predicate on the "crawled_site_name" field.
+func CrawledSiteNameGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameLT applies the LT predicate on the "crawled_site_name" field.
+func CrawledSiteNameLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameLTE applies the LTE predicate on the "crawled_site_name" field.
+func CrawledSiteNameLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameContains applies the Contains predicate on the "crawled_site_name" field.
+func CrawledSiteNameContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameHasPrefix applies the HasPrefix predicate on the "crawled_site_name" field.
+func CrawledSiteNameHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameHasSuffix applies the HasSuffix predicate on the "crawled_site_name" field.
+func CrawledSiteNameHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameEqualFold applies the EqualFold predicate on the "crawled_site_name" field.
+func CrawledSiteNameEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledSiteNameContainsFold applies the ContainsFold predicate on the "crawled_site_name" field.
+func CrawledSiteNameContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledSiteName), v))
+	})
+}
+
+// CrawledImageEQ applies the EQ predicate on the "crawled_image" field.
+func CrawledImageEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageNEQ applies the NEQ predicate on the "crawled_image" field.
+func CrawledImageNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageIn applies the In predicate on the "crawled_image" field.
+func CrawledImageIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledImage), v...))
+	})
+}
+
+// CrawledImageNotIn applies the NotIn predicate on the "crawled_image" field.
+func CrawledImageNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledImage), v...))
+	})
+}
+
+// CrawledImageGT applies the GT predicate on the "crawled_image" field.
+func CrawledImageGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageGTE applies the GTE predicate on the "crawled_image" field.
+func CrawledImageGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageLT applies the LT predicate on the "crawled_image" field.
+func CrawledImageLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageLTE applies the LTE predicate on the "crawled_image" field.
+func CrawledImageLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageContains applies the Contains predicate on the "crawled_image" field.
+func CrawledImageContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageHasPrefix applies the HasPrefix predicate on the "crawled_image" field.
+func CrawledImageHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageHasSuffix applies the HasSuffix predicate on the "crawled_image" field.
+func CrawledImageHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageEqualFold applies the EqualFold predicate on the "crawled_image" field.
+func CrawledImageEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledImageContainsFold applies the ContainsFold predicate on the "crawled_image" field.
+func CrawledImageContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledImage), v))
+	})
+}
+
+// CrawledContentHTMLEQ applies the EQ predicate on the "crawled_content_html" field.
+func CrawledContentHTMLEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLNEQ applies the NEQ predicate on the "crawled_content_html" field.
+func CrawledContentHTMLNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLIn applies the In predicate on the "crawled_content_html" field.
+func CrawledContentHTMLIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledContentHTML), v...))
+	})
+}
+
+// CrawledContentHTMLNotIn applies the NotIn predicate on the "crawled_content_html" field.
+func CrawledContentHTMLNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledContentHTML), v...))
+	})
+}
+
+// CrawledContentHTMLGT applies the GT predicate on the "crawled_content_html" field.
+func CrawledContentHTMLGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLGTE applies the GTE predicate on the "crawled_content_html" field.
+func CrawledContentHTMLGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLLT applies the LT predicate on the "crawled_content_html" field.
+func CrawledContentHTMLLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLLTE applies the LTE predicate on the "crawled_content_html" field.
+func CrawledContentHTMLLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLContains applies the Contains predicate on the "crawled_content_html" field.
+func CrawledContentHTMLContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLHasPrefix applies the HasPrefix predicate on the "crawled_content_html" field.
+func CrawledContentHTMLHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLHasSuffix applies the HasSuffix predicate on the "crawled_content_html" field.
+func CrawledContentHTMLHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLEqualFold applies the EqualFold predicate on the "crawled_content_html" field.
+func CrawledContentHTMLEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentHTMLContainsFold applies the ContainsFold predicate on the "crawled_content_html" field.
+func CrawledContentHTMLContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledContentHTML), v))
+	})
+}
+
+// CrawledContentTextEQ applies the EQ predicate on the "crawled_content_text" field.
+func CrawledContentTextEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextNEQ applies the NEQ predicate on the "crawled_content_text" field.
+func CrawledContentTextNEQ(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextIn applies the In predicate on the "crawled_content_text" field.
+func CrawledContentTextIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCrawledContentText), v...))
+	})
+}
+
+// CrawledContentTextNotIn applies the NotIn predicate on the "crawled_content_text" field.
+func CrawledContentTextNotIn(vs ...string) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCrawledContentText), v...))
+	})
+}
+
+// CrawledContentTextGT applies the GT predicate on the "crawled_content_text" field.
+func CrawledContentTextGT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextGTE applies the GTE predicate on the "crawled_content_text" field.
+func CrawledContentTextGTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextLT applies the LT predicate on the "crawled_content_text" field.
+func CrawledContentTextLT(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextLTE applies the LTE predicate on the "crawled_content_text" field.
+func CrawledContentTextLTE(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextContains applies the Contains predicate on the "crawled_content_text" field.
+func CrawledContentTextContains(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextHasPrefix applies the HasPrefix predicate on the "crawled_content_text" field.
+func CrawledContentTextHasPrefix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextHasSuffix applies the HasSuffix predicate on the "crawled_content_text" field.
+func CrawledContentTextHasSuffix(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextEqualFold applies the EqualFold predicate on the "crawled_content_text" field.
+func CrawledContentTextEqualFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CrawledContentTextContainsFold applies the ContainsFold predicate on the "crawled_content_text" field.
+func CrawledContentTextContainsFold(v string) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldCrawledContentText), v))
+	})
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
+func UpdatedAtEQ(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtNEQ applies the NEQ predicate on the "updated_at" field.
+func UpdatedAtNEQ(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtIn applies the In predicate on the "updated_at" field.
+func UpdatedAtIn(vs ...time.Time) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUpdatedAt), v...))
+	})
+}
+
+// UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
+func UpdatedAtNotIn(vs ...time.Time) predicate.Item {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUpdatedAt), v...))
+	})
+}
+
+// UpdatedAtGT applies the GT predicate on the "updated_at" field.
+func UpdatedAtGT(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtGTE applies the GTE predicate on the "updated_at" field.
+func UpdatedAtGTE(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtLT applies the LT predicate on the "updated_at" field.
+func UpdatedAtLT(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
+func UpdatedAtLTE(v time.Time) predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUpdatedAt), v))
 	})
 }
 

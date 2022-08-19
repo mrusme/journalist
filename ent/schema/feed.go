@@ -1,11 +1,12 @@
 package schema
 
 import (
-	// "regexp"
+  "time"
+  "github.com/go-playground/validator/v10"
 
 	"entgo.io/ent"
-	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/edge"
+	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 )
 
@@ -16,10 +17,37 @@ type Feed struct {
 
 // Fields of the Feed.
 func (Feed) Fields() []ent.Field {
+  validate := validator.New()
+
   return []ent.Field{
     field.UUID("id", uuid.UUID{}).
-      Default(uuid.New).
-      StorageKey("oid"),
+      Default(uuid.New),
+      // StorageKey("oid"),
+    field.String("title"),
+    field.String("description"),
+    field.String("site_url").
+      Validate(func(s string) error {
+        return validate.Var(s, "required,url")
+      }),
+    field.String("feed_url").
+      Validate(func(s string) error {
+        return validate.Var(s, "required,url")
+      }),
+    field.String("author"),
+    field.String("language"),
+    field.String("image"),
+    field.String("copyright"),
+    field.String("generator"),
+    field.String("categories"),
+    field.Time("created_at").
+      Default(time.Now),
+    field.Time("updated_at").
+      Default(time.Now).
+      UpdateDefault(time.Now),
+    field.Time("deleted_at").
+      Default(nil).
+      Optional().
+      Nillable(),
   }
 }
 

@@ -4,7 +4,9 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -20,6 +22,118 @@ type ItemCreate struct {
 	config
 	mutation *ItemMutation
 	hooks    []Hook
+}
+
+// SetTitle sets the "title" field.
+func (ic *ItemCreate) SetTitle(s string) *ItemCreate {
+	ic.mutation.SetTitle(s)
+	return ic
+}
+
+// SetDescription sets the "description" field.
+func (ic *ItemCreate) SetDescription(s string) *ItemCreate {
+	ic.mutation.SetDescription(s)
+	return ic
+}
+
+// SetContent sets the "content" field.
+func (ic *ItemCreate) SetContent(s string) *ItemCreate {
+	ic.mutation.SetContent(s)
+	return ic
+}
+
+// SetURL sets the "url" field.
+func (ic *ItemCreate) SetURL(s string) *ItemCreate {
+	ic.mutation.SetURL(s)
+	return ic
+}
+
+// SetAuthor sets the "author" field.
+func (ic *ItemCreate) SetAuthor(s string) *ItemCreate {
+	ic.mutation.SetAuthor(s)
+	return ic
+}
+
+// SetImage sets the "image" field.
+func (ic *ItemCreate) SetImage(s string) *ItemCreate {
+	ic.mutation.SetImage(s)
+	return ic
+}
+
+// SetCategories sets the "categories" field.
+func (ic *ItemCreate) SetCategories(s string) *ItemCreate {
+	ic.mutation.SetCategories(s)
+	return ic
+}
+
+// SetCrawledTitle sets the "crawled_title" field.
+func (ic *ItemCreate) SetCrawledTitle(s string) *ItemCreate {
+	ic.mutation.SetCrawledTitle(s)
+	return ic
+}
+
+// SetCrawledAuthor sets the "crawled_author" field.
+func (ic *ItemCreate) SetCrawledAuthor(s string) *ItemCreate {
+	ic.mutation.SetCrawledAuthor(s)
+	return ic
+}
+
+// SetCrawledExcerpt sets the "crawled_excerpt" field.
+func (ic *ItemCreate) SetCrawledExcerpt(s string) *ItemCreate {
+	ic.mutation.SetCrawledExcerpt(s)
+	return ic
+}
+
+// SetCrawledSiteName sets the "crawled_site_name" field.
+func (ic *ItemCreate) SetCrawledSiteName(s string) *ItemCreate {
+	ic.mutation.SetCrawledSiteName(s)
+	return ic
+}
+
+// SetCrawledImage sets the "crawled_image" field.
+func (ic *ItemCreate) SetCrawledImage(s string) *ItemCreate {
+	ic.mutation.SetCrawledImage(s)
+	return ic
+}
+
+// SetCrawledContentHTML sets the "crawled_content_html" field.
+func (ic *ItemCreate) SetCrawledContentHTML(s string) *ItemCreate {
+	ic.mutation.SetCrawledContentHTML(s)
+	return ic
+}
+
+// SetCrawledContentText sets the "crawled_content_text" field.
+func (ic *ItemCreate) SetCrawledContentText(s string) *ItemCreate {
+	ic.mutation.SetCrawledContentText(s)
+	return ic
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (ic *ItemCreate) SetCreatedAt(t time.Time) *ItemCreate {
+	ic.mutation.SetCreatedAt(t)
+	return ic
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCreatedAt(t *time.Time) *ItemCreate {
+	if t != nil {
+		ic.SetCreatedAt(*t)
+	}
+	return ic
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (ic *ItemCreate) SetUpdatedAt(t time.Time) *ItemCreate {
+	ic.mutation.SetUpdatedAt(t)
+	return ic
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableUpdatedAt(t *time.Time) *ItemCreate {
+	if t != nil {
+		ic.SetUpdatedAt(*t)
+	}
+	return ic
 }
 
 // SetID sets the "id" field.
@@ -162,6 +276,14 @@ func (ic *ItemCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ic *ItemCreate) defaults() {
+	if _, ok := ic.mutation.CreatedAt(); !ok {
+		v := item.DefaultCreatedAt()
+		ic.mutation.SetCreatedAt(v)
+	}
+	if _, ok := ic.mutation.UpdatedAt(); !ok {
+		v := item.DefaultUpdatedAt()
+		ic.mutation.SetUpdatedAt(v)
+	}
 	if _, ok := ic.mutation.ID(); !ok {
 		v := item.DefaultID()
 		ic.mutation.SetID(v)
@@ -170,6 +292,59 @@ func (ic *ItemCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ic *ItemCreate) check() error {
+	if _, ok := ic.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Item.title"`)}
+	}
+	if _, ok := ic.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Item.description"`)}
+	}
+	if _, ok := ic.mutation.Content(); !ok {
+		return &ValidationError{Name: "content", err: errors.New(`ent: missing required field "Item.content"`)}
+	}
+	if _, ok := ic.mutation.URL(); !ok {
+		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Item.url"`)}
+	}
+	if v, ok := ic.mutation.URL(); ok {
+		if err := item.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Item.url": %w`, err)}
+		}
+	}
+	if _, ok := ic.mutation.Author(); !ok {
+		return &ValidationError{Name: "author", err: errors.New(`ent: missing required field "Item.author"`)}
+	}
+	if _, ok := ic.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Item.image"`)}
+	}
+	if _, ok := ic.mutation.Categories(); !ok {
+		return &ValidationError{Name: "categories", err: errors.New(`ent: missing required field "Item.categories"`)}
+	}
+	if _, ok := ic.mutation.CrawledTitle(); !ok {
+		return &ValidationError{Name: "crawled_title", err: errors.New(`ent: missing required field "Item.crawled_title"`)}
+	}
+	if _, ok := ic.mutation.CrawledAuthor(); !ok {
+		return &ValidationError{Name: "crawled_author", err: errors.New(`ent: missing required field "Item.crawled_author"`)}
+	}
+	if _, ok := ic.mutation.CrawledExcerpt(); !ok {
+		return &ValidationError{Name: "crawled_excerpt", err: errors.New(`ent: missing required field "Item.crawled_excerpt"`)}
+	}
+	if _, ok := ic.mutation.CrawledSiteName(); !ok {
+		return &ValidationError{Name: "crawled_site_name", err: errors.New(`ent: missing required field "Item.crawled_site_name"`)}
+	}
+	if _, ok := ic.mutation.CrawledImage(); !ok {
+		return &ValidationError{Name: "crawled_image", err: errors.New(`ent: missing required field "Item.crawled_image"`)}
+	}
+	if _, ok := ic.mutation.CrawledContentHTML(); !ok {
+		return &ValidationError{Name: "crawled_content_html", err: errors.New(`ent: missing required field "Item.crawled_content_html"`)}
+	}
+	if _, ok := ic.mutation.CrawledContentText(); !ok {
+		return &ValidationError{Name: "crawled_content_text", err: errors.New(`ent: missing required field "Item.crawled_content_text"`)}
+	}
+	if _, ok := ic.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Item.created_at"`)}
+	}
+	if _, ok := ic.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Item.updated_at"`)}
+	}
 	return nil
 }
 
@@ -205,6 +380,134 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 	if id, ok := ic.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := ic.mutation.Title(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldTitle,
+		})
+		_node.Title = value
+	}
+	if value, ok := ic.mutation.Description(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldDescription,
+		})
+		_node.Description = value
+	}
+	if value, ok := ic.mutation.Content(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldContent,
+		})
+		_node.Content = value
+	}
+	if value, ok := ic.mutation.URL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldURL,
+		})
+		_node.URL = value
+	}
+	if value, ok := ic.mutation.Author(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldAuthor,
+		})
+		_node.Author = value
+	}
+	if value, ok := ic.mutation.Image(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldImage,
+		})
+		_node.Image = value
+	}
+	if value, ok := ic.mutation.Categories(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCategories,
+		})
+		_node.Categories = value
+	}
+	if value, ok := ic.mutation.CrawledTitle(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledTitle,
+		})
+		_node.CrawledTitle = value
+	}
+	if value, ok := ic.mutation.CrawledAuthor(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledAuthor,
+		})
+		_node.CrawledAuthor = value
+	}
+	if value, ok := ic.mutation.CrawledExcerpt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledExcerpt,
+		})
+		_node.CrawledExcerpt = value
+	}
+	if value, ok := ic.mutation.CrawledSiteName(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledSiteName,
+		})
+		_node.CrawledSiteName = value
+	}
+	if value, ok := ic.mutation.CrawledImage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledImage,
+		})
+		_node.CrawledImage = value
+	}
+	if value, ok := ic.mutation.CrawledContentHTML(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentHTML,
+		})
+		_node.CrawledContentHTML = value
+	}
+	if value, ok := ic.mutation.CrawledContentText(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentText,
+		})
+		_node.CrawledContentText = value
+	}
+	if value, ok := ic.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := ic.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
 	}
 	if nodes := ic.mutation.FeedIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

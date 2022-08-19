@@ -3,6 +3,8 @@
 package subscription
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
@@ -94,6 +96,20 @@ func FeedID(v uuid.UUID) predicate.Subscription {
 	})
 }
 
+// Group applies equality check predicate on the "group" field. It's identical to GroupEQ.
+func Group(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGroup), v))
+	})
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v uuid.UUID) predicate.Subscription {
 	return predicate.Subscription(func(s *sql.Selector) {
@@ -163,6 +179,169 @@ func FeedIDNotIn(vs ...uuid.UUID) predicate.Subscription {
 	}
 	return predicate.Subscription(func(s *sql.Selector) {
 		s.Where(sql.NotIn(s.C(FieldFeedID), v...))
+	})
+}
+
+// GroupEQ applies the EQ predicate on the "group" field.
+func GroupEQ(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGroup), v))
+	})
+}
+
+// GroupNEQ applies the NEQ predicate on the "group" field.
+func GroupNEQ(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGroup), v))
+	})
+}
+
+// GroupIn applies the In predicate on the "group" field.
+func GroupIn(vs ...string) predicate.Subscription {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldGroup), v...))
+	})
+}
+
+// GroupNotIn applies the NotIn predicate on the "group" field.
+func GroupNotIn(vs ...string) predicate.Subscription {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldGroup), v...))
+	})
+}
+
+// GroupGT applies the GT predicate on the "group" field.
+func GroupGT(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGroup), v))
+	})
+}
+
+// GroupGTE applies the GTE predicate on the "group" field.
+func GroupGTE(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGroup), v))
+	})
+}
+
+// GroupLT applies the LT predicate on the "group" field.
+func GroupLT(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGroup), v))
+	})
+}
+
+// GroupLTE applies the LTE predicate on the "group" field.
+func GroupLTE(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGroup), v))
+	})
+}
+
+// GroupContains applies the Contains predicate on the "group" field.
+func GroupContains(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldGroup), v))
+	})
+}
+
+// GroupHasPrefix applies the HasPrefix predicate on the "group" field.
+func GroupHasPrefix(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldGroup), v))
+	})
+}
+
+// GroupHasSuffix applies the HasSuffix predicate on the "group" field.
+func GroupHasSuffix(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldGroup), v))
+	})
+}
+
+// GroupEqualFold applies the EqualFold predicate on the "group" field.
+func GroupEqualFold(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldGroup), v))
+	})
+}
+
+// GroupContainsFold applies the ContainsFold predicate on the "group" field.
+func GroupContainsFold(v string) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldGroup), v))
+	})
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.Subscription {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.Subscription {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.Subscription {
+	return predicate.Subscription(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
 	})
 }
 

@@ -1,7 +1,8 @@
 package schema
 
 import (
-	// "regexp"
+  "time"
+  "github.com/go-playground/validator/v10"
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
@@ -16,12 +17,20 @@ type Subscription struct {
 
 // Fields of the Subscription.
 func (Subscription) Fields() []ent.Field {
+  validate := validator.New()
+
   return []ent.Field{
     field.UUID("id", uuid.UUID{}).
-      Default(uuid.New).
-      StorageKey("oid"),
+      Default(uuid.New),
+      // StorageKey("oid"),
     field.UUID("user_id", uuid.UUID{}),
     field.UUID("feed_id", uuid.UUID{}),
+    field.String("group").
+      Validate(func(s string) error {
+        return validate.Var(s, "required,alphanum,lt=32")
+      }),
+    field.Time("created_at").
+      Default(time.Now),
   }
 }
 

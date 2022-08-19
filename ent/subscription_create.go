@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -31,6 +32,26 @@ func (sc *SubscriptionCreate) SetUserID(u uuid.UUID) *SubscriptionCreate {
 // SetFeedID sets the "feed_id" field.
 func (sc *SubscriptionCreate) SetFeedID(u uuid.UUID) *SubscriptionCreate {
 	sc.mutation.SetFeedID(u)
+	return sc
+}
+
+// SetGroup sets the "group" field.
+func (sc *SubscriptionCreate) SetGroup(s string) *SubscriptionCreate {
+	sc.mutation.SetGroup(s)
+	return sc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (sc *SubscriptionCreate) SetCreatedAt(t time.Time) *SubscriptionCreate {
+	sc.mutation.SetCreatedAt(t)
+	return sc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (sc *SubscriptionCreate) SetNillableCreatedAt(t *time.Time) *SubscriptionCreate {
+	if t != nil {
+		sc.SetCreatedAt(*t)
+	}
 	return sc
 }
 
@@ -135,6 +156,10 @@ func (sc *SubscriptionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (sc *SubscriptionCreate) defaults() {
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		v := subscription.DefaultCreatedAt()
+		sc.mutation.SetCreatedAt(v)
+	}
 	if _, ok := sc.mutation.ID(); !ok {
 		v := subscription.DefaultID()
 		sc.mutation.SetID(v)
@@ -148,6 +173,17 @@ func (sc *SubscriptionCreate) check() error {
 	}
 	if _, ok := sc.mutation.FeedID(); !ok {
 		return &ValidationError{Name: "feed_id", err: errors.New(`ent: missing required field "Subscription.feed_id"`)}
+	}
+	if _, ok := sc.mutation.Group(); !ok {
+		return &ValidationError{Name: "group", err: errors.New(`ent: missing required field "Subscription.group"`)}
+	}
+	if v, ok := sc.mutation.Group(); ok {
+		if err := subscription.GroupValidator(v); err != nil {
+			return &ValidationError{Name: "group", err: fmt.Errorf(`ent: validator failed for field "Subscription.group": %w`, err)}
+		}
+	}
+	if _, ok := sc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Subscription.created_at"`)}
 	}
 	if _, ok := sc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Subscription.user"`)}
@@ -190,6 +226,22 @@ func (sc *SubscriptionCreate) createSpec() (*Subscription, *sqlgraph.CreateSpec)
 	if id, ok := sc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := sc.mutation.Group(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldGroup,
+		})
+		_node.Group = value
+	}
+	if value, ok := sc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: subscription.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
 	}
 	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

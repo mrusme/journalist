@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -28,6 +29,110 @@ type ItemUpdate struct {
 // Where appends a list predicates to the ItemUpdate builder.
 func (iu *ItemUpdate) Where(ps ...predicate.Item) *ItemUpdate {
 	iu.mutation.Where(ps...)
+	return iu
+}
+
+// SetTitle sets the "title" field.
+func (iu *ItemUpdate) SetTitle(s string) *ItemUpdate {
+	iu.mutation.SetTitle(s)
+	return iu
+}
+
+// SetDescription sets the "description" field.
+func (iu *ItemUpdate) SetDescription(s string) *ItemUpdate {
+	iu.mutation.SetDescription(s)
+	return iu
+}
+
+// SetContent sets the "content" field.
+func (iu *ItemUpdate) SetContent(s string) *ItemUpdate {
+	iu.mutation.SetContent(s)
+	return iu
+}
+
+// SetURL sets the "url" field.
+func (iu *ItemUpdate) SetURL(s string) *ItemUpdate {
+	iu.mutation.SetURL(s)
+	return iu
+}
+
+// SetAuthor sets the "author" field.
+func (iu *ItemUpdate) SetAuthor(s string) *ItemUpdate {
+	iu.mutation.SetAuthor(s)
+	return iu
+}
+
+// SetImage sets the "image" field.
+func (iu *ItemUpdate) SetImage(s string) *ItemUpdate {
+	iu.mutation.SetImage(s)
+	return iu
+}
+
+// SetCategories sets the "categories" field.
+func (iu *ItemUpdate) SetCategories(s string) *ItemUpdate {
+	iu.mutation.SetCategories(s)
+	return iu
+}
+
+// SetCrawledTitle sets the "crawled_title" field.
+func (iu *ItemUpdate) SetCrawledTitle(s string) *ItemUpdate {
+	iu.mutation.SetCrawledTitle(s)
+	return iu
+}
+
+// SetCrawledAuthor sets the "crawled_author" field.
+func (iu *ItemUpdate) SetCrawledAuthor(s string) *ItemUpdate {
+	iu.mutation.SetCrawledAuthor(s)
+	return iu
+}
+
+// SetCrawledExcerpt sets the "crawled_excerpt" field.
+func (iu *ItemUpdate) SetCrawledExcerpt(s string) *ItemUpdate {
+	iu.mutation.SetCrawledExcerpt(s)
+	return iu
+}
+
+// SetCrawledSiteName sets the "crawled_site_name" field.
+func (iu *ItemUpdate) SetCrawledSiteName(s string) *ItemUpdate {
+	iu.mutation.SetCrawledSiteName(s)
+	return iu
+}
+
+// SetCrawledImage sets the "crawled_image" field.
+func (iu *ItemUpdate) SetCrawledImage(s string) *ItemUpdate {
+	iu.mutation.SetCrawledImage(s)
+	return iu
+}
+
+// SetCrawledContentHTML sets the "crawled_content_html" field.
+func (iu *ItemUpdate) SetCrawledContentHTML(s string) *ItemUpdate {
+	iu.mutation.SetCrawledContentHTML(s)
+	return iu
+}
+
+// SetCrawledContentText sets the "crawled_content_text" field.
+func (iu *ItemUpdate) SetCrawledContentText(s string) *ItemUpdate {
+	iu.mutation.SetCrawledContentText(s)
+	return iu
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (iu *ItemUpdate) SetCreatedAt(t time.Time) *ItemUpdate {
+	iu.mutation.SetCreatedAt(t)
+	return iu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCreatedAt(t *time.Time) *ItemUpdate {
+	if t != nil {
+		iu.SetCreatedAt(*t)
+	}
+	return iu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (iu *ItemUpdate) SetUpdatedAt(t time.Time) *ItemUpdate {
+	iu.mutation.SetUpdatedAt(t)
 	return iu
 }
 
@@ -139,13 +244,20 @@ func (iu *ItemUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	iu.defaults()
 	if len(iu.hooks) == 0 {
+		if err = iu.check(); err != nil {
+			return 0, err
+		}
 		affected, err = iu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ItemMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = iu.check(); err != nil {
+				return 0, err
 			}
 			iu.mutation = mutation
 			affected, err = iu.sqlSave(ctx)
@@ -187,6 +299,24 @@ func (iu *ItemUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (iu *ItemUpdate) defaults() {
+	if _, ok := iu.mutation.UpdatedAt(); !ok {
+		v := item.UpdateDefaultUpdatedAt()
+		iu.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (iu *ItemUpdate) check() error {
+	if v, ok := iu.mutation.URL(); ok {
+		if err := item.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Item.url": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -204,6 +334,118 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := iu.mutation.Title(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldTitle,
+		})
+	}
+	if value, ok := iu.mutation.Description(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldDescription,
+		})
+	}
+	if value, ok := iu.mutation.Content(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldContent,
+		})
+	}
+	if value, ok := iu.mutation.URL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldURL,
+		})
+	}
+	if value, ok := iu.mutation.Author(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldAuthor,
+		})
+	}
+	if value, ok := iu.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldImage,
+		})
+	}
+	if value, ok := iu.mutation.Categories(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCategories,
+		})
+	}
+	if value, ok := iu.mutation.CrawledTitle(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledTitle,
+		})
+	}
+	if value, ok := iu.mutation.CrawledAuthor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledAuthor,
+		})
+	}
+	if value, ok := iu.mutation.CrawledExcerpt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledExcerpt,
+		})
+	}
+	if value, ok := iu.mutation.CrawledSiteName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledSiteName,
+		})
+	}
+	if value, ok := iu.mutation.CrawledImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledImage,
+		})
+	}
+	if value, ok := iu.mutation.CrawledContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentHTML,
+		})
+	}
+	if value, ok := iu.mutation.CrawledContentText(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentText,
+		})
+	}
+	if value, ok := iu.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldCreatedAt,
+		})
+	}
+	if value, ok := iu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldUpdatedAt,
+		})
 	}
 	if iu.mutation.FeedCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -388,6 +630,110 @@ type ItemUpdateOne struct {
 	mutation *ItemMutation
 }
 
+// SetTitle sets the "title" field.
+func (iuo *ItemUpdateOne) SetTitle(s string) *ItemUpdateOne {
+	iuo.mutation.SetTitle(s)
+	return iuo
+}
+
+// SetDescription sets the "description" field.
+func (iuo *ItemUpdateOne) SetDescription(s string) *ItemUpdateOne {
+	iuo.mutation.SetDescription(s)
+	return iuo
+}
+
+// SetContent sets the "content" field.
+func (iuo *ItemUpdateOne) SetContent(s string) *ItemUpdateOne {
+	iuo.mutation.SetContent(s)
+	return iuo
+}
+
+// SetURL sets the "url" field.
+func (iuo *ItemUpdateOne) SetURL(s string) *ItemUpdateOne {
+	iuo.mutation.SetURL(s)
+	return iuo
+}
+
+// SetAuthor sets the "author" field.
+func (iuo *ItemUpdateOne) SetAuthor(s string) *ItemUpdateOne {
+	iuo.mutation.SetAuthor(s)
+	return iuo
+}
+
+// SetImage sets the "image" field.
+func (iuo *ItemUpdateOne) SetImage(s string) *ItemUpdateOne {
+	iuo.mutation.SetImage(s)
+	return iuo
+}
+
+// SetCategories sets the "categories" field.
+func (iuo *ItemUpdateOne) SetCategories(s string) *ItemUpdateOne {
+	iuo.mutation.SetCategories(s)
+	return iuo
+}
+
+// SetCrawledTitle sets the "crawled_title" field.
+func (iuo *ItemUpdateOne) SetCrawledTitle(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledTitle(s)
+	return iuo
+}
+
+// SetCrawledAuthor sets the "crawled_author" field.
+func (iuo *ItemUpdateOne) SetCrawledAuthor(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledAuthor(s)
+	return iuo
+}
+
+// SetCrawledExcerpt sets the "crawled_excerpt" field.
+func (iuo *ItemUpdateOne) SetCrawledExcerpt(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledExcerpt(s)
+	return iuo
+}
+
+// SetCrawledSiteName sets the "crawled_site_name" field.
+func (iuo *ItemUpdateOne) SetCrawledSiteName(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledSiteName(s)
+	return iuo
+}
+
+// SetCrawledImage sets the "crawled_image" field.
+func (iuo *ItemUpdateOne) SetCrawledImage(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledImage(s)
+	return iuo
+}
+
+// SetCrawledContentHTML sets the "crawled_content_html" field.
+func (iuo *ItemUpdateOne) SetCrawledContentHTML(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledContentHTML(s)
+	return iuo
+}
+
+// SetCrawledContentText sets the "crawled_content_text" field.
+func (iuo *ItemUpdateOne) SetCrawledContentText(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawledContentText(s)
+	return iuo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (iuo *ItemUpdateOne) SetCreatedAt(t time.Time) *ItemUpdateOne {
+	iuo.mutation.SetCreatedAt(t)
+	return iuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCreatedAt(t *time.Time) *ItemUpdateOne {
+	if t != nil {
+		iuo.SetCreatedAt(*t)
+	}
+	return iuo
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (iuo *ItemUpdateOne) SetUpdatedAt(t time.Time) *ItemUpdateOne {
+	iuo.mutation.SetUpdatedAt(t)
+	return iuo
+}
+
 // SetFeedID sets the "feed" edge to the Feed entity by ID.
 func (iuo *ItemUpdateOne) SetFeedID(id uuid.UUID) *ItemUpdateOne {
 	iuo.mutation.SetFeedID(id)
@@ -503,13 +849,20 @@ func (iuo *ItemUpdateOne) Save(ctx context.Context) (*Item, error) {
 		err  error
 		node *Item
 	)
+	iuo.defaults()
 	if len(iuo.hooks) == 0 {
+		if err = iuo.check(); err != nil {
+			return nil, err
+		}
 		node, err = iuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*ItemMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = iuo.check(); err != nil {
+				return nil, err
 			}
 			iuo.mutation = mutation
 			node, err = iuo.sqlSave(ctx)
@@ -557,6 +910,24 @@ func (iuo *ItemUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (iuo *ItemUpdateOne) defaults() {
+	if _, ok := iuo.mutation.UpdatedAt(); !ok {
+		v := item.UpdateDefaultUpdatedAt()
+		iuo.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (iuo *ItemUpdateOne) check() error {
+	if v, ok := iuo.mutation.URL(); ok {
+		if err := item.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Item.url": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -591,6 +962,118 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := iuo.mutation.Title(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldTitle,
+		})
+	}
+	if value, ok := iuo.mutation.Description(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldDescription,
+		})
+	}
+	if value, ok := iuo.mutation.Content(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldContent,
+		})
+	}
+	if value, ok := iuo.mutation.URL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldURL,
+		})
+	}
+	if value, ok := iuo.mutation.Author(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldAuthor,
+		})
+	}
+	if value, ok := iuo.mutation.Image(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldImage,
+		})
+	}
+	if value, ok := iuo.mutation.Categories(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCategories,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledTitle(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledTitle,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledAuthor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledAuthor,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledExcerpt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledExcerpt,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledSiteName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledSiteName,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledImage,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentHTML,
+		})
+	}
+	if value, ok := iuo.mutation.CrawledContentText(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawledContentText,
+		})
+	}
+	if value, ok := iuo.mutation.CreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldCreatedAt,
+		})
+	}
+	if value, ok := iuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: item.FieldUpdatedAt,
+		})
 	}
 	if iuo.mutation.FeedCleared() {
 		edge := &sqlgraph.EdgeSpec{

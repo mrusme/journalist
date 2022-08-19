@@ -3,6 +3,8 @@
 package read
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -10,11 +12,13 @@ const (
 	// Label holds the string label denoting the read type in the database.
 	Label = "read"
 	// FieldID holds the string denoting the id field in the database.
-	FieldID = "oid"
+	FieldID = "id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// FieldItemID holds the string denoting the item_id field in the database.
 	FieldItemID = "item_id"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgeItem holds the string denoting the item edge name in mutations.
@@ -42,6 +46,7 @@ var Columns = []string{
 	FieldID,
 	FieldUserID,
 	FieldItemID,
+	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -55,6 +60,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

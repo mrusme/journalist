@@ -10,7 +10,20 @@ import (
 var (
 	// FeedsColumns holds the columns for the "feeds" table.
 	FeedsColumns = []*schema.Column{
-		{Name: "oid", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "title", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+		{Name: "site_url", Type: field.TypeString},
+		{Name: "feed_url", Type: field.TypeString},
+		{Name: "author", Type: field.TypeString},
+		{Name: "language", Type: field.TypeString},
+		{Name: "image", Type: field.TypeString},
+		{Name: "copyright", Type: field.TypeString},
+		{Name: "generator", Type: field.TypeString},
+		{Name: "categories", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 	}
 	// FeedsTable holds the schema information for the "feeds" table.
 	FeedsTable = &schema.Table{
@@ -20,7 +33,23 @@ var (
 	}
 	// ItemsColumns holds the columns for the "items" table.
 	ItemsColumns = []*schema.Column{
-		{Name: "oid", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "title", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString},
+		{Name: "content", Type: field.TypeString},
+		{Name: "url", Type: field.TypeString},
+		{Name: "author", Type: field.TypeString},
+		{Name: "image", Type: field.TypeString},
+		{Name: "categories", Type: field.TypeString},
+		{Name: "crawled_title", Type: field.TypeString},
+		{Name: "crawled_author", Type: field.TypeString},
+		{Name: "crawled_excerpt", Type: field.TypeString},
+		{Name: "crawled_site_name", Type: field.TypeString},
+		{Name: "crawled_image", Type: field.TypeString},
+		{Name: "crawled_content_html", Type: field.TypeString},
+		{Name: "crawled_content_text", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "feed_items", Type: field.TypeUUID, Nullable: true},
 	}
 	// ItemsTable holds the schema information for the "items" table.
@@ -31,7 +60,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "items_feeds_items",
-				Columns:    []*schema.Column{ItemsColumns[1]},
+				Columns:    []*schema.Column{ItemsColumns[17]},
 				RefColumns: []*schema.Column{FeedsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -39,7 +68,8 @@ var (
 	}
 	// ReadsColumns holds the columns for the "reads" table.
 	ReadsColumns = []*schema.Column{
-		{Name: "oid", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "item_id", Type: field.TypeUUID},
 	}
@@ -51,13 +81,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "reads_users_user",
-				Columns:    []*schema.Column{ReadsColumns[1]},
+				Columns:    []*schema.Column{ReadsColumns[2]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "reads_items_item",
-				Columns:    []*schema.Column{ReadsColumns[2]},
+				Columns:    []*schema.Column{ReadsColumns[3]},
 				RefColumns: []*schema.Column{ItemsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -66,13 +96,15 @@ var (
 			{
 				Name:    "read_user_id_item_id",
 				Unique:  true,
-				Columns: []*schema.Column{ReadsColumns[1], ReadsColumns[2]},
+				Columns: []*schema.Column{ReadsColumns[2], ReadsColumns[3]},
 			},
 		},
 	}
 	// SubscriptionsColumns holds the columns for the "subscriptions" table.
 	SubscriptionsColumns = []*schema.Column{
-		{Name: "oid", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "group", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "feed_id", Type: field.TypeUUID},
 	}
@@ -84,13 +116,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "subscriptions_users_user",
-				Columns:    []*schema.Column{SubscriptionsColumns[1]},
+				Columns:    []*schema.Column{SubscriptionsColumns[3]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "subscriptions_feeds_feed",
-				Columns:    []*schema.Column{SubscriptionsColumns[2]},
+				Columns:    []*schema.Column{SubscriptionsColumns[4]},
 				RefColumns: []*schema.Column{FeedsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -99,16 +131,19 @@ var (
 			{
 				Name:    "subscription_user_id_feed_id",
 				Unique:  true,
-				Columns: []*schema.Column{SubscriptionsColumns[1], SubscriptionsColumns[2]},
+				Columns: []*schema.Column{SubscriptionsColumns[3], SubscriptionsColumns[4]},
 			},
 		},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "oid", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeUUID},
 		{Name: "username", Type: field.TypeString, Unique: true},
 		{Name: "password", Type: field.TypeString},
 		{Name: "role", Type: field.TypeString, Default: "user"},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

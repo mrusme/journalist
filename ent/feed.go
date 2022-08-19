@@ -5,16 +5,44 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/feed"
 )
 
 // Feed is the model entity for the Feed schema.
 type Feed struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// Title holds the value of the "title" field.
+	Title string `json:"title,omitempty"`
+	// Description holds the value of the "description" field.
+	Description string `json:"description,omitempty"`
+	// SiteURL holds the value of the "site_url" field.
+	SiteURL string `json:"site_url,omitempty"`
+	// FeedURL holds the value of the "feed_url" field.
+	FeedURL string `json:"feed_url,omitempty"`
+	// Author holds the value of the "author" field.
+	Author string `json:"author,omitempty"`
+	// Language holds the value of the "language" field.
+	Language string `json:"language,omitempty"`
+	// Image holds the value of the "image" field.
+	Image string `json:"image,omitempty"`
+	// Copyright holds the value of the "copyright" field.
+	Copyright string `json:"copyright,omitempty"`
+	// Generator holds the value of the "generator" field.
+	Generator string `json:"generator,omitempty"`
+	// Categories holds the value of the "categories" field.
+	Categories string `json:"categories,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FeedQuery when eager-loading is set.
 	Edges FeedEdges `json:"edges"`
@@ -65,6 +93,10 @@ func (*Feed) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case feed.FieldTitle, feed.FieldDescription, feed.FieldSiteURL, feed.FieldFeedURL, feed.FieldAuthor, feed.FieldLanguage, feed.FieldImage, feed.FieldCopyright, feed.FieldGenerator, feed.FieldCategories:
+			values[i] = new(sql.NullString)
+		case feed.FieldCreatedAt, feed.FieldUpdatedAt, feed.FieldDeletedAt:
+			values[i] = new(sql.NullTime)
 		case feed.FieldID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -87,6 +119,85 @@ func (f *Feed) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				f.ID = *value
+			}
+		case feed.FieldTitle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field title", values[i])
+			} else if value.Valid {
+				f.Title = value.String
+			}
+		case feed.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				f.Description = value.String
+			}
+		case feed.FieldSiteURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field site_url", values[i])
+			} else if value.Valid {
+				f.SiteURL = value.String
+			}
+		case feed.FieldFeedURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_url", values[i])
+			} else if value.Valid {
+				f.FeedURL = value.String
+			}
+		case feed.FieldAuthor:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field author", values[i])
+			} else if value.Valid {
+				f.Author = value.String
+			}
+		case feed.FieldLanguage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field language", values[i])
+			} else if value.Valid {
+				f.Language = value.String
+			}
+		case feed.FieldImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field image", values[i])
+			} else if value.Valid {
+				f.Image = value.String
+			}
+		case feed.FieldCopyright:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field copyright", values[i])
+			} else if value.Valid {
+				f.Copyright = value.String
+			}
+		case feed.FieldGenerator:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field generator", values[i])
+			} else if value.Valid {
+				f.Generator = value.String
+			}
+		case feed.FieldCategories:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field categories", values[i])
+			} else if value.Valid {
+				f.Categories = value.String
+			}
+		case feed.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				f.CreatedAt = value.Time
+			}
+		case feed.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				f.UpdatedAt = value.Time
+			}
+		case feed.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				f.DeletedAt = new(time.Time)
+				*f.DeletedAt = value.Time
 			}
 		}
 	}
@@ -130,7 +241,47 @@ func (f *Feed) Unwrap() *Feed {
 func (f *Feed) String() string {
 	var builder strings.Builder
 	builder.WriteString("Feed(")
-	builder.WriteString(fmt.Sprintf("id=%v", f.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", f.ID))
+	builder.WriteString("title=")
+	builder.WriteString(f.Title)
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(f.Description)
+	builder.WriteString(", ")
+	builder.WriteString("site_url=")
+	builder.WriteString(f.SiteURL)
+	builder.WriteString(", ")
+	builder.WriteString("feed_url=")
+	builder.WriteString(f.FeedURL)
+	builder.WriteString(", ")
+	builder.WriteString("author=")
+	builder.WriteString(f.Author)
+	builder.WriteString(", ")
+	builder.WriteString("language=")
+	builder.WriteString(f.Language)
+	builder.WriteString(", ")
+	builder.WriteString("image=")
+	builder.WriteString(f.Image)
+	builder.WriteString(", ")
+	builder.WriteString("copyright=")
+	builder.WriteString(f.Copyright)
+	builder.WriteString(", ")
+	builder.WriteString("generator=")
+	builder.WriteString(f.Generator)
+	builder.WriteString(", ")
+	builder.WriteString("categories=")
+	builder.WriteString(f.Categories)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(f.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("updated_at=")
+	builder.WriteString(f.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := f.DeletedAt; v != nil {
+		builder.WriteString("deleted_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

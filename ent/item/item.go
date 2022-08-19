@@ -3,6 +3,8 @@
 package item
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -10,7 +12,39 @@ const (
 	// Label holds the string label denoting the item type in the database.
 	Label = "item"
 	// FieldID holds the string denoting the id field in the database.
-	FieldID = "oid"
+	FieldID = "id"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
+	// FieldContent holds the string denoting the content field in the database.
+	FieldContent = "content"
+	// FieldURL holds the string denoting the url field in the database.
+	FieldURL = "url"
+	// FieldAuthor holds the string denoting the author field in the database.
+	FieldAuthor = "author"
+	// FieldImage holds the string denoting the image field in the database.
+	FieldImage = "image"
+	// FieldCategories holds the string denoting the categories field in the database.
+	FieldCategories = "categories"
+	// FieldCrawledTitle holds the string denoting the crawled_title field in the database.
+	FieldCrawledTitle = "crawled_title"
+	// FieldCrawledAuthor holds the string denoting the crawled_author field in the database.
+	FieldCrawledAuthor = "crawled_author"
+	// FieldCrawledExcerpt holds the string denoting the crawled_excerpt field in the database.
+	FieldCrawledExcerpt = "crawled_excerpt"
+	// FieldCrawledSiteName holds the string denoting the crawled_site_name field in the database.
+	FieldCrawledSiteName = "crawled_site_name"
+	// FieldCrawledImage holds the string denoting the crawled_image field in the database.
+	FieldCrawledImage = "crawled_image"
+	// FieldCrawledContentHTML holds the string denoting the crawled_content_html field in the database.
+	FieldCrawledContentHTML = "crawled_content_html"
+	// FieldCrawledContentText holds the string denoting the crawled_content_text field in the database.
+	FieldCrawledContentText = "crawled_content_text"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 	// EdgeFeed holds the string denoting the feed edge name in mutations.
 	EdgeFeed = "feed"
 	// EdgeReadByUsers holds the string denoting the read_by_users edge name in mutations.
@@ -43,6 +77,22 @@ const (
 // Columns holds all SQL columns for item fields.
 var Columns = []string{
 	FieldID,
+	FieldTitle,
+	FieldDescription,
+	FieldContent,
+	FieldURL,
+	FieldAuthor,
+	FieldImage,
+	FieldCategories,
+	FieldCrawledTitle,
+	FieldCrawledAuthor,
+	FieldCrawledExcerpt,
+	FieldCrawledSiteName,
+	FieldCrawledImage,
+	FieldCrawledContentHTML,
+	FieldCrawledContentText,
+	FieldCreatedAt,
+	FieldUpdatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "items"
@@ -73,6 +123,14 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// URLValidator is a validator for the "url" field. It is called by the builders before save.
+	URLValidator func(string) error
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
