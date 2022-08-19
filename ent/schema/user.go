@@ -26,7 +26,7 @@ func (User) Fields() []ent.Field {
       // StorageKey("oid"),
     field.String("username").
       Validate(func(s string) error {
-        return validate.Var(s, "required,alphanum,lt=32")
+        return validate.Var(s, "required,alphanum,max=32")
       }).
       Unique(),
     field.String("password").

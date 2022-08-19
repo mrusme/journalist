@@ -27,7 +27,7 @@ func (Subscription) Fields() []ent.Field {
     field.UUID("feed_id", uuid.UUID{}),
     field.String("group").
       Validate(func(s string) error {
-        return validate.Var(s, "required,alphanum,lt=32")
+        return validate.Var(s, "required,alphanum,max=32")
       }),
     field.Time("created_at").
       Default(time.Now),

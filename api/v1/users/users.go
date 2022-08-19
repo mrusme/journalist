@@ -16,9 +16,14 @@ type UserShowModel struct {
 }
 
 type UserCreateModel struct {
-  Username          string        `json:"username"`
-  Password          string        `json:"password"`
-  Role              string        `json:"role"`
+  Username          string        `json:"username",validate:"required,alphanum,max=32"`
+  Password          string        `json:"password",validate:"required"`
+  Role              string        `json:"role",validate:"required"`
+}
+
+type UserUpdateModel struct {
+  Password          string        `json:"password",validate:""`
+  Role              string        `json:"role",validate:""`
 }
 
 func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
@@ -29,7 +34,7 @@ func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
   usersRouter.Get("/", endpoint.List)
   usersRouter.Get("/:id", endpoint.Show)
   usersRouter.Post("/", endpoint.Create)
-  // usersRouter.Put("/:id", endpoint.Update)
+  usersRouter.Put("/:id", endpoint.Update)
   // usersRouter.Delete("/:id", endpoint.Destroy)
 }
 
