@@ -22,7 +22,7 @@ type UserCreateModel struct {
 }
 
 type UserUpdateModel struct {
-  Password          string        `json:"password",validate:""`
+  Password          string        `json:"password",validate:"min=5"`
   Role              string        `json:"role",validate:""`
 }
 

@@ -60,21 +60,29 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
       })
   }
 
-  if updateUser.Role != "" && role != "admin" {
-    return ctx.
-      Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": "Only admins are allowed to update roles",
-      })
+  dbUserTmp := h.EntClient.User.
+    UpdateOneID(id)
+
+  if updateUser.Role != "" {
+    if role == "admin" {
+      dbUserTmp = dbUserTmp.SetRole(updateUser.Role)
+    } else {
+      return ctx.
+        Status(fiber.StatusForbidden).
+        JSON(&fiber.Map{
+          "success": false,
+          "user": nil,
+          "message": "Only admins are allowed to update roles",
+        })
+    }
   }
 
-  dbUser, err := h.EntClient.User.
-    UpdateOneID(id).
-    SetPassword(updateUser.Password).
-    SetRole(updateUser.Role).
-    Save(context.Background())
+  if updateUser.Password != "" {
+    dbUserTmp = dbUserTmp.
+      SetPassword(updateUser.Password)
+  }
+
+  dbUser, err := dbUserTmp.Save(context.Background())
 
   if err != nil {
     return ctx.

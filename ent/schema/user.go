@@ -30,6 +30,9 @@ func (User) Fields() []ent.Field {
       }).
       Unique(),
     field.String("password").
+      Validate(func(s string) error {
+        return validate.Var(s, "required,min=5")
+      }).
       Sensitive(),
     field.String("role").
       Default("user").
