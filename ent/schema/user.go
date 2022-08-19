@@ -1,9 +1,11 @@
 package schema
 
 import (
-  "github.com/google/uuid"
+	"regexp"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 )
 
 // User holds the schema definition for the User entity.
@@ -17,6 +19,11 @@ func (User) Fields() []ent.Field {
     field.UUID("id", uuid.UUID{}).
       Default(uuid.New).
       StorageKey("oid"),
+    field.String("username").
+      Match(regexp.MustCompile("^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$")).
+      Unique(),
+    field.String("password").
+      Sensitive(),
   }
 }
 

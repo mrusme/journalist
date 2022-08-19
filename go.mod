@@ -9,6 +9,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.36.0
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.15
+	golang.org/x/net v0.0.0-20220617184016-355a448f1bc9
 )
 
 require (
