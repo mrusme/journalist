@@ -24,6 +24,9 @@ func (User) Fields() []ent.Field {
       Unique(),
     field.String("password").
       Sensitive(),
+    field.String("role").
+      Default("user").
+      Match(regexp.MustCompile("^(admin|user)$")),
   }
 }
 
