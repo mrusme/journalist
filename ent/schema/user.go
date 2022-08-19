@@ -5,6 +5,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/edge"
 	"github.com/google/uuid"
 )
 
@@ -32,5 +33,10 @@ func (User) Fields() []ent.Field {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return nil
+  return []ent.Edge{
+    edge.To("subscribed_feeds", Feed.Type).
+      Through("subscriptions", Subscription.Type),
+    edge.To("read_items", Item.Type).
+      Through("reads", Read.Type),
+  }
 }

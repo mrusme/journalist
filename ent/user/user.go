@@ -17,8 +17,40 @@ const (
 	FieldPassword = "password"
 	// FieldRole holds the string denoting the role field in the database.
 	FieldRole = "role"
+	// EdgeSubscribedFeeds holds the string denoting the subscribed_feeds edge name in mutations.
+	EdgeSubscribedFeeds = "subscribed_feeds"
+	// EdgeReadItems holds the string denoting the read_items edge name in mutations.
+	EdgeReadItems = "read_items"
+	// EdgeSubscriptions holds the string denoting the subscriptions edge name in mutations.
+	EdgeSubscriptions = "subscriptions"
+	// EdgeReads holds the string denoting the reads edge name in mutations.
+	EdgeReads = "reads"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// SubscribedFeedsTable is the table that holds the subscribed_feeds relation/edge. The primary key declared below.
+	SubscribedFeedsTable = "subscriptions"
+	// SubscribedFeedsInverseTable is the table name for the Feed entity.
+	// It exists in this package in order to avoid circular dependency with the "feed" package.
+	SubscribedFeedsInverseTable = "feeds"
+	// ReadItemsTable is the table that holds the read_items relation/edge. The primary key declared below.
+	ReadItemsTable = "reads"
+	// ReadItemsInverseTable is the table name for the Item entity.
+	// It exists in this package in order to avoid circular dependency with the "item" package.
+	ReadItemsInverseTable = "items"
+	// SubscriptionsTable is the table that holds the subscriptions relation/edge.
+	SubscriptionsTable = "subscriptions"
+	// SubscriptionsInverseTable is the table name for the Subscription entity.
+	// It exists in this package in order to avoid circular dependency with the "subscription" package.
+	SubscriptionsInverseTable = "subscriptions"
+	// SubscriptionsColumn is the table column denoting the subscriptions relation/edge.
+	SubscriptionsColumn = "user_id"
+	// ReadsTable is the table that holds the reads relation/edge.
+	ReadsTable = "reads"
+	// ReadsInverseTable is the table name for the Read entity.
+	// It exists in this package in order to avoid circular dependency with the "read" package.
+	ReadsInverseTable = "reads"
+	// ReadsColumn is the table column denoting the reads relation/edge.
+	ReadsColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -28,6 +60,15 @@ var Columns = []string{
 	FieldPassword,
 	FieldRole,
 }
+
+var (
+	// SubscribedFeedsPrimaryKey and SubscribedFeedsColumn2 are the table columns denoting the
+	// primary key for the subscribed_feeds relation (M2M).
+	SubscribedFeedsPrimaryKey = []string{"user_id", "feed_id"}
+	// ReadItemsPrimaryKey and ReadItemsColumn2 are the table columns denoting the
+	// primary key for the read_items relation (M2M).
+	ReadItemsPrimaryKey = []string{"user_id", "item_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {

@@ -9,7 +9,11 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
+	"github.com/mrusme/journalist/ent/feed"
+	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/predicate"
+	"github.com/mrusme/journalist/ent/read"
+	"github.com/mrusme/journalist/ent/subscription"
 	"github.com/mrusme/journalist/ent/user"
 
 	"entgo.io/ent"
@@ -24,22 +28,1984 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeUser = "User"
+	TypeFeed         = "Feed"
+	TypeItem         = "Item"
+	TypeRead         = "Read"
+	TypeSubscription = "Subscription"
+	TypeUser         = "User"
 )
 
-// UserMutation represents an operation that mutates the User nodes in the graph.
-type UserMutation struct {
+// FeedMutation represents an operation that mutates the Feed nodes in the graph.
+type FeedMutation struct {
+	config
+	op                      Op
+	typ                     string
+	id                      *uuid.UUID
+	clearedFields           map[string]struct{}
+	items                   map[uuid.UUID]struct{}
+	removeditems            map[uuid.UUID]struct{}
+	cleareditems            bool
+	subscribed_users        map[uuid.UUID]struct{}
+	removedsubscribed_users map[uuid.UUID]struct{}
+	clearedsubscribed_users bool
+	subscriptions           map[uuid.UUID]struct{}
+	removedsubscriptions    map[uuid.UUID]struct{}
+	clearedsubscriptions    bool
+	done                    bool
+	oldValue                func(context.Context) (*Feed, error)
+	predicates              []predicate.Feed
+}
+
+var _ ent.Mutation = (*FeedMutation)(nil)
+
+// feedOption allows management of the mutation configuration using functional options.
+type feedOption func(*FeedMutation)
+
+// newFeedMutation creates new mutation for the Feed entity.
+func newFeedMutation(c config, op Op, opts ...feedOption) *FeedMutation {
+	m := &FeedMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeFeed,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withFeedID sets the ID field of the mutation.
+func withFeedID(id uuid.UUID) feedOption {
+	return func(m *FeedMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Feed
+		)
+		m.oldValue = func(ctx context.Context) (*Feed, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Feed.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withFeed sets the old Feed of the mutation.
+func withFeed(node *Feed) feedOption {
+	return func(m *FeedMutation) {
+		m.oldValue = func(context.Context) (*Feed, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m FeedMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m FeedMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Feed entities.
+func (m *FeedMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *FeedMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *FeedMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Feed.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// AddItemIDs adds the "items" edge to the Item entity by ids.
+func (m *FeedMutation) AddItemIDs(ids ...uuid.UUID) {
+	if m.items == nil {
+		m.items = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.items[ids[i]] = struct{}{}
+	}
+}
+
+// ClearItems clears the "items" edge to the Item entity.
+func (m *FeedMutation) ClearItems() {
+	m.cleareditems = true
+}
+
+// ItemsCleared reports if the "items" edge to the Item entity was cleared.
+func (m *FeedMutation) ItemsCleared() bool {
+	return m.cleareditems
+}
+
+// RemoveItemIDs removes the "items" edge to the Item entity by IDs.
+func (m *FeedMutation) RemoveItemIDs(ids ...uuid.UUID) {
+	if m.removeditems == nil {
+		m.removeditems = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.items, ids[i])
+		m.removeditems[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedItems returns the removed IDs of the "items" edge to the Item entity.
+func (m *FeedMutation) RemovedItemsIDs() (ids []uuid.UUID) {
+	for id := range m.removeditems {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ItemsIDs returns the "items" edge IDs in the mutation.
+func (m *FeedMutation) ItemsIDs() (ids []uuid.UUID) {
+	for id := range m.items {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetItems resets all changes to the "items" edge.
+func (m *FeedMutation) ResetItems() {
+	m.items = nil
+	m.cleareditems = false
+	m.removeditems = nil
+}
+
+// AddSubscribedUserIDs adds the "subscribed_users" edge to the User entity by ids.
+func (m *FeedMutation) AddSubscribedUserIDs(ids ...uuid.UUID) {
+	if m.subscribed_users == nil {
+		m.subscribed_users = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.subscribed_users[ids[i]] = struct{}{}
+	}
+}
+
+// ClearSubscribedUsers clears the "subscribed_users" edge to the User entity.
+func (m *FeedMutation) ClearSubscribedUsers() {
+	m.clearedsubscribed_users = true
+}
+
+// SubscribedUsersCleared reports if the "subscribed_users" edge to the User entity was cleared.
+func (m *FeedMutation) SubscribedUsersCleared() bool {
+	return m.clearedsubscribed_users
+}
+
+// RemoveSubscribedUserIDs removes the "subscribed_users" edge to the User entity by IDs.
+func (m *FeedMutation) RemoveSubscribedUserIDs(ids ...uuid.UUID) {
+	if m.removedsubscribed_users == nil {
+		m.removedsubscribed_users = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.subscribed_users, ids[i])
+		m.removedsubscribed_users[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedSubscribedUsers returns the removed IDs of the "subscribed_users" edge to the User entity.
+func (m *FeedMutation) RemovedSubscribedUsersIDs() (ids []uuid.UUID) {
+	for id := range m.removedsubscribed_users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// SubscribedUsersIDs returns the "subscribed_users" edge IDs in the mutation.
+func (m *FeedMutation) SubscribedUsersIDs() (ids []uuid.UUID) {
+	for id := range m.subscribed_users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetSubscribedUsers resets all changes to the "subscribed_users" edge.
+func (m *FeedMutation) ResetSubscribedUsers() {
+	m.subscribed_users = nil
+	m.clearedsubscribed_users = false
+	m.removedsubscribed_users = nil
+}
+
+// AddSubscriptionIDs adds the "subscriptions" edge to the Subscription entity by ids.
+func (m *FeedMutation) AddSubscriptionIDs(ids ...uuid.UUID) {
+	if m.subscriptions == nil {
+		m.subscriptions = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.subscriptions[ids[i]] = struct{}{}
+	}
+}
+
+// ClearSubscriptions clears the "subscriptions" edge to the Subscription entity.
+func (m *FeedMutation) ClearSubscriptions() {
+	m.clearedsubscriptions = true
+}
+
+// SubscriptionsCleared reports if the "subscriptions" edge to the Subscription entity was cleared.
+func (m *FeedMutation) SubscriptionsCleared() bool {
+	return m.clearedsubscriptions
+}
+
+// RemoveSubscriptionIDs removes the "subscriptions" edge to the Subscription entity by IDs.
+func (m *FeedMutation) RemoveSubscriptionIDs(ids ...uuid.UUID) {
+	if m.removedsubscriptions == nil {
+		m.removedsubscriptions = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.subscriptions, ids[i])
+		m.removedsubscriptions[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedSubscriptions returns the removed IDs of the "subscriptions" edge to the Subscription entity.
+func (m *FeedMutation) RemovedSubscriptionsIDs() (ids []uuid.UUID) {
+	for id := range m.removedsubscriptions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// SubscriptionsIDs returns the "subscriptions" edge IDs in the mutation.
+func (m *FeedMutation) SubscriptionsIDs() (ids []uuid.UUID) {
+	for id := range m.subscriptions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetSubscriptions resets all changes to the "subscriptions" edge.
+func (m *FeedMutation) ResetSubscriptions() {
+	m.subscriptions = nil
+	m.clearedsubscriptions = false
+	m.removedsubscriptions = nil
+}
+
+// Where appends a list predicates to the FeedMutation builder.
+func (m *FeedMutation) Where(ps ...predicate.Feed) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *FeedMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Feed).
+func (m *FeedMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *FeedMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *FeedMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *FeedMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Feed field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *FeedMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Feed field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *FeedMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *FeedMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *FeedMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Feed numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *FeedMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *FeedMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *FeedMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Feed nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *FeedMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Feed field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *FeedMutation) AddedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.items != nil {
+		edges = append(edges, feed.EdgeItems)
+	}
+	if m.subscribed_users != nil {
+		edges = append(edges, feed.EdgeSubscribedUsers)
+	}
+	if m.subscriptions != nil {
+		edges = append(edges, feed.EdgeSubscriptions)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *FeedMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case feed.EdgeItems:
+		ids := make([]ent.Value, 0, len(m.items))
+		for id := range m.items {
+			ids = append(ids, id)
+		}
+		return ids
+	case feed.EdgeSubscribedUsers:
+		ids := make([]ent.Value, 0, len(m.subscribed_users))
+		for id := range m.subscribed_users {
+			ids = append(ids, id)
+		}
+		return ids
+	case feed.EdgeSubscriptions:
+		ids := make([]ent.Value, 0, len(m.subscriptions))
+		for id := range m.subscriptions {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *FeedMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.removeditems != nil {
+		edges = append(edges, feed.EdgeItems)
+	}
+	if m.removedsubscribed_users != nil {
+		edges = append(edges, feed.EdgeSubscribedUsers)
+	}
+	if m.removedsubscriptions != nil {
+		edges = append(edges, feed.EdgeSubscriptions)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *FeedMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case feed.EdgeItems:
+		ids := make([]ent.Value, 0, len(m.removeditems))
+		for id := range m.removeditems {
+			ids = append(ids, id)
+		}
+		return ids
+	case feed.EdgeSubscribedUsers:
+		ids := make([]ent.Value, 0, len(m.removedsubscribed_users))
+		for id := range m.removedsubscribed_users {
+			ids = append(ids, id)
+		}
+		return ids
+	case feed.EdgeSubscriptions:
+		ids := make([]ent.Value, 0, len(m.removedsubscriptions))
+		for id := range m.removedsubscriptions {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *FeedMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.cleareditems {
+		edges = append(edges, feed.EdgeItems)
+	}
+	if m.clearedsubscribed_users {
+		edges = append(edges, feed.EdgeSubscribedUsers)
+	}
+	if m.clearedsubscriptions {
+		edges = append(edges, feed.EdgeSubscriptions)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *FeedMutation) EdgeCleared(name string) bool {
+	switch name {
+	case feed.EdgeItems:
+		return m.cleareditems
+	case feed.EdgeSubscribedUsers:
+		return m.clearedsubscribed_users
+	case feed.EdgeSubscriptions:
+		return m.clearedsubscriptions
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *FeedMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Feed unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *FeedMutation) ResetEdge(name string) error {
+	switch name {
+	case feed.EdgeItems:
+		m.ResetItems()
+		return nil
+	case feed.EdgeSubscribedUsers:
+		m.ResetSubscribedUsers()
+		return nil
+	case feed.EdgeSubscriptions:
+		m.ResetSubscriptions()
+		return nil
+	}
+	return fmt.Errorf("unknown Feed edge %s", name)
+}
+
+// ItemMutation represents an operation that mutates the Item nodes in the graph.
+type ItemMutation struct {
+	config
+	op                   Op
+	typ                  string
+	id                   *uuid.UUID
+	clearedFields        map[string]struct{}
+	feed                 *uuid.UUID
+	clearedfeed          bool
+	read_by_users        map[uuid.UUID]struct{}
+	removedread_by_users map[uuid.UUID]struct{}
+	clearedread_by_users bool
+	reads                map[uuid.UUID]struct{}
+	removedreads         map[uuid.UUID]struct{}
+	clearedreads         bool
+	done                 bool
+	oldValue             func(context.Context) (*Item, error)
+	predicates           []predicate.Item
+}
+
+var _ ent.Mutation = (*ItemMutation)(nil)
+
+// itemOption allows management of the mutation configuration using functional options.
+type itemOption func(*ItemMutation)
+
+// newItemMutation creates new mutation for the Item entity.
+func newItemMutation(c config, op Op, opts ...itemOption) *ItemMutation {
+	m := &ItemMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeItem,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withItemID sets the ID field of the mutation.
+func withItemID(id uuid.UUID) itemOption {
+	return func(m *ItemMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Item
+		)
+		m.oldValue = func(ctx context.Context) (*Item, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Item.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withItem sets the old Item of the mutation.
+func withItem(node *Item) itemOption {
+	return func(m *ItemMutation) {
+		m.oldValue = func(context.Context) (*Item, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ItemMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ItemMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Item entities.
+func (m *ItemMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ItemMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ItemMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Item.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetFeedID sets the "feed" edge to the Feed entity by id.
+func (m *ItemMutation) SetFeedID(id uuid.UUID) {
+	m.feed = &id
+}
+
+// ClearFeed clears the "feed" edge to the Feed entity.
+func (m *ItemMutation) ClearFeed() {
+	m.clearedfeed = true
+}
+
+// FeedCleared reports if the "feed" edge to the Feed entity was cleared.
+func (m *ItemMutation) FeedCleared() bool {
+	return m.clearedfeed
+}
+
+// FeedID returns the "feed" edge ID in the mutation.
+func (m *ItemMutation) FeedID() (id uuid.UUID, exists bool) {
+	if m.feed != nil {
+		return *m.feed, true
+	}
+	return
+}
+
+// FeedIDs returns the "feed" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// FeedID instead. It exists only for internal usage by the builders.
+func (m *ItemMutation) FeedIDs() (ids []uuid.UUID) {
+	if id := m.feed; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetFeed resets all changes to the "feed" edge.
+func (m *ItemMutation) ResetFeed() {
+	m.feed = nil
+	m.clearedfeed = false
+}
+
+// AddReadByUserIDs adds the "read_by_users" edge to the User entity by ids.
+func (m *ItemMutation) AddReadByUserIDs(ids ...uuid.UUID) {
+	if m.read_by_users == nil {
+		m.read_by_users = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.read_by_users[ids[i]] = struct{}{}
+	}
+}
+
+// ClearReadByUsers clears the "read_by_users" edge to the User entity.
+func (m *ItemMutation) ClearReadByUsers() {
+	m.clearedread_by_users = true
+}
+
+// ReadByUsersCleared reports if the "read_by_users" edge to the User entity was cleared.
+func (m *ItemMutation) ReadByUsersCleared() bool {
+	return m.clearedread_by_users
+}
+
+// RemoveReadByUserIDs removes the "read_by_users" edge to the User entity by IDs.
+func (m *ItemMutation) RemoveReadByUserIDs(ids ...uuid.UUID) {
+	if m.removedread_by_users == nil {
+		m.removedread_by_users = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.read_by_users, ids[i])
+		m.removedread_by_users[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReadByUsers returns the removed IDs of the "read_by_users" edge to the User entity.
+func (m *ItemMutation) RemovedReadByUsersIDs() (ids []uuid.UUID) {
+	for id := range m.removedread_by_users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReadByUsersIDs returns the "read_by_users" edge IDs in the mutation.
+func (m *ItemMutation) ReadByUsersIDs() (ids []uuid.UUID) {
+	for id := range m.read_by_users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReadByUsers resets all changes to the "read_by_users" edge.
+func (m *ItemMutation) ResetReadByUsers() {
+	m.read_by_users = nil
+	m.clearedread_by_users = false
+	m.removedread_by_users = nil
+}
+
+// AddReadIDs adds the "reads" edge to the Read entity by ids.
+func (m *ItemMutation) AddReadIDs(ids ...uuid.UUID) {
+	if m.reads == nil {
+		m.reads = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.reads[ids[i]] = struct{}{}
+	}
+}
+
+// ClearReads clears the "reads" edge to the Read entity.
+func (m *ItemMutation) ClearReads() {
+	m.clearedreads = true
+}
+
+// ReadsCleared reports if the "reads" edge to the Read entity was cleared.
+func (m *ItemMutation) ReadsCleared() bool {
+	return m.clearedreads
+}
+
+// RemoveReadIDs removes the "reads" edge to the Read entity by IDs.
+func (m *ItemMutation) RemoveReadIDs(ids ...uuid.UUID) {
+	if m.removedreads == nil {
+		m.removedreads = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.reads, ids[i])
+		m.removedreads[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReads returns the removed IDs of the "reads" edge to the Read entity.
+func (m *ItemMutation) RemovedReadsIDs() (ids []uuid.UUID) {
+	for id := range m.removedreads {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReadsIDs returns the "reads" edge IDs in the mutation.
+func (m *ItemMutation) ReadsIDs() (ids []uuid.UUID) {
+	for id := range m.reads {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReads resets all changes to the "reads" edge.
+func (m *ItemMutation) ResetReads() {
+	m.reads = nil
+	m.clearedreads = false
+	m.removedreads = nil
+}
+
+// Where appends a list predicates to the ItemMutation builder.
+func (m *ItemMutation) Where(ps ...predicate.Item) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *ItemMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Item).
+func (m *ItemMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ItemMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ItemMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ItemMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Item field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ItemMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Item field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ItemMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ItemMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ItemMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Item numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ItemMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ItemMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ItemMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Item nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ItemMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Item field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ItemMutation) AddedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.feed != nil {
+		edges = append(edges, item.EdgeFeed)
+	}
+	if m.read_by_users != nil {
+		edges = append(edges, item.EdgeReadByUsers)
+	}
+	if m.reads != nil {
+		edges = append(edges, item.EdgeReads)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ItemMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case item.EdgeFeed:
+		if id := m.feed; id != nil {
+			return []ent.Value{*id}
+		}
+	case item.EdgeReadByUsers:
+		ids := make([]ent.Value, 0, len(m.read_by_users))
+		for id := range m.read_by_users {
+			ids = append(ids, id)
+		}
+		return ids
+	case item.EdgeReads:
+		ids := make([]ent.Value, 0, len(m.reads))
+		for id := range m.reads {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ItemMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.removedread_by_users != nil {
+		edges = append(edges, item.EdgeReadByUsers)
+	}
+	if m.removedreads != nil {
+		edges = append(edges, item.EdgeReads)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ItemMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case item.EdgeReadByUsers:
+		ids := make([]ent.Value, 0, len(m.removedread_by_users))
+		for id := range m.removedread_by_users {
+			ids = append(ids, id)
+		}
+		return ids
+	case item.EdgeReads:
+		ids := make([]ent.Value, 0, len(m.removedreads))
+		for id := range m.removedreads {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ItemMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.clearedfeed {
+		edges = append(edges, item.EdgeFeed)
+	}
+	if m.clearedread_by_users {
+		edges = append(edges, item.EdgeReadByUsers)
+	}
+	if m.clearedreads {
+		edges = append(edges, item.EdgeReads)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ItemMutation) EdgeCleared(name string) bool {
+	switch name {
+	case item.EdgeFeed:
+		return m.clearedfeed
+	case item.EdgeReadByUsers:
+		return m.clearedread_by_users
+	case item.EdgeReads:
+		return m.clearedreads
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ItemMutation) ClearEdge(name string) error {
+	switch name {
+	case item.EdgeFeed:
+		m.ClearFeed()
+		return nil
+	}
+	return fmt.Errorf("unknown Item unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ItemMutation) ResetEdge(name string) error {
+	switch name {
+	case item.EdgeFeed:
+		m.ResetFeed()
+		return nil
+	case item.EdgeReadByUsers:
+		m.ResetReadByUsers()
+		return nil
+	case item.EdgeReads:
+		m.ResetReads()
+		return nil
+	}
+	return fmt.Errorf("unknown Item edge %s", name)
+}
+
+// ReadMutation represents an operation that mutates the Read nodes in the graph.
+type ReadMutation struct {
 	config
 	op            Op
 	typ           string
 	id            *uuid.UUID
-	username      *string
-	password      *string
-	role          *string
 	clearedFields map[string]struct{}
+	user          *uuid.UUID
+	cleareduser   bool
+	item          *uuid.UUID
+	cleareditem   bool
 	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	oldValue      func(context.Context) (*Read, error)
+	predicates    []predicate.Read
+}
+
+var _ ent.Mutation = (*ReadMutation)(nil)
+
+// readOption allows management of the mutation configuration using functional options.
+type readOption func(*ReadMutation)
+
+// newReadMutation creates new mutation for the Read entity.
+func newReadMutation(c config, op Op, opts ...readOption) *ReadMutation {
+	m := &ReadMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeRead,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withReadID sets the ID field of the mutation.
+func withReadID(id uuid.UUID) readOption {
+	return func(m *ReadMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Read
+		)
+		m.oldValue = func(ctx context.Context) (*Read, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Read.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withRead sets the old Read of the mutation.
+func withRead(node *Read) readOption {
+	return func(m *ReadMutation) {
+		m.oldValue = func(context.Context) (*Read, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ReadMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ReadMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Read entities.
+func (m *ReadMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ReadMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ReadMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Read.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetUserID sets the "user_id" field.
+func (m *ReadMutation) SetUserID(u uuid.UUID) {
+	m.user = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *ReadMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Read entity.
+// If the Read object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReadMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *ReadMutation) ResetUserID() {
+	m.user = nil
+}
+
+// SetItemID sets the "item_id" field.
+func (m *ReadMutation) SetItemID(u uuid.UUID) {
+	m.item = &u
+}
+
+// ItemID returns the value of the "item_id" field in the mutation.
+func (m *ReadMutation) ItemID() (r uuid.UUID, exists bool) {
+	v := m.item
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldItemID returns the old "item_id" field's value of the Read entity.
+// If the Read object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ReadMutation) OldItemID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldItemID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldItemID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldItemID: %w", err)
+	}
+	return oldValue.ItemID, nil
+}
+
+// ResetItemID resets all changes to the "item_id" field.
+func (m *ReadMutation) ResetItemID() {
+	m.item = nil
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *ReadMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *ReadMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *ReadMutation) UserIDs() (ids []uuid.UUID) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *ReadMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
+// ClearItem clears the "item" edge to the Item entity.
+func (m *ReadMutation) ClearItem() {
+	m.cleareditem = true
+}
+
+// ItemCleared reports if the "item" edge to the Item entity was cleared.
+func (m *ReadMutation) ItemCleared() bool {
+	return m.cleareditem
+}
+
+// ItemIDs returns the "item" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ItemID instead. It exists only for internal usage by the builders.
+func (m *ReadMutation) ItemIDs() (ids []uuid.UUID) {
+	if id := m.item; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetItem resets all changes to the "item" edge.
+func (m *ReadMutation) ResetItem() {
+	m.item = nil
+	m.cleareditem = false
+}
+
+// Where appends a list predicates to the ReadMutation builder.
+func (m *ReadMutation) Where(ps ...predicate.Read) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *ReadMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Read).
+func (m *ReadMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ReadMutation) Fields() []string {
+	fields := make([]string, 0, 2)
+	if m.user != nil {
+		fields = append(fields, read.FieldUserID)
+	}
+	if m.item != nil {
+		fields = append(fields, read.FieldItemID)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ReadMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case read.FieldUserID:
+		return m.UserID()
+	case read.FieldItemID:
+		return m.ItemID()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ReadMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case read.FieldUserID:
+		return m.OldUserID(ctx)
+	case read.FieldItemID:
+		return m.OldItemID(ctx)
+	}
+	return nil, fmt.Errorf("unknown Read field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ReadMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case read.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case read.FieldItemID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetItemID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Read field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ReadMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ReadMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ReadMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Read numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ReadMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ReadMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ReadMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Read nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ReadMutation) ResetField(name string) error {
+	switch name {
+	case read.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case read.FieldItemID:
+		m.ResetItemID()
+		return nil
+	}
+	return fmt.Errorf("unknown Read field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ReadMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.user != nil {
+		edges = append(edges, read.EdgeUser)
+	}
+	if m.item != nil {
+		edges = append(edges, read.EdgeItem)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ReadMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case read.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	case read.EdgeItem:
+		if id := m.item; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ReadMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ReadMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ReadMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.cleareduser {
+		edges = append(edges, read.EdgeUser)
+	}
+	if m.cleareditem {
+		edges = append(edges, read.EdgeItem)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ReadMutation) EdgeCleared(name string) bool {
+	switch name {
+	case read.EdgeUser:
+		return m.cleareduser
+	case read.EdgeItem:
+		return m.cleareditem
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ReadMutation) ClearEdge(name string) error {
+	switch name {
+	case read.EdgeUser:
+		m.ClearUser()
+		return nil
+	case read.EdgeItem:
+		m.ClearItem()
+		return nil
+	}
+	return fmt.Errorf("unknown Read unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ReadMutation) ResetEdge(name string) error {
+	switch name {
+	case read.EdgeUser:
+		m.ResetUser()
+		return nil
+	case read.EdgeItem:
+		m.ResetItem()
+		return nil
+	}
+	return fmt.Errorf("unknown Read edge %s", name)
+}
+
+// SubscriptionMutation represents an operation that mutates the Subscription nodes in the graph.
+type SubscriptionMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	clearedFields map[string]struct{}
+	user          *uuid.UUID
+	cleareduser   bool
+	feed          *uuid.UUID
+	clearedfeed   bool
+	done          bool
+	oldValue      func(context.Context) (*Subscription, error)
+	predicates    []predicate.Subscription
+}
+
+var _ ent.Mutation = (*SubscriptionMutation)(nil)
+
+// subscriptionOption allows management of the mutation configuration using functional options.
+type subscriptionOption func(*SubscriptionMutation)
+
+// newSubscriptionMutation creates new mutation for the Subscription entity.
+func newSubscriptionMutation(c config, op Op, opts ...subscriptionOption) *SubscriptionMutation {
+	m := &SubscriptionMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeSubscription,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withSubscriptionID sets the ID field of the mutation.
+func withSubscriptionID(id uuid.UUID) subscriptionOption {
+	return func(m *SubscriptionMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Subscription
+		)
+		m.oldValue = func(ctx context.Context) (*Subscription, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Subscription.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withSubscription sets the old Subscription of the mutation.
+func withSubscription(node *Subscription) subscriptionOption {
+	return func(m *SubscriptionMutation) {
+		m.oldValue = func(context.Context) (*Subscription, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m SubscriptionMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m SubscriptionMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Subscription entities.
+func (m *SubscriptionMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *SubscriptionMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *SubscriptionMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Subscription.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetUserID sets the "user_id" field.
+func (m *SubscriptionMutation) SetUserID(u uuid.UUID) {
+	m.user = &u
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *SubscriptionMutation) UserID() (r uuid.UUID, exists bool) {
+	v := m.user
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Subscription entity.
+// If the Subscription object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SubscriptionMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *SubscriptionMutation) ResetUserID() {
+	m.user = nil
+}
+
+// SetFeedID sets the "feed_id" field.
+func (m *SubscriptionMutation) SetFeedID(u uuid.UUID) {
+	m.feed = &u
+}
+
+// FeedID returns the value of the "feed_id" field in the mutation.
+func (m *SubscriptionMutation) FeedID() (r uuid.UUID, exists bool) {
+	v := m.feed
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFeedID returns the old "feed_id" field's value of the Subscription entity.
+// If the Subscription object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *SubscriptionMutation) OldFeedID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFeedID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFeedID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFeedID: %w", err)
+	}
+	return oldValue.FeedID, nil
+}
+
+// ResetFeedID resets all changes to the "feed_id" field.
+func (m *SubscriptionMutation) ResetFeedID() {
+	m.feed = nil
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (m *SubscriptionMutation) ClearUser() {
+	m.cleareduser = true
+}
+
+// UserCleared reports if the "user" edge to the User entity was cleared.
+func (m *SubscriptionMutation) UserCleared() bool {
+	return m.cleareduser
+}
+
+// UserIDs returns the "user" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// UserID instead. It exists only for internal usage by the builders.
+func (m *SubscriptionMutation) UserIDs() (ids []uuid.UUID) {
+	if id := m.user; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUser resets all changes to the "user" edge.
+func (m *SubscriptionMutation) ResetUser() {
+	m.user = nil
+	m.cleareduser = false
+}
+
+// ClearFeed clears the "feed" edge to the Feed entity.
+func (m *SubscriptionMutation) ClearFeed() {
+	m.clearedfeed = true
+}
+
+// FeedCleared reports if the "feed" edge to the Feed entity was cleared.
+func (m *SubscriptionMutation) FeedCleared() bool {
+	return m.clearedfeed
+}
+
+// FeedIDs returns the "feed" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// FeedID instead. It exists only for internal usage by the builders.
+func (m *SubscriptionMutation) FeedIDs() (ids []uuid.UUID) {
+	if id := m.feed; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetFeed resets all changes to the "feed" edge.
+func (m *SubscriptionMutation) ResetFeed() {
+	m.feed = nil
+	m.clearedfeed = false
+}
+
+// Where appends a list predicates to the SubscriptionMutation builder.
+func (m *SubscriptionMutation) Where(ps ...predicate.Subscription) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *SubscriptionMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Subscription).
+func (m *SubscriptionMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *SubscriptionMutation) Fields() []string {
+	fields := make([]string, 0, 2)
+	if m.user != nil {
+		fields = append(fields, subscription.FieldUserID)
+	}
+	if m.feed != nil {
+		fields = append(fields, subscription.FieldFeedID)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *SubscriptionMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case subscription.FieldUserID:
+		return m.UserID()
+	case subscription.FieldFeedID:
+		return m.FeedID()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *SubscriptionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case subscription.FieldUserID:
+		return m.OldUserID(ctx)
+	case subscription.FieldFeedID:
+		return m.OldFeedID(ctx)
+	}
+	return nil, fmt.Errorf("unknown Subscription field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SubscriptionMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case subscription.FieldUserID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
+		return nil
+	case subscription.FieldFeedID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFeedID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Subscription field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *SubscriptionMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *SubscriptionMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *SubscriptionMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Subscription numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *SubscriptionMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *SubscriptionMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *SubscriptionMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Subscription nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *SubscriptionMutation) ResetField(name string) error {
+	switch name {
+	case subscription.FieldUserID:
+		m.ResetUserID()
+		return nil
+	case subscription.FieldFeedID:
+		m.ResetFeedID()
+		return nil
+	}
+	return fmt.Errorf("unknown Subscription field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *SubscriptionMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.user != nil {
+		edges = append(edges, subscription.EdgeUser)
+	}
+	if m.feed != nil {
+		edges = append(edges, subscription.EdgeFeed)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *SubscriptionMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case subscription.EdgeUser:
+		if id := m.user; id != nil {
+			return []ent.Value{*id}
+		}
+	case subscription.EdgeFeed:
+		if id := m.feed; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *SubscriptionMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *SubscriptionMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *SubscriptionMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.cleareduser {
+		edges = append(edges, subscription.EdgeUser)
+	}
+	if m.clearedfeed {
+		edges = append(edges, subscription.EdgeFeed)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *SubscriptionMutation) EdgeCleared(name string) bool {
+	switch name {
+	case subscription.EdgeUser:
+		return m.cleareduser
+	case subscription.EdgeFeed:
+		return m.clearedfeed
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *SubscriptionMutation) ClearEdge(name string) error {
+	switch name {
+	case subscription.EdgeUser:
+		m.ClearUser()
+		return nil
+	case subscription.EdgeFeed:
+		m.ClearFeed()
+		return nil
+	}
+	return fmt.Errorf("unknown Subscription unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *SubscriptionMutation) ResetEdge(name string) error {
+	switch name {
+	case subscription.EdgeUser:
+		m.ResetUser()
+		return nil
+	case subscription.EdgeFeed:
+		m.ResetFeed()
+		return nil
+	}
+	return fmt.Errorf("unknown Subscription edge %s", name)
+}
+
+// UserMutation represents an operation that mutates the User nodes in the graph.
+type UserMutation struct {
+	config
+	op                      Op
+	typ                     string
+	id                      *uuid.UUID
+	username                *string
+	password                *string
+	role                    *string
+	clearedFields           map[string]struct{}
+	subscribed_feeds        map[uuid.UUID]struct{}
+	removedsubscribed_feeds map[uuid.UUID]struct{}
+	clearedsubscribed_feeds bool
+	read_items              map[uuid.UUID]struct{}
+	removedread_items       map[uuid.UUID]struct{}
+	clearedread_items       bool
+	subscriptions           map[uuid.UUID]struct{}
+	removedsubscriptions    map[uuid.UUID]struct{}
+	clearedsubscriptions    bool
+	reads                   map[uuid.UUID]struct{}
+	removedreads            map[uuid.UUID]struct{}
+	clearedreads            bool
+	done                    bool
+	oldValue                func(context.Context) (*User, error)
+	predicates              []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -254,6 +2220,222 @@ func (m *UserMutation) ResetRole() {
 	m.role = nil
 }
 
+// AddSubscribedFeedIDs adds the "subscribed_feeds" edge to the Feed entity by ids.
+func (m *UserMutation) AddSubscribedFeedIDs(ids ...uuid.UUID) {
+	if m.subscribed_feeds == nil {
+		m.subscribed_feeds = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.subscribed_feeds[ids[i]] = struct{}{}
+	}
+}
+
+// ClearSubscribedFeeds clears the "subscribed_feeds" edge to the Feed entity.
+func (m *UserMutation) ClearSubscribedFeeds() {
+	m.clearedsubscribed_feeds = true
+}
+
+// SubscribedFeedsCleared reports if the "subscribed_feeds" edge to the Feed entity was cleared.
+func (m *UserMutation) SubscribedFeedsCleared() bool {
+	return m.clearedsubscribed_feeds
+}
+
+// RemoveSubscribedFeedIDs removes the "subscribed_feeds" edge to the Feed entity by IDs.
+func (m *UserMutation) RemoveSubscribedFeedIDs(ids ...uuid.UUID) {
+	if m.removedsubscribed_feeds == nil {
+		m.removedsubscribed_feeds = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.subscribed_feeds, ids[i])
+		m.removedsubscribed_feeds[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedSubscribedFeeds returns the removed IDs of the "subscribed_feeds" edge to the Feed entity.
+func (m *UserMutation) RemovedSubscribedFeedsIDs() (ids []uuid.UUID) {
+	for id := range m.removedsubscribed_feeds {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// SubscribedFeedsIDs returns the "subscribed_feeds" edge IDs in the mutation.
+func (m *UserMutation) SubscribedFeedsIDs() (ids []uuid.UUID) {
+	for id := range m.subscribed_feeds {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetSubscribedFeeds resets all changes to the "subscribed_feeds" edge.
+func (m *UserMutation) ResetSubscribedFeeds() {
+	m.subscribed_feeds = nil
+	m.clearedsubscribed_feeds = false
+	m.removedsubscribed_feeds = nil
+}
+
+// AddReadItemIDs adds the "read_items" edge to the Item entity by ids.
+func (m *UserMutation) AddReadItemIDs(ids ...uuid.UUID) {
+	if m.read_items == nil {
+		m.read_items = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.read_items[ids[i]] = struct{}{}
+	}
+}
+
+// ClearReadItems clears the "read_items" edge to the Item entity.
+func (m *UserMutation) ClearReadItems() {
+	m.clearedread_items = true
+}
+
+// ReadItemsCleared reports if the "read_items" edge to the Item entity was cleared.
+func (m *UserMutation) ReadItemsCleared() bool {
+	return m.clearedread_items
+}
+
+// RemoveReadItemIDs removes the "read_items" edge to the Item entity by IDs.
+func (m *UserMutation) RemoveReadItemIDs(ids ...uuid.UUID) {
+	if m.removedread_items == nil {
+		m.removedread_items = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.read_items, ids[i])
+		m.removedread_items[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReadItems returns the removed IDs of the "read_items" edge to the Item entity.
+func (m *UserMutation) RemovedReadItemsIDs() (ids []uuid.UUID) {
+	for id := range m.removedread_items {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReadItemsIDs returns the "read_items" edge IDs in the mutation.
+func (m *UserMutation) ReadItemsIDs() (ids []uuid.UUID) {
+	for id := range m.read_items {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReadItems resets all changes to the "read_items" edge.
+func (m *UserMutation) ResetReadItems() {
+	m.read_items = nil
+	m.clearedread_items = false
+	m.removedread_items = nil
+}
+
+// AddSubscriptionIDs adds the "subscriptions" edge to the Subscription entity by ids.
+func (m *UserMutation) AddSubscriptionIDs(ids ...uuid.UUID) {
+	if m.subscriptions == nil {
+		m.subscriptions = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.subscriptions[ids[i]] = struct{}{}
+	}
+}
+
+// ClearSubscriptions clears the "subscriptions" edge to the Subscription entity.
+func (m *UserMutation) ClearSubscriptions() {
+	m.clearedsubscriptions = true
+}
+
+// SubscriptionsCleared reports if the "subscriptions" edge to the Subscription entity was cleared.
+func (m *UserMutation) SubscriptionsCleared() bool {
+	return m.clearedsubscriptions
+}
+
+// RemoveSubscriptionIDs removes the "subscriptions" edge to the Subscription entity by IDs.
+func (m *UserMutation) RemoveSubscriptionIDs(ids ...uuid.UUID) {
+	if m.removedsubscriptions == nil {
+		m.removedsubscriptions = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.subscriptions, ids[i])
+		m.removedsubscriptions[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedSubscriptions returns the removed IDs of the "subscriptions" edge to the Subscription entity.
+func (m *UserMutation) RemovedSubscriptionsIDs() (ids []uuid.UUID) {
+	for id := range m.removedsubscriptions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// SubscriptionsIDs returns the "subscriptions" edge IDs in the mutation.
+func (m *UserMutation) SubscriptionsIDs() (ids []uuid.UUID) {
+	for id := range m.subscriptions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetSubscriptions resets all changes to the "subscriptions" edge.
+func (m *UserMutation) ResetSubscriptions() {
+	m.subscriptions = nil
+	m.clearedsubscriptions = false
+	m.removedsubscriptions = nil
+}
+
+// AddReadIDs adds the "reads" edge to the Read entity by ids.
+func (m *UserMutation) AddReadIDs(ids ...uuid.UUID) {
+	if m.reads == nil {
+		m.reads = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.reads[ids[i]] = struct{}{}
+	}
+}
+
+// ClearReads clears the "reads" edge to the Read entity.
+func (m *UserMutation) ClearReads() {
+	m.clearedreads = true
+}
+
+// ReadsCleared reports if the "reads" edge to the Read entity was cleared.
+func (m *UserMutation) ReadsCleared() bool {
+	return m.clearedreads
+}
+
+// RemoveReadIDs removes the "reads" edge to the Read entity by IDs.
+func (m *UserMutation) RemoveReadIDs(ids ...uuid.UUID) {
+	if m.removedreads == nil {
+		m.removedreads = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.reads, ids[i])
+		m.removedreads[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReads returns the removed IDs of the "reads" edge to the Read entity.
+func (m *UserMutation) RemovedReadsIDs() (ids []uuid.UUID) {
+	for id := range m.removedreads {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReadsIDs returns the "reads" edge IDs in the mutation.
+func (m *UserMutation) ReadsIDs() (ids []uuid.UUID) {
+	for id := range m.reads {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReads resets all changes to the "reads" edge.
+func (m *UserMutation) ResetReads() {
+	m.reads = nil
+	m.clearedreads = false
+	m.removedreads = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -406,48 +2588,162 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.subscribed_feeds != nil {
+		edges = append(edges, user.EdgeSubscribedFeeds)
+	}
+	if m.read_items != nil {
+		edges = append(edges, user.EdgeReadItems)
+	}
+	if m.subscriptions != nil {
+		edges = append(edges, user.EdgeSubscriptions)
+	}
+	if m.reads != nil {
+		edges = append(edges, user.EdgeReads)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeSubscribedFeeds:
+		ids := make([]ent.Value, 0, len(m.subscribed_feeds))
+		for id := range m.subscribed_feeds {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeReadItems:
+		ids := make([]ent.Value, 0, len(m.read_items))
+		for id := range m.read_items {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeSubscriptions:
+		ids := make([]ent.Value, 0, len(m.subscriptions))
+		for id := range m.subscriptions {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeReads:
+		ids := make([]ent.Value, 0, len(m.reads))
+		for id := range m.reads {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.removedsubscribed_feeds != nil {
+		edges = append(edges, user.EdgeSubscribedFeeds)
+	}
+	if m.removedread_items != nil {
+		edges = append(edges, user.EdgeReadItems)
+	}
+	if m.removedsubscriptions != nil {
+		edges = append(edges, user.EdgeSubscriptions)
+	}
+	if m.removedreads != nil {
+		edges = append(edges, user.EdgeReads)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *UserMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeSubscribedFeeds:
+		ids := make([]ent.Value, 0, len(m.removedsubscribed_feeds))
+		for id := range m.removedsubscribed_feeds {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeReadItems:
+		ids := make([]ent.Value, 0, len(m.removedread_items))
+		for id := range m.removedread_items {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeSubscriptions:
+		ids := make([]ent.Value, 0, len(m.removedsubscriptions))
+		for id := range m.removedsubscriptions {
+			ids = append(ids, id)
+		}
+		return ids
+	case user.EdgeReads:
+		ids := make([]ent.Value, 0, len(m.removedreads))
+		for id := range m.removedreads {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 4)
+	if m.clearedsubscribed_feeds {
+		edges = append(edges, user.EdgeSubscribedFeeds)
+	}
+	if m.clearedread_items {
+		edges = append(edges, user.EdgeReadItems)
+	}
+	if m.clearedsubscriptions {
+		edges = append(edges, user.EdgeSubscriptions)
+	}
+	if m.clearedreads {
+		edges = append(edges, user.EdgeReads)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
+	switch name {
+	case user.EdgeSubscribedFeeds:
+		return m.clearedsubscribed_feeds
+	case user.EdgeReadItems:
+		return m.clearedread_items
+	case user.EdgeSubscriptions:
+		return m.clearedsubscriptions
+	case user.EdgeReads:
+		return m.clearedreads
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown User unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
+	switch name {
+	case user.EdgeSubscribedFeeds:
+		m.ResetSubscribedFeeds()
+		return nil
+	case user.EdgeReadItems:
+		m.ResetReadItems()
+		return nil
+	case user.EdgeSubscriptions:
+		m.ResetSubscriptions()
+		return nil
+	case user.EdgeReads:
+		m.ResetReads()
+		return nil
+	}
 	return fmt.Errorf("unknown User edge %s", name)
 }

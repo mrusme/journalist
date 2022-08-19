@@ -22,6 +22,60 @@ type User struct {
 	Password string `json:"-"`
 	// Role holds the value of the "role" field.
 	Role string `json:"role,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges UserEdges `json:"edges"`
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// SubscribedFeeds holds the value of the subscribed_feeds edge.
+	SubscribedFeeds []*Feed `json:"subscribed_feeds,omitempty"`
+	// ReadItems holds the value of the read_items edge.
+	ReadItems []*Item `json:"read_items,omitempty"`
+	// Subscriptions holds the value of the subscriptions edge.
+	Subscriptions []*Subscription `json:"subscriptions,omitempty"`
+	// Reads holds the value of the reads edge.
+	Reads []*Read `json:"reads,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [4]bool
+}
+
+// SubscribedFeedsOrErr returns the SubscribedFeeds value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SubscribedFeedsOrErr() ([]*Feed, error) {
+	if e.loadedTypes[0] {
+		return e.SubscribedFeeds, nil
+	}
+	return nil, &NotLoadedError{edge: "subscribed_feeds"}
+}
+
+// ReadItemsOrErr returns the ReadItems value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReadItemsOrErr() ([]*Item, error) {
+	if e.loadedTypes[1] {
+		return e.ReadItems, nil
+	}
+	return nil, &NotLoadedError{edge: "read_items"}
+}
+
+// SubscriptionsOrErr returns the Subscriptions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SubscriptionsOrErr() ([]*Subscription, error) {
+	if e.loadedTypes[2] {
+		return e.Subscriptions, nil
+	}
+	return nil, &NotLoadedError{edge: "subscriptions"}
+}
+
+// ReadsOrErr returns the Reads value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReadsOrErr() ([]*Read, error) {
+	if e.loadedTypes[3] {
+		return e.Reads, nil
+	}
+	return nil, &NotLoadedError{edge: "reads"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -75,6 +129,26 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QuerySubscribedFeeds queries the "subscribed_feeds" edge of the User entity.
+func (u *User) QuerySubscribedFeeds() *FeedQuery {
+	return (&UserClient{config: u.config}).QuerySubscribedFeeds(u)
+}
+
+// QueryReadItems queries the "read_items" edge of the User entity.
+func (u *User) QueryReadItems() *ItemQuery {
+	return (&UserClient{config: u.config}).QueryReadItems(u)
+}
+
+// QuerySubscriptions queries the "subscriptions" edge of the User entity.
+func (u *User) QuerySubscriptions() *SubscriptionQuery {
+	return (&UserClient{config: u.config}).QuerySubscriptions(u)
+}
+
+// QueryReads queries the "reads" edge of the User entity.
+func (u *User) QueryReads() *ReadQuery {
+	return (&UserClient{config: u.config}).QueryReads(u)
 }
 
 // Update returns a builder for updating this User.

@@ -4,7 +4,11 @@ package ent
 
 import (
 	"github.com/google/uuid"
+	"github.com/mrusme/journalist/ent/feed"
+	"github.com/mrusme/journalist/ent/item"
+	"github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/schema"
+	"github.com/mrusme/journalist/ent/subscription"
 	"github.com/mrusme/journalist/ent/user"
 )
 
@@ -12,6 +16,30 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	feedFields := schema.Feed{}.Fields()
+	_ = feedFields
+	// feedDescID is the schema descriptor for id field.
+	feedDescID := feedFields[0].Descriptor()
+	// feed.DefaultID holds the default value on creation for the id field.
+	feed.DefaultID = feedDescID.Default.(func() uuid.UUID)
+	itemFields := schema.Item{}.Fields()
+	_ = itemFields
+	// itemDescID is the schema descriptor for id field.
+	itemDescID := itemFields[0].Descriptor()
+	// item.DefaultID holds the default value on creation for the id field.
+	item.DefaultID = itemDescID.Default.(func() uuid.UUID)
+	readFields := schema.Read{}.Fields()
+	_ = readFields
+	// readDescID is the schema descriptor for id field.
+	readDescID := readFields[0].Descriptor()
+	// read.DefaultID holds the default value on creation for the id field.
+	read.DefaultID = readDescID.Default.(func() uuid.UUID)
+	subscriptionFields := schema.Subscription{}.Fields()
+	_ = subscriptionFields
+	// subscriptionDescID is the schema descriptor for id field.
+	subscriptionDescID := subscriptionFields[0].Descriptor()
+	// subscription.DefaultID holds the default value on creation for the id field.
+	subscription.DefaultID = subscriptionDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUsername is the schema descriptor for username field.

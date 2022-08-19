@@ -8,6 +8,101 @@ import (
 )
 
 var (
+	// FeedsColumns holds the columns for the "feeds" table.
+	FeedsColumns = []*schema.Column{
+		{Name: "oid", Type: field.TypeUUID},
+	}
+	// FeedsTable holds the schema information for the "feeds" table.
+	FeedsTable = &schema.Table{
+		Name:       "feeds",
+		Columns:    FeedsColumns,
+		PrimaryKey: []*schema.Column{FeedsColumns[0]},
+	}
+	// ItemsColumns holds the columns for the "items" table.
+	ItemsColumns = []*schema.Column{
+		{Name: "oid", Type: field.TypeUUID},
+		{Name: "feed_items", Type: field.TypeUUID, Nullable: true},
+	}
+	// ItemsTable holds the schema information for the "items" table.
+	ItemsTable = &schema.Table{
+		Name:       "items",
+		Columns:    ItemsColumns,
+		PrimaryKey: []*schema.Column{ItemsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "items_feeds_items",
+				Columns:    []*schema.Column{ItemsColumns[1]},
+				RefColumns: []*schema.Column{FeedsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// ReadsColumns holds the columns for the "reads" table.
+	ReadsColumns = []*schema.Column{
+		{Name: "oid", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "item_id", Type: field.TypeUUID},
+	}
+	// ReadsTable holds the schema information for the "reads" table.
+	ReadsTable = &schema.Table{
+		Name:       "reads",
+		Columns:    ReadsColumns,
+		PrimaryKey: []*schema.Column{ReadsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "reads_users_user",
+				Columns:    []*schema.Column{ReadsColumns[1]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "reads_items_item",
+				Columns:    []*schema.Column{ReadsColumns[2]},
+				RefColumns: []*schema.Column{ItemsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "read_user_id_item_id",
+				Unique:  true,
+				Columns: []*schema.Column{ReadsColumns[1], ReadsColumns[2]},
+			},
+		},
+	}
+	// SubscriptionsColumns holds the columns for the "subscriptions" table.
+	SubscriptionsColumns = []*schema.Column{
+		{Name: "oid", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "feed_id", Type: field.TypeUUID},
+	}
+	// SubscriptionsTable holds the schema information for the "subscriptions" table.
+	SubscriptionsTable = &schema.Table{
+		Name:       "subscriptions",
+		Columns:    SubscriptionsColumns,
+		PrimaryKey: []*schema.Column{SubscriptionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "subscriptions_users_user",
+				Columns:    []*schema.Column{SubscriptionsColumns[1]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "subscriptions_feeds_feed",
+				Columns:    []*schema.Column{SubscriptionsColumns[2]},
+				RefColumns: []*schema.Column{FeedsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "subscription_user_id_feed_id",
+				Unique:  true,
+				Columns: []*schema.Column{SubscriptionsColumns[1], SubscriptionsColumns[2]},
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "oid", Type: field.TypeUUID},
@@ -23,9 +118,18 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		FeedsTable,
+		ItemsTable,
+		ReadsTable,
+		SubscriptionsTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	ItemsTable.ForeignKeys[0].RefTable = FeedsTable
+	ReadsTable.ForeignKeys[0].RefTable = UsersTable
+	ReadsTable.ForeignKeys[1].RefTable = ItemsTable
+	SubscriptionsTable.ForeignKeys[0].RefTable = UsersTable
+	SubscriptionsTable.ForeignKeys[1].RefTable = FeedsTable
 }

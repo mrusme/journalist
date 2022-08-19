@@ -4,6 +4,7 @@ package user
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/predicate"
 )
@@ -394,6 +395,118 @@ func RoleEqualFold(v string) predicate.User {
 func RoleContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldRole), v))
+	})
+}
+
+// HasSubscribedFeeds applies the HasEdge predicate on the "subscribed_feeds" edge.
+func HasSubscribedFeeds() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(SubscribedFeedsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, SubscribedFeedsTable, SubscribedFeedsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSubscribedFeedsWith applies the HasEdge predicate on the "subscribed_feeds" edge with a given conditions (other predicates).
+func HasSubscribedFeedsWith(preds ...predicate.Feed) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(SubscribedFeedsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, SubscribedFeedsTable, SubscribedFeedsPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasReadItems applies the HasEdge predicate on the "read_items" edge.
+func HasReadItems() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReadItemsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ReadItemsTable, ReadItemsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasReadItemsWith applies the HasEdge predicate on the "read_items" edge with a given conditions (other predicates).
+func HasReadItemsWith(preds ...predicate.Item) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReadItemsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ReadItemsTable, ReadItemsPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSubscriptions applies the HasEdge predicate on the "subscriptions" edge.
+func HasSubscriptions() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(SubscriptionsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, SubscriptionsTable, SubscriptionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSubscriptionsWith applies the HasEdge predicate on the "subscriptions" edge with a given conditions (other predicates).
+func HasSubscriptionsWith(preds ...predicate.Subscription) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(SubscriptionsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, SubscriptionsTable, SubscriptionsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasReads applies the HasEdge predicate on the "reads" edge.
+func HasReads() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReadsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ReadsTable, ReadsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasReadsWith applies the HasEdge predicate on the "reads" edge with a given conditions (other predicates).
+func HasReadsWith(preds ...predicate.Read) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReadsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ReadsTable, ReadsColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 
