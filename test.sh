@@ -4,6 +4,7 @@ api_url="http://127.0.0.1:8000/api/v1"
 admin_user="admin"
 admin_pass="admin"
 
+user1_id=""
 user1_user="user1"
 user1_pass="p4sS!"
 
@@ -42,16 +43,33 @@ perform() {
 failfast() {
   if [ "$1" -ne "0" ]
   then
+    printf "  FAILED: %s\n" "$2"
     exit "$1"
+  else
+    printf "  SUCCESS\n"
   fi
 }
 
+
+#------------------------------------------------------------------------------#
+printf "\
+## Listing all users as admin \
+\n"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
   perform get \
        on users \
        as $admin_user $admin_pass
 )
-failfast $?
+failfast $? "$out"
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Creating user as admin with username %s \
+\n" "$user1_user"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
   perform post \
        on users \
@@ -62,14 +80,40 @@ out=$(
        \"role\": \"user\"
      }"
 )
-failfast $?
+failfast $? "$out"
+#------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Listing all users as admin \
+\n"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
   perform get \
        on users \
        as $admin_user $admin_pass
 )
-failfast $?
+failfast $? "$out"
+user1_id="$(printf "%s" "$out" | jq --raw-output ".users[] | select(.username == \"$user1_user\") | .id")"
+#------------------------------------------------------------------------------#
 
-user1_id="$(printf "%s" "$out" | jq ".users[] | select(.username == \"$user1_user\") | .id")"
-echo "$user1_id"
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Updating %s as admin with 'admin' role \
+\n" "$user1_user"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
+out=$(
+  perform put \
+       on users/$user1_id \
+       as $admin_user $admin_pass \
+     with "{
+       \"role\": \"admin\"
+     }"
+)
+failfast $? "$out"
+#------------------------------------------------------------------------------#
 
