@@ -15,6 +15,12 @@ type UserShowModel struct {
   Role              string        `json:"role"`
 }
 
+type UserCreateModel struct {
+  Username          string        `json:"username"`
+  Password          string        `json:"password"`
+  Role              string        `json:"role"`
+}
+
 func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
   endpoint := new(handler)
   endpoint.EntClient = entClient
@@ -22,7 +28,7 @@ func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
   usersRouter := (*fiberRouter).Group("/users")
   usersRouter.Get("/", endpoint.List)
   usersRouter.Get("/:id", endpoint.Show)
-  // usersRouter.Post("/", endpoint.Create)
+  usersRouter.Post("/", endpoint.Create)
   // usersRouter.Put("/:id", endpoint.Update)
   // usersRouter.Delete("/:id", endpoint.Destroy)
 }
