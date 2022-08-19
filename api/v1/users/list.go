@@ -1,16 +1,17 @@
 package users
 
 import (
-  "log"
 	"context"
-	"github.com/google/uuid"
+	// "github.com/google/uuid"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mrusme/journalist/ent/user"
+	// "github.com/mrusme/journalist/ent/user"
 	// "github.com/mrusme/journalist/ent"
 )
 
 func (h *handler) List(ctx *fiber.Ctx) error {
+  var err error
+
   role := ctx.Locals("role").(string)
 
   if role != "admin" {
@@ -23,20 +24,9 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       })
   }
 
-  var list[]struct {
-    ID                uuid.UUID     `json:"id"`
-    Username          string        `json:"username"`
-    Role              string        `json:"role"`
-  }
-  log.Println("ID: %s", user.FieldID)
-  err := h.EntClient.User.
+  dbUsers, err := h.EntClient.User.
     Query().
-    Select(
-      user.FieldID,
-      user.FieldUsername,
-      user.FieldRole,
-    ).
-    Scan(context.Background(), &list)
+    All(context.Background())
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
@@ -47,11 +37,21 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       })
   }
 
+  showUsers := make([]UserShowModel, len(dbUsers))
+
+  for i, dbUser := range dbUsers {
+    showUsers[i] = UserShowModel{
+      ID: dbUser.ID.String(),
+      Username: dbUser.Username,
+      Role: dbUser.Role,
+    }
+  }
+
   return ctx.
     Status(fiber.StatusOK).
     JSON(&fiber.Map{
       "success": true,
-      "users": list,
+      "users": showUsers,
       "message": "",
     })
 }

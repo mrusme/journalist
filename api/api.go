@@ -56,7 +56,7 @@ func authorizer(entClient *ent.Client) fiber.Handler {
       return ctx.SendStatus(fiber.StatusUnauthorized)
     }
 
-    ctx.Locals("user_id", u.ID)
+    ctx.Locals("user_id", u.ID.String())
     ctx.Locals("username", u.Username)
     // ctx.Locals("password", u.Password)
     ctx.Locals("role", u.Role)
