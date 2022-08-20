@@ -14,6 +14,16 @@ import (
 	"github.com/go-shiori/go-readability"
 )
 
+type ItemCrawled struct {
+  Title         string
+  Author        string
+  Excerpt       string
+  SiteName      string
+  Image         string
+  ContentHtml   string
+  ContentText   string
+}
+
 type Crawler struct {
   source            io.ReadCloser
   sourceLocation    string
@@ -77,17 +87,27 @@ func (c *Crawler) SetBasicAuth(username string, password string) {
   c.password = password
 }
 
-func (c *Crawler) GetReadable() (string, string, error) {
+func (c *Crawler) GetReadable() (ItemCrawled, error) {
   if err := c.FromAuto(); err != nil {
-    return "", "", err
+    return ItemCrawled{}, err
   }
 
   article, err := readability.FromReader(c.source, c.sourceLocationUrl)
   if err != nil {
-    return "", "", err
+    return ItemCrawled{}, err
   }
 
-  return article.Title, article.Content, nil
+  item := ItemCrawled{
+    Title: article.Title,
+    Author: article.Byline,
+    Excerpt: article.Excerpt,
+    SiteName: article.SiteName,
+    Image: article.Image,
+    ContentHtml: article.Content,
+    ContentText: article.TextContent,
+  }
+
+  return item, nil
 }
 
 func (c *Crawler) FromAuto() (error) {

@@ -48,16 +48,17 @@ var (
 	// ItemsColumns holds the columns for the "items" table.
 	ItemsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
+		{Name: "item_guid", Type: field.TypeString},
 		{Name: "item_title", Type: field.TypeString},
 		{Name: "item_description", Type: field.TypeString},
 		{Name: "item_content", Type: field.TypeString},
 		{Name: "item_link", Type: field.TypeString},
 		{Name: "item_updated", Type: field.TypeString},
 		{Name: "item_published", Type: field.TypeString},
-		{Name: "item_author", Type: field.TypeString},
-		{Name: "item_authors", Type: field.TypeString},
-		{Name: "item_guid", Type: field.TypeString},
-		{Name: "item_image", Type: field.TypeString},
+		{Name: "item_author_name", Type: field.TypeString},
+		{Name: "item_author_email", Type: field.TypeString},
+		{Name: "item_image_title", Type: field.TypeString},
+		{Name: "item_image_url", Type: field.TypeString},
 		{Name: "item_categories", Type: field.TypeString},
 		{Name: "item_enclosures", Type: field.TypeString},
 		{Name: "crawler_title", Type: field.TypeString},
@@ -79,7 +80,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "items_feeds_items",
-				Columns:    []*schema.Column{ItemsColumns[22]},
+				Columns:    []*schema.Column{ItemsColumns[23]},
 				RefColumns: []*schema.Column{FeedsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

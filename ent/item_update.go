@@ -32,6 +32,12 @@ func (iu *ItemUpdate) Where(ps ...predicate.Item) *ItemUpdate {
 	return iu
 }
 
+// SetItemGUID sets the "item_guid" field.
+func (iu *ItemUpdate) SetItemGUID(s string) *ItemUpdate {
+	iu.mutation.SetItemGUID(s)
+	return iu
+}
+
 // SetItemTitle sets the "item_title" field.
 func (iu *ItemUpdate) SetItemTitle(s string) *ItemUpdate {
 	iu.mutation.SetItemTitle(s)
@@ -68,27 +74,27 @@ func (iu *ItemUpdate) SetItemPublished(s string) *ItemUpdate {
 	return iu
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (iu *ItemUpdate) SetItemAuthor(s string) *ItemUpdate {
-	iu.mutation.SetItemAuthor(s)
+// SetItemAuthorName sets the "item_author_name" field.
+func (iu *ItemUpdate) SetItemAuthorName(s string) *ItemUpdate {
+	iu.mutation.SetItemAuthorName(s)
 	return iu
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (iu *ItemUpdate) SetItemAuthors(s string) *ItemUpdate {
-	iu.mutation.SetItemAuthors(s)
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (iu *ItemUpdate) SetItemAuthorEmail(s string) *ItemUpdate {
+	iu.mutation.SetItemAuthorEmail(s)
 	return iu
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (iu *ItemUpdate) SetItemGUID(s string) *ItemUpdate {
-	iu.mutation.SetItemGUID(s)
+// SetItemImageTitle sets the "item_image_title" field.
+func (iu *ItemUpdate) SetItemImageTitle(s string) *ItemUpdate {
+	iu.mutation.SetItemImageTitle(s)
 	return iu
 }
 
-// SetItemImage sets the "item_image" field.
-func (iu *ItemUpdate) SetItemImage(s string) *ItemUpdate {
-	iu.mutation.SetItemImage(s)
+// SetItemImageURL sets the "item_image_url" field.
+func (iu *ItemUpdate) SetItemImageURL(s string) *ItemUpdate {
+	iu.mutation.SetItemImageURL(s)
 	return iu
 }
 
@@ -365,6 +371,13 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := iu.mutation.ItemGUID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldItemGUID,
+		})
+	}
 	if value, ok := iu.mutation.ItemTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -407,32 +420,32 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldItemPublished,
 		})
 	}
-	if value, ok := iu.mutation.ItemAuthor(); ok {
+	if value, ok := iu.mutation.ItemAuthorName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthor,
+			Column: item.FieldItemAuthorName,
 		})
 	}
-	if value, ok := iu.mutation.ItemAuthors(); ok {
+	if value, ok := iu.mutation.ItemAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthors,
+			Column: item.FieldItemAuthorEmail,
 		})
 	}
-	if value, ok := iu.mutation.ItemGUID(); ok {
+	if value, ok := iu.mutation.ItemImageTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemGUID,
+			Column: item.FieldItemImageTitle,
 		})
 	}
-	if value, ok := iu.mutation.ItemImage(); ok {
+	if value, ok := iu.mutation.ItemImageURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemImage,
+			Column: item.FieldItemImageURL,
 		})
 	}
 	if value, ok := iu.mutation.ItemCategories(); ok {
@@ -695,6 +708,12 @@ type ItemUpdateOne struct {
 	mutation *ItemMutation
 }
 
+// SetItemGUID sets the "item_guid" field.
+func (iuo *ItemUpdateOne) SetItemGUID(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemGUID(s)
+	return iuo
+}
+
 // SetItemTitle sets the "item_title" field.
 func (iuo *ItemUpdateOne) SetItemTitle(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemTitle(s)
@@ -731,27 +750,27 @@ func (iuo *ItemUpdateOne) SetItemPublished(s string) *ItemUpdateOne {
 	return iuo
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (iuo *ItemUpdateOne) SetItemAuthor(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemAuthor(s)
+// SetItemAuthorName sets the "item_author_name" field.
+func (iuo *ItemUpdateOne) SetItemAuthorName(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemAuthorName(s)
 	return iuo
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (iuo *ItemUpdateOne) SetItemAuthors(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemAuthors(s)
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (iuo *ItemUpdateOne) SetItemAuthorEmail(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemAuthorEmail(s)
 	return iuo
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (iuo *ItemUpdateOne) SetItemGUID(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemGUID(s)
+// SetItemImageTitle sets the "item_image_title" field.
+func (iuo *ItemUpdateOne) SetItemImageTitle(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemImageTitle(s)
 	return iuo
 }
 
-// SetItemImage sets the "item_image" field.
-func (iuo *ItemUpdateOne) SetItemImage(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemImage(s)
+// SetItemImageURL sets the "item_image_url" field.
+func (iuo *ItemUpdateOne) SetItemImageURL(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemImageURL(s)
 	return iuo
 }
 
@@ -1058,6 +1077,13 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			}
 		}
 	}
+	if value, ok := iuo.mutation.ItemGUID(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldItemGUID,
+		})
+	}
 	if value, ok := iuo.mutation.ItemTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -1100,32 +1126,32 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldItemPublished,
 		})
 	}
-	if value, ok := iuo.mutation.ItemAuthor(); ok {
+	if value, ok := iuo.mutation.ItemAuthorName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthor,
+			Column: item.FieldItemAuthorName,
 		})
 	}
-	if value, ok := iuo.mutation.ItemAuthors(); ok {
+	if value, ok := iuo.mutation.ItemAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthors,
+			Column: item.FieldItemAuthorEmail,
 		})
 	}
-	if value, ok := iuo.mutation.ItemGUID(); ok {
+	if value, ok := iuo.mutation.ItemImageTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemGUID,
+			Column: item.FieldItemImageTitle,
 		})
 	}
-	if value, ok := iuo.mutation.ItemImage(); ok {
+	if value, ok := iuo.mutation.ItemImageURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemImage,
+			Column: item.FieldItemImageURL,
 		})
 	}
 	if value, ok := iuo.mutation.ItemCategories(); ok {

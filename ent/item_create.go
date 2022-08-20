@@ -27,6 +27,12 @@ type ItemCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetItemGUID sets the "item_guid" field.
+func (ic *ItemCreate) SetItemGUID(s string) *ItemCreate {
+	ic.mutation.SetItemGUID(s)
+	return ic
+}
+
 // SetItemTitle sets the "item_title" field.
 func (ic *ItemCreate) SetItemTitle(s string) *ItemCreate {
 	ic.mutation.SetItemTitle(s)
@@ -63,27 +69,27 @@ func (ic *ItemCreate) SetItemPublished(s string) *ItemCreate {
 	return ic
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (ic *ItemCreate) SetItemAuthor(s string) *ItemCreate {
-	ic.mutation.SetItemAuthor(s)
+// SetItemAuthorName sets the "item_author_name" field.
+func (ic *ItemCreate) SetItemAuthorName(s string) *ItemCreate {
+	ic.mutation.SetItemAuthorName(s)
 	return ic
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (ic *ItemCreate) SetItemAuthors(s string) *ItemCreate {
-	ic.mutation.SetItemAuthors(s)
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (ic *ItemCreate) SetItemAuthorEmail(s string) *ItemCreate {
+	ic.mutation.SetItemAuthorEmail(s)
 	return ic
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (ic *ItemCreate) SetItemGUID(s string) *ItemCreate {
-	ic.mutation.SetItemGUID(s)
+// SetItemImageTitle sets the "item_image_title" field.
+func (ic *ItemCreate) SetItemImageTitle(s string) *ItemCreate {
+	ic.mutation.SetItemImageTitle(s)
 	return ic
 }
 
-// SetItemImage sets the "item_image" field.
-func (ic *ItemCreate) SetItemImage(s string) *ItemCreate {
-	ic.mutation.SetItemImage(s)
+// SetItemImageURL sets the "item_image_url" field.
+func (ic *ItemCreate) SetItemImageURL(s string) *ItemCreate {
+	ic.mutation.SetItemImageURL(s)
 	return ic
 }
 
@@ -325,6 +331,9 @@ func (ic *ItemCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ic *ItemCreate) check() error {
+	if _, ok := ic.mutation.ItemGUID(); !ok {
+		return &ValidationError{Name: "item_guid", err: errors.New(`ent: missing required field "Item.item_guid"`)}
+	}
 	if _, ok := ic.mutation.ItemTitle(); !ok {
 		return &ValidationError{Name: "item_title", err: errors.New(`ent: missing required field "Item.item_title"`)}
 	}
@@ -348,17 +357,17 @@ func (ic *ItemCreate) check() error {
 	if _, ok := ic.mutation.ItemPublished(); !ok {
 		return &ValidationError{Name: "item_published", err: errors.New(`ent: missing required field "Item.item_published"`)}
 	}
-	if _, ok := ic.mutation.ItemAuthor(); !ok {
-		return &ValidationError{Name: "item_author", err: errors.New(`ent: missing required field "Item.item_author"`)}
+	if _, ok := ic.mutation.ItemAuthorName(); !ok {
+		return &ValidationError{Name: "item_author_name", err: errors.New(`ent: missing required field "Item.item_author_name"`)}
 	}
-	if _, ok := ic.mutation.ItemAuthors(); !ok {
-		return &ValidationError{Name: "item_authors", err: errors.New(`ent: missing required field "Item.item_authors"`)}
+	if _, ok := ic.mutation.ItemAuthorEmail(); !ok {
+		return &ValidationError{Name: "item_author_email", err: errors.New(`ent: missing required field "Item.item_author_email"`)}
 	}
-	if _, ok := ic.mutation.ItemGUID(); !ok {
-		return &ValidationError{Name: "item_guid", err: errors.New(`ent: missing required field "Item.item_guid"`)}
+	if _, ok := ic.mutation.ItemImageTitle(); !ok {
+		return &ValidationError{Name: "item_image_title", err: errors.New(`ent: missing required field "Item.item_image_title"`)}
 	}
-	if _, ok := ic.mutation.ItemImage(); !ok {
-		return &ValidationError{Name: "item_image", err: errors.New(`ent: missing required field "Item.item_image"`)}
+	if _, ok := ic.mutation.ItemImageURL(); !ok {
+		return &ValidationError{Name: "item_image_url", err: errors.New(`ent: missing required field "Item.item_image_url"`)}
 	}
 	if _, ok := ic.mutation.ItemCategories(); !ok {
 		return &ValidationError{Name: "item_categories", err: errors.New(`ent: missing required field "Item.item_categories"`)}
@@ -430,6 +439,14 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
+	if value, ok := ic.mutation.ItemGUID(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldItemGUID,
+		})
+		_node.ItemGUID = value
+	}
 	if value, ok := ic.mutation.ItemTitle(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -478,37 +495,37 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 		})
 		_node.ItemPublished = value
 	}
-	if value, ok := ic.mutation.ItemAuthor(); ok {
+	if value, ok := ic.mutation.ItemAuthorName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthor,
+			Column: item.FieldItemAuthorName,
 		})
-		_node.ItemAuthor = value
+		_node.ItemAuthorName = value
 	}
-	if value, ok := ic.mutation.ItemAuthors(); ok {
+	if value, ok := ic.mutation.ItemAuthorEmail(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemAuthors,
+			Column: item.FieldItemAuthorEmail,
 		})
-		_node.ItemAuthors = value
+		_node.ItemAuthorEmail = value
 	}
-	if value, ok := ic.mutation.ItemGUID(); ok {
+	if value, ok := ic.mutation.ItemImageTitle(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemGUID,
+			Column: item.FieldItemImageTitle,
 		})
-		_node.ItemGUID = value
+		_node.ItemImageTitle = value
 	}
-	if value, ok := ic.mutation.ItemImage(); ok {
+	if value, ok := ic.mutation.ItemImageURL(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldItemImage,
+			Column: item.FieldItemImageURL,
 		})
-		_node.ItemImage = value
+		_node.ItemImageURL = value
 	}
 	if value, ok := ic.mutation.ItemCategories(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -670,7 +687,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.Item.Create().
-//		SetItemTitle(v).
+//		SetItemGUID(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -679,7 +696,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.ItemUpsert) {
-//			SetItemTitle(v+v).
+//			SetItemGUID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -716,6 +733,18 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsert) SetItemGUID(v string) *ItemUpsert {
+	u.Set(item.FieldItemGUID, v)
+	return u
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemGUID() *ItemUpsert {
+	u.SetExcluded(item.FieldItemGUID)
+	return u
+}
 
 // SetItemTitle sets the "item_title" field.
 func (u *ItemUpsert) SetItemTitle(v string) *ItemUpsert {
@@ -789,51 +818,51 @@ func (u *ItemUpsert) UpdateItemPublished() *ItemUpsert {
 	return u
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (u *ItemUpsert) SetItemAuthor(v string) *ItemUpsert {
-	u.Set(item.FieldItemAuthor, v)
+// SetItemAuthorName sets the "item_author_name" field.
+func (u *ItemUpsert) SetItemAuthorName(v string) *ItemUpsert {
+	u.Set(item.FieldItemAuthorName, v)
 	return u
 }
 
-// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
-func (u *ItemUpsert) UpdateItemAuthor() *ItemUpsert {
-	u.SetExcluded(item.FieldItemAuthor)
+// UpdateItemAuthorName sets the "item_author_name" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemAuthorName() *ItemUpsert {
+	u.SetExcluded(item.FieldItemAuthorName)
 	return u
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (u *ItemUpsert) SetItemAuthors(v string) *ItemUpsert {
-	u.Set(item.FieldItemAuthors, v)
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (u *ItemUpsert) SetItemAuthorEmail(v string) *ItemUpsert {
+	u.Set(item.FieldItemAuthorEmail, v)
 	return u
 }
 
-// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
-func (u *ItemUpsert) UpdateItemAuthors() *ItemUpsert {
-	u.SetExcluded(item.FieldItemAuthors)
+// UpdateItemAuthorEmail sets the "item_author_email" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemAuthorEmail() *ItemUpsert {
+	u.SetExcluded(item.FieldItemAuthorEmail)
 	return u
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (u *ItemUpsert) SetItemGUID(v string) *ItemUpsert {
-	u.Set(item.FieldItemGUID, v)
+// SetItemImageTitle sets the "item_image_title" field.
+func (u *ItemUpsert) SetItemImageTitle(v string) *ItemUpsert {
+	u.Set(item.FieldItemImageTitle, v)
 	return u
 }
 
-// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
-func (u *ItemUpsert) UpdateItemGUID() *ItemUpsert {
-	u.SetExcluded(item.FieldItemGUID)
+// UpdateItemImageTitle sets the "item_image_title" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemImageTitle() *ItemUpsert {
+	u.SetExcluded(item.FieldItemImageTitle)
 	return u
 }
 
-// SetItemImage sets the "item_image" field.
-func (u *ItemUpsert) SetItemImage(v string) *ItemUpsert {
-	u.Set(item.FieldItemImage, v)
+// SetItemImageURL sets the "item_image_url" field.
+func (u *ItemUpsert) SetItemImageURL(v string) *ItemUpsert {
+	u.Set(item.FieldItemImageURL, v)
 	return u
 }
 
-// UpdateItemImage sets the "item_image" field to the value that was provided on create.
-func (u *ItemUpsert) UpdateItemImage() *ItemUpsert {
-	u.SetExcluded(item.FieldItemImage)
+// UpdateItemImageURL sets the "item_image_url" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemImageURL() *ItemUpsert {
+	u.SetExcluded(item.FieldItemImageURL)
 	return u
 }
 
@@ -1019,6 +1048,20 @@ func (u *ItemUpsertOne) Update(set func(*ItemUpsert)) *ItemUpsertOne {
 	return u
 }
 
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsertOne) SetItemGUID(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemGUID(v)
+	})
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemGUID() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemGUID()
+	})
+}
+
 // SetItemTitle sets the "item_title" field.
 func (u *ItemUpsertOne) SetItemTitle(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1103,59 +1146,59 @@ func (u *ItemUpsertOne) UpdateItemPublished() *ItemUpsertOne {
 	})
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (u *ItemUpsertOne) SetItemAuthor(v string) *ItemUpsertOne {
+// SetItemAuthorName sets the "item_author_name" field.
+func (u *ItemUpsertOne) SetItemAuthorName(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemAuthor(v)
+		s.SetItemAuthorName(v)
 	})
 }
 
-// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
-func (u *ItemUpsertOne) UpdateItemAuthor() *ItemUpsertOne {
+// UpdateItemAuthorName sets the "item_author_name" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemAuthorName() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemAuthor()
+		s.UpdateItemAuthorName()
 	})
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (u *ItemUpsertOne) SetItemAuthors(v string) *ItemUpsertOne {
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (u *ItemUpsertOne) SetItemAuthorEmail(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemAuthors(v)
+		s.SetItemAuthorEmail(v)
 	})
 }
 
-// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
-func (u *ItemUpsertOne) UpdateItemAuthors() *ItemUpsertOne {
+// UpdateItemAuthorEmail sets the "item_author_email" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemAuthorEmail() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemAuthors()
+		s.UpdateItemAuthorEmail()
 	})
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (u *ItemUpsertOne) SetItemGUID(v string) *ItemUpsertOne {
+// SetItemImageTitle sets the "item_image_title" field.
+func (u *ItemUpsertOne) SetItemImageTitle(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemGUID(v)
+		s.SetItemImageTitle(v)
 	})
 }
 
-// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
-func (u *ItemUpsertOne) UpdateItemGUID() *ItemUpsertOne {
+// UpdateItemImageTitle sets the "item_image_title" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemImageTitle() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemGUID()
+		s.UpdateItemImageTitle()
 	})
 }
 
-// SetItemImage sets the "item_image" field.
-func (u *ItemUpsertOne) SetItemImage(v string) *ItemUpsertOne {
+// SetItemImageURL sets the "item_image_url" field.
+func (u *ItemUpsertOne) SetItemImageURL(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemImage(v)
+		s.SetItemImageURL(v)
 	})
 }
 
-// UpdateItemImage sets the "item_image" field to the value that was provided on create.
-func (u *ItemUpsertOne) UpdateItemImage() *ItemUpsertOne {
+// UpdateItemImageURL sets the "item_image_url" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemImageURL() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemImage()
+		s.UpdateItemImageURL()
 	})
 }
 
@@ -1445,7 +1488,7 @@ func (icb *ItemCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.ItemUpsert) {
-//			SetItemTitle(v+v).
+//			SetItemGUID(v+v).
 //		}).
 //		Exec(ctx)
 //
@@ -1527,6 +1570,20 @@ func (u *ItemUpsertBulk) Update(set func(*ItemUpsert)) *ItemUpsertBulk {
 		set(&ItemUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsertBulk) SetItemGUID(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemGUID(v)
+	})
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemGUID() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemGUID()
+	})
 }
 
 // SetItemTitle sets the "item_title" field.
@@ -1613,59 +1670,59 @@ func (u *ItemUpsertBulk) UpdateItemPublished() *ItemUpsertBulk {
 	})
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (u *ItemUpsertBulk) SetItemAuthor(v string) *ItemUpsertBulk {
+// SetItemAuthorName sets the "item_author_name" field.
+func (u *ItemUpsertBulk) SetItemAuthorName(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemAuthor(v)
+		s.SetItemAuthorName(v)
 	})
 }
 
-// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
-func (u *ItemUpsertBulk) UpdateItemAuthor() *ItemUpsertBulk {
+// UpdateItemAuthorName sets the "item_author_name" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemAuthorName() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemAuthor()
+		s.UpdateItemAuthorName()
 	})
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (u *ItemUpsertBulk) SetItemAuthors(v string) *ItemUpsertBulk {
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (u *ItemUpsertBulk) SetItemAuthorEmail(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemAuthors(v)
+		s.SetItemAuthorEmail(v)
 	})
 }
 
-// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
-func (u *ItemUpsertBulk) UpdateItemAuthors() *ItemUpsertBulk {
+// UpdateItemAuthorEmail sets the "item_author_email" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemAuthorEmail() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemAuthors()
+		s.UpdateItemAuthorEmail()
 	})
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (u *ItemUpsertBulk) SetItemGUID(v string) *ItemUpsertBulk {
+// SetItemImageTitle sets the "item_image_title" field.
+func (u *ItemUpsertBulk) SetItemImageTitle(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemGUID(v)
+		s.SetItemImageTitle(v)
 	})
 }
 
-// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
-func (u *ItemUpsertBulk) UpdateItemGUID() *ItemUpsertBulk {
+// UpdateItemImageTitle sets the "item_image_title" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemImageTitle() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemGUID()
+		s.UpdateItemImageTitle()
 	})
 }
 
-// SetItemImage sets the "item_image" field.
-func (u *ItemUpsertBulk) SetItemImage(v string) *ItemUpsertBulk {
+// SetItemImageURL sets the "item_image_url" field.
+func (u *ItemUpsertBulk) SetItemImageURL(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.SetItemImage(v)
+		s.SetItemImageURL(v)
 	})
 }
 
-// UpdateItemImage sets the "item_image" field to the value that was provided on create.
-func (u *ItemUpsertBulk) UpdateItemImage() *ItemUpsertBulk {
+// UpdateItemImageURL sets the "item_image_url" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemImageURL() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
-		s.UpdateItemImage()
+		s.UpdateItemImageURL()
 	})
 }
 

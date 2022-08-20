@@ -49,15 +49,15 @@ func init() {
 	itemFields := schema.Item{}.Fields()
 	_ = itemFields
 	// itemDescItemLink is the schema descriptor for item_link field.
-	itemDescItemLink := itemFields[4].Descriptor()
+	itemDescItemLink := itemFields[5].Descriptor()
 	// item.ItemLinkValidator is a validator for the "item_link" field. It is called by the builders before save.
 	item.ItemLinkValidator = itemDescItemLink.Validators[0].(func(string) error)
 	// itemDescCreatedAt is the schema descriptor for created_at field.
-	itemDescCreatedAt := itemFields[20].Descriptor()
+	itemDescCreatedAt := itemFields[21].Descriptor()
 	// item.DefaultCreatedAt holds the default value on creation for the created_at field.
 	item.DefaultCreatedAt = itemDescCreatedAt.Default.(func() time.Time)
 	// itemDescUpdatedAt is the schema descriptor for updated_at field.
-	itemDescUpdatedAt := itemFields[21].Descriptor()
+	itemDescUpdatedAt := itemFields[22].Descriptor()
 	// item.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	item.DefaultUpdatedAt = itemDescUpdatedAt.Default.(func() time.Time)
 	// item.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

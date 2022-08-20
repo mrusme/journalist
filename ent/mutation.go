@@ -1742,16 +1742,17 @@ type ItemMutation struct {
 	op                   Op
 	typ                  string
 	id                   *uuid.UUID
+	item_guid            *string
 	item_title           *string
 	item_description     *string
 	item_content         *string
 	item_link            *string
 	item_updated         *string
 	item_published       *string
-	item_author          *string
-	item_authors         *string
-	item_guid            *string
-	item_image           *string
+	item_author_name     *string
+	item_author_email    *string
+	item_image_title     *string
+	item_image_url       *string
 	item_categories      *string
 	item_enclosures      *string
 	crawler_title        *string
@@ -1879,6 +1880,42 @@ func (m *ItemMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetItemGUID sets the "item_guid" field.
+func (m *ItemMutation) SetItemGUID(s string) {
+	m.item_guid = &s
+}
+
+// ItemGUID returns the value of the "item_guid" field in the mutation.
+func (m *ItemMutation) ItemGUID() (r string, exists bool) {
+	v := m.item_guid
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldItemGUID returns the old "item_guid" field's value of the Item entity.
+// If the Item object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItemMutation) OldItemGUID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldItemGUID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldItemGUID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldItemGUID: %w", err)
+	}
+	return oldValue.ItemGUID, nil
+}
+
+// ResetItemGUID resets all changes to the "item_guid" field.
+func (m *ItemMutation) ResetItemGUID() {
+	m.item_guid = nil
 }
 
 // SetItemTitle sets the "item_title" field.
@@ -2097,148 +2134,148 @@ func (m *ItemMutation) ResetItemPublished() {
 	m.item_published = nil
 }
 
-// SetItemAuthor sets the "item_author" field.
-func (m *ItemMutation) SetItemAuthor(s string) {
-	m.item_author = &s
+// SetItemAuthorName sets the "item_author_name" field.
+func (m *ItemMutation) SetItemAuthorName(s string) {
+	m.item_author_name = &s
 }
 
-// ItemAuthor returns the value of the "item_author" field in the mutation.
-func (m *ItemMutation) ItemAuthor() (r string, exists bool) {
-	v := m.item_author
+// ItemAuthorName returns the value of the "item_author_name" field in the mutation.
+func (m *ItemMutation) ItemAuthorName() (r string, exists bool) {
+	v := m.item_author_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldItemAuthor returns the old "item_author" field's value of the Item entity.
+// OldItemAuthorName returns the old "item_author_name" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemAuthor(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemAuthorName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldItemAuthor is only allowed on UpdateOne operations")
+		return v, errors.New("OldItemAuthorName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldItemAuthor requires an ID field in the mutation")
+		return v, errors.New("OldItemAuthorName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldItemAuthor: %w", err)
+		return v, fmt.Errorf("querying old value for OldItemAuthorName: %w", err)
 	}
-	return oldValue.ItemAuthor, nil
+	return oldValue.ItemAuthorName, nil
 }
 
-// ResetItemAuthor resets all changes to the "item_author" field.
-func (m *ItemMutation) ResetItemAuthor() {
-	m.item_author = nil
+// ResetItemAuthorName resets all changes to the "item_author_name" field.
+func (m *ItemMutation) ResetItemAuthorName() {
+	m.item_author_name = nil
 }
 
-// SetItemAuthors sets the "item_authors" field.
-func (m *ItemMutation) SetItemAuthors(s string) {
-	m.item_authors = &s
+// SetItemAuthorEmail sets the "item_author_email" field.
+func (m *ItemMutation) SetItemAuthorEmail(s string) {
+	m.item_author_email = &s
 }
 
-// ItemAuthors returns the value of the "item_authors" field in the mutation.
-func (m *ItemMutation) ItemAuthors() (r string, exists bool) {
-	v := m.item_authors
+// ItemAuthorEmail returns the value of the "item_author_email" field in the mutation.
+func (m *ItemMutation) ItemAuthorEmail() (r string, exists bool) {
+	v := m.item_author_email
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldItemAuthors returns the old "item_authors" field's value of the Item entity.
+// OldItemAuthorEmail returns the old "item_author_email" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemAuthors(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemAuthorEmail(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldItemAuthors is only allowed on UpdateOne operations")
+		return v, errors.New("OldItemAuthorEmail is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldItemAuthors requires an ID field in the mutation")
+		return v, errors.New("OldItemAuthorEmail requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldItemAuthors: %w", err)
+		return v, fmt.Errorf("querying old value for OldItemAuthorEmail: %w", err)
 	}
-	return oldValue.ItemAuthors, nil
+	return oldValue.ItemAuthorEmail, nil
 }
 
-// ResetItemAuthors resets all changes to the "item_authors" field.
-func (m *ItemMutation) ResetItemAuthors() {
-	m.item_authors = nil
+// ResetItemAuthorEmail resets all changes to the "item_author_email" field.
+func (m *ItemMutation) ResetItemAuthorEmail() {
+	m.item_author_email = nil
 }
 
-// SetItemGUID sets the "item_guid" field.
-func (m *ItemMutation) SetItemGUID(s string) {
-	m.item_guid = &s
+// SetItemImageTitle sets the "item_image_title" field.
+func (m *ItemMutation) SetItemImageTitle(s string) {
+	m.item_image_title = &s
 }
 
-// ItemGUID returns the value of the "item_guid" field in the mutation.
-func (m *ItemMutation) ItemGUID() (r string, exists bool) {
-	v := m.item_guid
+// ItemImageTitle returns the value of the "item_image_title" field in the mutation.
+func (m *ItemMutation) ItemImageTitle() (r string, exists bool) {
+	v := m.item_image_title
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldItemGUID returns the old "item_guid" field's value of the Item entity.
+// OldItemImageTitle returns the old "item_image_title" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemGUID(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemImageTitle(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldItemGUID is only allowed on UpdateOne operations")
+		return v, errors.New("OldItemImageTitle is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldItemGUID requires an ID field in the mutation")
+		return v, errors.New("OldItemImageTitle requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldItemGUID: %w", err)
+		return v, fmt.Errorf("querying old value for OldItemImageTitle: %w", err)
 	}
-	return oldValue.ItemGUID, nil
+	return oldValue.ItemImageTitle, nil
 }
 
-// ResetItemGUID resets all changes to the "item_guid" field.
-func (m *ItemMutation) ResetItemGUID() {
-	m.item_guid = nil
+// ResetItemImageTitle resets all changes to the "item_image_title" field.
+func (m *ItemMutation) ResetItemImageTitle() {
+	m.item_image_title = nil
 }
 
-// SetItemImage sets the "item_image" field.
-func (m *ItemMutation) SetItemImage(s string) {
-	m.item_image = &s
+// SetItemImageURL sets the "item_image_url" field.
+func (m *ItemMutation) SetItemImageURL(s string) {
+	m.item_image_url = &s
 }
 
-// ItemImage returns the value of the "item_image" field in the mutation.
-func (m *ItemMutation) ItemImage() (r string, exists bool) {
-	v := m.item_image
+// ItemImageURL returns the value of the "item_image_url" field in the mutation.
+func (m *ItemMutation) ItemImageURL() (r string, exists bool) {
+	v := m.item_image_url
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldItemImage returns the old "item_image" field's value of the Item entity.
+// OldItemImageURL returns the old "item_image_url" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemImage(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemImageURL(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldItemImage is only allowed on UpdateOne operations")
+		return v, errors.New("OldItemImageURL is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldItemImage requires an ID field in the mutation")
+		return v, errors.New("OldItemImageURL requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldItemImage: %w", err)
+		return v, fmt.Errorf("querying old value for OldItemImageURL: %w", err)
 	}
-	return oldValue.ItemImage, nil
+	return oldValue.ItemImageURL, nil
 }
 
-// ResetItemImage resets all changes to the "item_image" field.
-func (m *ItemMutation) ResetItemImage() {
-	m.item_image = nil
+// ResetItemImageURL resets all changes to the "item_image_url" field.
+func (m *ItemMutation) ResetItemImageURL() {
+	m.item_image_url = nil
 }
 
 // SetItemCategories sets the "item_categories" field.
@@ -2803,7 +2840,10 @@ func (m *ItemMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ItemMutation) Fields() []string {
-	fields := make([]string, 0, 21)
+	fields := make([]string, 0, 22)
+	if m.item_guid != nil {
+		fields = append(fields, item.FieldItemGUID)
+	}
 	if m.item_title != nil {
 		fields = append(fields, item.FieldItemTitle)
 	}
@@ -2822,17 +2862,17 @@ func (m *ItemMutation) Fields() []string {
 	if m.item_published != nil {
 		fields = append(fields, item.FieldItemPublished)
 	}
-	if m.item_author != nil {
-		fields = append(fields, item.FieldItemAuthor)
+	if m.item_author_name != nil {
+		fields = append(fields, item.FieldItemAuthorName)
 	}
-	if m.item_authors != nil {
-		fields = append(fields, item.FieldItemAuthors)
+	if m.item_author_email != nil {
+		fields = append(fields, item.FieldItemAuthorEmail)
 	}
-	if m.item_guid != nil {
-		fields = append(fields, item.FieldItemGUID)
+	if m.item_image_title != nil {
+		fields = append(fields, item.FieldItemImageTitle)
 	}
-	if m.item_image != nil {
-		fields = append(fields, item.FieldItemImage)
+	if m.item_image_url != nil {
+		fields = append(fields, item.FieldItemImageURL)
 	}
 	if m.item_categories != nil {
 		fields = append(fields, item.FieldItemCategories)
@@ -2875,6 +2915,8 @@ func (m *ItemMutation) Fields() []string {
 // schema.
 func (m *ItemMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case item.FieldItemGUID:
+		return m.ItemGUID()
 	case item.FieldItemTitle:
 		return m.ItemTitle()
 	case item.FieldItemDescription:
@@ -2887,14 +2929,14 @@ func (m *ItemMutation) Field(name string) (ent.Value, bool) {
 		return m.ItemUpdated()
 	case item.FieldItemPublished:
 		return m.ItemPublished()
-	case item.FieldItemAuthor:
-		return m.ItemAuthor()
-	case item.FieldItemAuthors:
-		return m.ItemAuthors()
-	case item.FieldItemGUID:
-		return m.ItemGUID()
-	case item.FieldItemImage:
-		return m.ItemImage()
+	case item.FieldItemAuthorName:
+		return m.ItemAuthorName()
+	case item.FieldItemAuthorEmail:
+		return m.ItemAuthorEmail()
+	case item.FieldItemImageTitle:
+		return m.ItemImageTitle()
+	case item.FieldItemImageURL:
+		return m.ItemImageURL()
 	case item.FieldItemCategories:
 		return m.ItemCategories()
 	case item.FieldItemEnclosures:
@@ -2926,6 +2968,8 @@ func (m *ItemMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ItemMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case item.FieldItemGUID:
+		return m.OldItemGUID(ctx)
 	case item.FieldItemTitle:
 		return m.OldItemTitle(ctx)
 	case item.FieldItemDescription:
@@ -2938,14 +2982,14 @@ func (m *ItemMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldItemUpdated(ctx)
 	case item.FieldItemPublished:
 		return m.OldItemPublished(ctx)
-	case item.FieldItemAuthor:
-		return m.OldItemAuthor(ctx)
-	case item.FieldItemAuthors:
-		return m.OldItemAuthors(ctx)
-	case item.FieldItemGUID:
-		return m.OldItemGUID(ctx)
-	case item.FieldItemImage:
-		return m.OldItemImage(ctx)
+	case item.FieldItemAuthorName:
+		return m.OldItemAuthorName(ctx)
+	case item.FieldItemAuthorEmail:
+		return m.OldItemAuthorEmail(ctx)
+	case item.FieldItemImageTitle:
+		return m.OldItemImageTitle(ctx)
+	case item.FieldItemImageURL:
+		return m.OldItemImageURL(ctx)
 	case item.FieldItemCategories:
 		return m.OldItemCategories(ctx)
 	case item.FieldItemEnclosures:
@@ -2977,6 +3021,13 @@ func (m *ItemMutation) OldField(ctx context.Context, name string) (ent.Value, er
 // type.
 func (m *ItemMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case item.FieldItemGUID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetItemGUID(v)
+		return nil
 	case item.FieldItemTitle:
 		v, ok := value.(string)
 		if !ok {
@@ -3019,33 +3070,33 @@ func (m *ItemMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetItemPublished(v)
 		return nil
-	case item.FieldItemAuthor:
+	case item.FieldItemAuthorName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetItemAuthor(v)
+		m.SetItemAuthorName(v)
 		return nil
-	case item.FieldItemAuthors:
+	case item.FieldItemAuthorEmail:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetItemAuthors(v)
+		m.SetItemAuthorEmail(v)
 		return nil
-	case item.FieldItemGUID:
+	case item.FieldItemImageTitle:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetItemGUID(v)
+		m.SetItemImageTitle(v)
 		return nil
-	case item.FieldItemImage:
+	case item.FieldItemImageURL:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetItemImage(v)
+		m.SetItemImageURL(v)
 		return nil
 	case item.FieldItemCategories:
 		v, ok := value.(string)
@@ -3173,6 +3224,9 @@ func (m *ItemMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ItemMutation) ResetField(name string) error {
 	switch name {
+	case item.FieldItemGUID:
+		m.ResetItemGUID()
+		return nil
 	case item.FieldItemTitle:
 		m.ResetItemTitle()
 		return nil
@@ -3191,17 +3245,17 @@ func (m *ItemMutation) ResetField(name string) error {
 	case item.FieldItemPublished:
 		m.ResetItemPublished()
 		return nil
-	case item.FieldItemAuthor:
-		m.ResetItemAuthor()
+	case item.FieldItemAuthorName:
+		m.ResetItemAuthorName()
 		return nil
-	case item.FieldItemAuthors:
-		m.ResetItemAuthors()
+	case item.FieldItemAuthorEmail:
+		m.ResetItemAuthorEmail()
 		return nil
-	case item.FieldItemGUID:
-		m.ResetItemGUID()
+	case item.FieldItemImageTitle:
+		m.ResetItemImageTitle()
 		return nil
-	case item.FieldItemImage:
-		m.ResetItemImage()
+	case item.FieldItemImageURL:
+		m.ResetItemImageURL()
 		return nil
 	case item.FieldItemCategories:
 		m.ResetItemCategories()

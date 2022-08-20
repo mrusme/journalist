@@ -18,6 +18,8 @@ type Item struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// ItemGUID holds the value of the "item_guid" field.
+	ItemGUID string `json:"item_guid,omitempty"`
 	// ItemTitle holds the value of the "item_title" field.
 	ItemTitle string `json:"item_title,omitempty"`
 	// ItemDescription holds the value of the "item_description" field.
@@ -30,14 +32,14 @@ type Item struct {
 	ItemUpdated string `json:"item_updated,omitempty"`
 	// ItemPublished holds the value of the "item_published" field.
 	ItemPublished string `json:"item_published,omitempty"`
-	// ItemAuthor holds the value of the "item_author" field.
-	ItemAuthor string `json:"item_author,omitempty"`
-	// ItemAuthors holds the value of the "item_authors" field.
-	ItemAuthors string `json:"item_authors,omitempty"`
-	// ItemGUID holds the value of the "item_guid" field.
-	ItemGUID string `json:"item_guid,omitempty"`
-	// ItemImage holds the value of the "item_image" field.
-	ItemImage string `json:"item_image,omitempty"`
+	// ItemAuthorName holds the value of the "item_author_name" field.
+	ItemAuthorName string `json:"item_author_name,omitempty"`
+	// ItemAuthorEmail holds the value of the "item_author_email" field.
+	ItemAuthorEmail string `json:"item_author_email,omitempty"`
+	// ItemImageTitle holds the value of the "item_image_title" field.
+	ItemImageTitle string `json:"item_image_title,omitempty"`
+	// ItemImageURL holds the value of the "item_image_url" field.
+	ItemImageURL string `json:"item_image_url,omitempty"`
 	// ItemCategories holds the value of the "item_categories" field.
 	ItemCategories string `json:"item_categories,omitempty"`
 	// ItemEnclosures holds the value of the "item_enclosures" field.
@@ -115,7 +117,7 @@ func (*Item) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case item.FieldItemTitle, item.FieldItemDescription, item.FieldItemContent, item.FieldItemLink, item.FieldItemUpdated, item.FieldItemPublished, item.FieldItemAuthor, item.FieldItemAuthors, item.FieldItemGUID, item.FieldItemImage, item.FieldItemCategories, item.FieldItemEnclosures, item.FieldCrawlerTitle, item.FieldCrawlerAuthor, item.FieldCrawlerExcerpt, item.FieldCrawlerSiteName, item.FieldCrawlerImage, item.FieldCrawlerContentHTML, item.FieldCrawlerContentText:
+		case item.FieldItemGUID, item.FieldItemTitle, item.FieldItemDescription, item.FieldItemContent, item.FieldItemLink, item.FieldItemUpdated, item.FieldItemPublished, item.FieldItemAuthorName, item.FieldItemAuthorEmail, item.FieldItemImageTitle, item.FieldItemImageURL, item.FieldItemCategories, item.FieldItemEnclosures, item.FieldCrawlerTitle, item.FieldCrawlerAuthor, item.FieldCrawlerExcerpt, item.FieldCrawlerSiteName, item.FieldCrawlerImage, item.FieldCrawlerContentHTML, item.FieldCrawlerContentText:
 			values[i] = new(sql.NullString)
 		case item.FieldCreatedAt, item.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -143,6 +145,12 @@ func (i *Item) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", values[j])
 			} else if value != nil {
 				i.ID = *value
+			}
+		case item.FieldItemGUID:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field item_guid", values[j])
+			} else if value.Valid {
+				i.ItemGUID = value.String
 			}
 		case item.FieldItemTitle:
 			if value, ok := values[j].(*sql.NullString); !ok {
@@ -180,29 +188,29 @@ func (i *Item) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				i.ItemPublished = value.String
 			}
-		case item.FieldItemAuthor:
+		case item.FieldItemAuthorName:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field item_author", values[j])
+				return fmt.Errorf("unexpected type %T for field item_author_name", values[j])
 			} else if value.Valid {
-				i.ItemAuthor = value.String
+				i.ItemAuthorName = value.String
 			}
-		case item.FieldItemAuthors:
+		case item.FieldItemAuthorEmail:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field item_authors", values[j])
+				return fmt.Errorf("unexpected type %T for field item_author_email", values[j])
 			} else if value.Valid {
-				i.ItemAuthors = value.String
+				i.ItemAuthorEmail = value.String
 			}
-		case item.FieldItemGUID:
+		case item.FieldItemImageTitle:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field item_guid", values[j])
+				return fmt.Errorf("unexpected type %T for field item_image_title", values[j])
 			} else if value.Valid {
-				i.ItemGUID = value.String
+				i.ItemImageTitle = value.String
 			}
-		case item.FieldItemImage:
+		case item.FieldItemImageURL:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field item_image", values[j])
+				return fmt.Errorf("unexpected type %T for field item_image_url", values[j])
 			} else if value.Valid {
-				i.ItemImage = value.String
+				i.ItemImageURL = value.String
 			}
 		case item.FieldItemCategories:
 			if value, ok := values[j].(*sql.NullString); !ok {
@@ -320,6 +328,9 @@ func (i *Item) String() string {
 	var builder strings.Builder
 	builder.WriteString("Item(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", i.ID))
+	builder.WriteString("item_guid=")
+	builder.WriteString(i.ItemGUID)
+	builder.WriteString(", ")
 	builder.WriteString("item_title=")
 	builder.WriteString(i.ItemTitle)
 	builder.WriteString(", ")
@@ -338,17 +349,17 @@ func (i *Item) String() string {
 	builder.WriteString("item_published=")
 	builder.WriteString(i.ItemPublished)
 	builder.WriteString(", ")
-	builder.WriteString("item_author=")
-	builder.WriteString(i.ItemAuthor)
+	builder.WriteString("item_author_name=")
+	builder.WriteString(i.ItemAuthorName)
 	builder.WriteString(", ")
-	builder.WriteString("item_authors=")
-	builder.WriteString(i.ItemAuthors)
+	builder.WriteString("item_author_email=")
+	builder.WriteString(i.ItemAuthorEmail)
 	builder.WriteString(", ")
-	builder.WriteString("item_guid=")
-	builder.WriteString(i.ItemGUID)
+	builder.WriteString("item_image_title=")
+	builder.WriteString(i.ItemImageTitle)
 	builder.WriteString(", ")
-	builder.WriteString("item_image=")
-	builder.WriteString(i.ItemImage)
+	builder.WriteString("item_image_url=")
+	builder.WriteString(i.ItemImageURL)
 	builder.WriteString(", ")
 	builder.WriteString("item_categories=")
 	builder.WriteString(i.ItemCategories)

@@ -13,6 +13,8 @@ const (
 	Label = "item"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldItemGUID holds the string denoting the item_guid field in the database.
+	FieldItemGUID = "item_guid"
 	// FieldItemTitle holds the string denoting the item_title field in the database.
 	FieldItemTitle = "item_title"
 	// FieldItemDescription holds the string denoting the item_description field in the database.
@@ -25,14 +27,14 @@ const (
 	FieldItemUpdated = "item_updated"
 	// FieldItemPublished holds the string denoting the item_published field in the database.
 	FieldItemPublished = "item_published"
-	// FieldItemAuthor holds the string denoting the item_author field in the database.
-	FieldItemAuthor = "item_author"
-	// FieldItemAuthors holds the string denoting the item_authors field in the database.
-	FieldItemAuthors = "item_authors"
-	// FieldItemGUID holds the string denoting the item_guid field in the database.
-	FieldItemGUID = "item_guid"
-	// FieldItemImage holds the string denoting the item_image field in the database.
-	FieldItemImage = "item_image"
+	// FieldItemAuthorName holds the string denoting the item_author_name field in the database.
+	FieldItemAuthorName = "item_author_name"
+	// FieldItemAuthorEmail holds the string denoting the item_author_email field in the database.
+	FieldItemAuthorEmail = "item_author_email"
+	// FieldItemImageTitle holds the string denoting the item_image_title field in the database.
+	FieldItemImageTitle = "item_image_title"
+	// FieldItemImageURL holds the string denoting the item_image_url field in the database.
+	FieldItemImageURL = "item_image_url"
 	// FieldItemCategories holds the string denoting the item_categories field in the database.
 	FieldItemCategories = "item_categories"
 	// FieldItemEnclosures holds the string denoting the item_enclosures field in the database.
@@ -87,16 +89,17 @@ const (
 // Columns holds all SQL columns for item fields.
 var Columns = []string{
 	FieldID,
+	FieldItemGUID,
 	FieldItemTitle,
 	FieldItemDescription,
 	FieldItemContent,
 	FieldItemLink,
 	FieldItemUpdated,
 	FieldItemPublished,
-	FieldItemAuthor,
-	FieldItemAuthors,
-	FieldItemGUID,
-	FieldItemImage,
+	FieldItemAuthorName,
+	FieldItemAuthorEmail,
+	FieldItemImageTitle,
+	FieldItemImageURL,
 	FieldItemCategories,
 	FieldItemEnclosures,
 	FieldCrawlerTitle,

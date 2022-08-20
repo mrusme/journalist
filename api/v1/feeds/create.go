@@ -1,7 +1,7 @@
 package feeds
 
 import (
-  "strings"
+  // "strings"
 	"context"
 
 	"github.com/go-playground/validator/v10"
@@ -43,9 +43,6 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  dbFeedTmp := h.EntClient.Feed.
-    Create()
-
   crwlr := crawler.New()
   defer crwlr.Close()
 
@@ -53,10 +50,6 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   if createFeed.Username != "" && createFeed.Password != "" {
     crwlr.SetBasicAuth(createFeed.Username, createFeed.Password)
-
-    dbFeedTmp = dbFeedTmp.
-      SetUsername(createFeed.Username).
-      SetPassword(createFeed.Password)
   }
 
   _, feedLink, err := crwlr.GetFeedLink()
@@ -70,34 +63,25 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  rssClient, err := rss.NewClient(feedLink)
 
-  if rssClient.Feed.Author != nil {
-    dbFeedTmp.
-      SetFeedAuthorName(rssClient.Feed.Author.Name).
-      SetFeedAuthorEmail(rssClient.Feed.Author.Email)
-  }
-  if rssClient.Feed.Image != nil {
-    dbFeedTmp.
-      SetFeedImageTitle(rssClient.Feed.Image.Title).
-      SetFeedImageURL(rssClient.Feed.Image.URL)
-  }
+  rssClient, err := rss.NewClient(
+    feedLink,
+    createFeed.Username,
+    createFeed.Password,
+    false,
+  )
 
+  dbFeedTmp := h.EntClient.Feed.
+    Create()
+
+  dbFeedTmp = rssClient.SetFeed(
+    feedLink,
+    createFeed.Username,
+    createFeed.Password,
+    dbFeedTmp,
+  )
   feedId, err := dbFeedTmp.
-    SetURL(feedLink).
-    SetFeedTitle(rssClient.Feed.Title).
-    SetFeedDescription(rssClient.Feed.Description).
-    SetFeedLink(rssClient.Feed.Link).
-    SetFeedFeedLink(rssClient.Feed.FeedLink).
-    SetFeedUpdated(rssClient.Feed.Updated).
-    SetFeedPublished(rssClient.Feed.Published).
-    SetFeedLanguage(rssClient.Feed.Language).
-    SetFeedCopyright(rssClient.Feed.Copyright).
-    SetFeedGenerator(rssClient.Feed.Generator).
-    SetFeedCopyright(rssClient.Feed.Copyright).
-    SetFeedCategories(strings.Join(rssClient.Feed.Categories, ", ")).
     OnConflict().
-    // Ignore().
     UpdateNewValues().
     ID(context.Background())
   if err != nil {

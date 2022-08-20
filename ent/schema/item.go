@@ -24,6 +24,7 @@ func (Item) Fields() []ent.Field {
       Default(uuid.New),
       // StorageKey("oid"),
 
+    field.String("item_guid"),
     field.String("item_title"),
     field.String("item_description"),
     field.String("item_content"),
@@ -33,10 +34,10 @@ func (Item) Fields() []ent.Field {
       }),
     field.String("item_updated"),
     field.String("item_published"),
-    field.String("item_author"),
-    field.String("item_authors"),
-    field.String("item_guid"),
-    field.String("item_image"),
+    field.String("item_author_name"),
+    field.String("item_author_email"),
+    field.String("item_image_title"),
+    field.String("item_image_url"),
     field.String("item_categories"),
     field.String("item_enclosures"),
 
