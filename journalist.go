@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+  "net/http"
+  "embed"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -12,14 +14,19 @@ import (
 
 	"github.com/gofiber/fiber/v2"
   "github.com/gofiber/fiber/v2/middleware/logger"
+  "github.com/gofiber/template/html"
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
 
 	"github.com/mrusme/journalist/api"
+	"github.com/mrusme/journalist/web"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+//go:embed views/*
+var viewsfs embed.FS
 
 var fiberApp *fiber.App
 var fiberLambda *fiberadapter.FiberLambda
@@ -29,7 +36,11 @@ func init() {
   var err error
 
   log.Printf("Fiber cold start")
-  fiberApp = fiber.New()
+
+  engine := html.NewFileSystem(http.FS(viewsfs), ".html")
+  fiberApp = fiber.New(fiber.Config{
+    Views: engine,
+  })
 
   entClient, err = ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
   if err != nil {
@@ -64,6 +75,7 @@ func init() {
 
   fiberApp.Use(logger.New())
   api.Register(fiberApp, entClient)
+  web.Register(fiberApp, entClient)
 
   fiberLambda = fiberadapter.New(fiberApp)
 }
