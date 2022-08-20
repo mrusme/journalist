@@ -15,7 +15,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/template/html"
+	// "github.com/gofiber/template/html"
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
@@ -39,7 +39,7 @@ func init() {
 
   log.Printf("Fiber cold start")
 
-  engine := html.NewFileSystem(http.FS(viewsfs), ".html")
+  engine := web.NewFileSystem(http.FS(viewsfs), ".html")
   fiberApp = fiber.New(fiber.Config{
     Views: engine,
   })
@@ -100,11 +100,12 @@ func main() {
     go func() {
       jd := journalistd.New(entClient)
 
-      for {
+      // for {
+        time.Sleep(time.Second * 30)
         errs := jd.RefreshAll()
         log.Printf("\n%v\n", errs)
         time.Sleep(time.Second * 30)
-      }
+      // }
     }()
 
     if appBindIp == "" {

@@ -8,6 +8,20 @@
     <language>en-us</language>
     <lastBuildDate></lastBuildDate>
     <atom:link href="/web/subscriptions" rel="self" type="application/rss+xml"/>
+    {{ range .Items }}
+    <item>
+      <guid isPermaLink="false">{{ .ItemGUID }}</guid>
+      <link>{{ .ItemLink }}</link>
+      <title>{{ .ItemTitle }}</title>
+      <description>{{ .ItemDescription }}</description>
+      <pubDate>{{ .ItemPublished }}</pubDate>
+      <content:encoded>
+        <![CDATA[
+          {{ .CrawlerContentHTML }}
+        ]]>
+      </content:encoded>
+    </item>
+    {{ end }}
   </channel>
 </rss>
 
