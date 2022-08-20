@@ -145,17 +145,17 @@ func FeedPublished(v string) predicate.Feed {
 	})
 }
 
-// FeedAuthor applies equality check predicate on the "feed_author" field. It's identical to FeedAuthorEQ.
-func FeedAuthor(v string) predicate.Feed {
+// FeedAuthorName applies equality check predicate on the "feed_author_name" field. It's identical to FeedAuthorNameEQ.
+func FeedAuthorName(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedAuthor), v))
+		s.Where(sql.EQ(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthors applies equality check predicate on the "feed_authors" field. It's identical to FeedAuthorsEQ.
-func FeedAuthors(v string) predicate.Feed {
+// FeedAuthorEmail applies equality check predicate on the "feed_author_email" field. It's identical to FeedAuthorEmailEQ.
+func FeedAuthorEmail(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedAuthors), v))
+		s.Where(sql.EQ(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
@@ -166,10 +166,17 @@ func FeedLanguage(v string) predicate.Feed {
 	})
 }
 
-// FeedImage applies equality check predicate on the "feed_image" field. It's identical to FeedImageEQ.
-func FeedImage(v string) predicate.Feed {
+// FeedImageTitle applies equality check predicate on the "feed_image_title" field. It's identical to FeedImageTitleEQ.
+func FeedImageTitle(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedImage), v))
+		s.Where(sql.EQ(s.C(FieldFeedImageTitle), v))
+	})
+}
+
+// FeedImageURL applies equality check predicate on the "feed_image_url" field. It's identical to FeedImageURLEQ.
+func FeedImageURL(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFeedImageURL), v))
 	})
 }
 
@@ -1134,201 +1141,229 @@ func FeedPublishedContainsFold(v string) predicate.Feed {
 	})
 }
 
-// FeedAuthorEQ applies the EQ predicate on the "feed_author" field.
-func FeedAuthorEQ(v string) predicate.Feed {
+// FeedAuthorNameEQ applies the EQ predicate on the "feed_author_name" field.
+func FeedAuthorNameEQ(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedAuthor), v))
+		s.Where(sql.EQ(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorNEQ applies the NEQ predicate on the "feed_author" field.
-func FeedAuthorNEQ(v string) predicate.Feed {
+// FeedAuthorNameNEQ applies the NEQ predicate on the "feed_author_name" field.
+func FeedAuthorNameNEQ(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFeedAuthor), v))
+		s.Where(sql.NEQ(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorIn applies the In predicate on the "feed_author" field.
-func FeedAuthorIn(vs ...string) predicate.Feed {
+// FeedAuthorNameIn applies the In predicate on the "feed_author_name" field.
+func FeedAuthorNameIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFeedAuthor), v...))
+		s.Where(sql.In(s.C(FieldFeedAuthorName), v...))
 	})
 }
 
-// FeedAuthorNotIn applies the NotIn predicate on the "feed_author" field.
-func FeedAuthorNotIn(vs ...string) predicate.Feed {
+// FeedAuthorNameNotIn applies the NotIn predicate on the "feed_author_name" field.
+func FeedAuthorNameNotIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFeedAuthor), v...))
+		s.Where(sql.NotIn(s.C(FieldFeedAuthorName), v...))
 	})
 }
 
-// FeedAuthorGT applies the GT predicate on the "feed_author" field.
-func FeedAuthorGT(v string) predicate.Feed {
+// FeedAuthorNameGT applies the GT predicate on the "feed_author_name" field.
+func FeedAuthorNameGT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFeedAuthor), v))
+		s.Where(sql.GT(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorGTE applies the GTE predicate on the "feed_author" field.
-func FeedAuthorGTE(v string) predicate.Feed {
+// FeedAuthorNameGTE applies the GTE predicate on the "feed_author_name" field.
+func FeedAuthorNameGTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFeedAuthor), v))
+		s.Where(sql.GTE(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorLT applies the LT predicate on the "feed_author" field.
-func FeedAuthorLT(v string) predicate.Feed {
+// FeedAuthorNameLT applies the LT predicate on the "feed_author_name" field.
+func FeedAuthorNameLT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFeedAuthor), v))
+		s.Where(sql.LT(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorLTE applies the LTE predicate on the "feed_author" field.
-func FeedAuthorLTE(v string) predicate.Feed {
+// FeedAuthorNameLTE applies the LTE predicate on the "feed_author_name" field.
+func FeedAuthorNameLTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFeedAuthor), v))
+		s.Where(sql.LTE(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorContains applies the Contains predicate on the "feed_author" field.
-func FeedAuthorContains(v string) predicate.Feed {
+// FeedAuthorNameContains applies the Contains predicate on the "feed_author_name" field.
+func FeedAuthorNameContains(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFeedAuthor), v))
+		s.Where(sql.Contains(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorHasPrefix applies the HasPrefix predicate on the "feed_author" field.
-func FeedAuthorHasPrefix(v string) predicate.Feed {
+// FeedAuthorNameHasPrefix applies the HasPrefix predicate on the "feed_author_name" field.
+func FeedAuthorNameHasPrefix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFeedAuthor), v))
+		s.Where(sql.HasPrefix(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorHasSuffix applies the HasSuffix predicate on the "feed_author" field.
-func FeedAuthorHasSuffix(v string) predicate.Feed {
+// FeedAuthorNameHasSuffix applies the HasSuffix predicate on the "feed_author_name" field.
+func FeedAuthorNameHasSuffix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFeedAuthor), v))
+		s.Where(sql.HasSuffix(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorEqualFold applies the EqualFold predicate on the "feed_author" field.
-func FeedAuthorEqualFold(v string) predicate.Feed {
+// FeedAuthorNameIsNil applies the IsNil predicate on the "feed_author_name" field.
+func FeedAuthorNameIsNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFeedAuthor), v))
+		s.Where(sql.IsNull(s.C(FieldFeedAuthorName)))
 	})
 }
 
-// FeedAuthorContainsFold applies the ContainsFold predicate on the "feed_author" field.
-func FeedAuthorContainsFold(v string) predicate.Feed {
+// FeedAuthorNameNotNil applies the NotNil predicate on the "feed_author_name" field.
+func FeedAuthorNameNotNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFeedAuthor), v))
+		s.Where(sql.NotNull(s.C(FieldFeedAuthorName)))
 	})
 }
 
-// FeedAuthorsEQ applies the EQ predicate on the "feed_authors" field.
-func FeedAuthorsEQ(v string) predicate.Feed {
+// FeedAuthorNameEqualFold applies the EqualFold predicate on the "feed_author_name" field.
+func FeedAuthorNameEqualFold(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedAuthors), v))
+		s.Where(sql.EqualFold(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorsNEQ applies the NEQ predicate on the "feed_authors" field.
-func FeedAuthorsNEQ(v string) predicate.Feed {
+// FeedAuthorNameContainsFold applies the ContainsFold predicate on the "feed_author_name" field.
+func FeedAuthorNameContainsFold(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFeedAuthors), v))
+		s.Where(sql.ContainsFold(s.C(FieldFeedAuthorName), v))
 	})
 }
 
-// FeedAuthorsIn applies the In predicate on the "feed_authors" field.
-func FeedAuthorsIn(vs ...string) predicate.Feed {
+// FeedAuthorEmailEQ applies the EQ predicate on the "feed_author_email" field.
+func FeedAuthorEmailEQ(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFeedAuthorEmail), v))
+	})
+}
+
+// FeedAuthorEmailNEQ applies the NEQ predicate on the "feed_author_email" field.
+func FeedAuthorEmailNEQ(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFeedAuthorEmail), v))
+	})
+}
+
+// FeedAuthorEmailIn applies the In predicate on the "feed_author_email" field.
+func FeedAuthorEmailIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFeedAuthors), v...))
+		s.Where(sql.In(s.C(FieldFeedAuthorEmail), v...))
 	})
 }
 
-// FeedAuthorsNotIn applies the NotIn predicate on the "feed_authors" field.
-func FeedAuthorsNotIn(vs ...string) predicate.Feed {
+// FeedAuthorEmailNotIn applies the NotIn predicate on the "feed_author_email" field.
+func FeedAuthorEmailNotIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFeedAuthors), v...))
+		s.Where(sql.NotIn(s.C(FieldFeedAuthorEmail), v...))
 	})
 }
 
-// FeedAuthorsGT applies the GT predicate on the "feed_authors" field.
-func FeedAuthorsGT(v string) predicate.Feed {
+// FeedAuthorEmailGT applies the GT predicate on the "feed_author_email" field.
+func FeedAuthorEmailGT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFeedAuthors), v))
+		s.Where(sql.GT(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsGTE applies the GTE predicate on the "feed_authors" field.
-func FeedAuthorsGTE(v string) predicate.Feed {
+// FeedAuthorEmailGTE applies the GTE predicate on the "feed_author_email" field.
+func FeedAuthorEmailGTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFeedAuthors), v))
+		s.Where(sql.GTE(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsLT applies the LT predicate on the "feed_authors" field.
-func FeedAuthorsLT(v string) predicate.Feed {
+// FeedAuthorEmailLT applies the LT predicate on the "feed_author_email" field.
+func FeedAuthorEmailLT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFeedAuthors), v))
+		s.Where(sql.LT(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsLTE applies the LTE predicate on the "feed_authors" field.
-func FeedAuthorsLTE(v string) predicate.Feed {
+// FeedAuthorEmailLTE applies the LTE predicate on the "feed_author_email" field.
+func FeedAuthorEmailLTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFeedAuthors), v))
+		s.Where(sql.LTE(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsContains applies the Contains predicate on the "feed_authors" field.
-func FeedAuthorsContains(v string) predicate.Feed {
+// FeedAuthorEmailContains applies the Contains predicate on the "feed_author_email" field.
+func FeedAuthorEmailContains(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFeedAuthors), v))
+		s.Where(sql.Contains(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsHasPrefix applies the HasPrefix predicate on the "feed_authors" field.
-func FeedAuthorsHasPrefix(v string) predicate.Feed {
+// FeedAuthorEmailHasPrefix applies the HasPrefix predicate on the "feed_author_email" field.
+func FeedAuthorEmailHasPrefix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFeedAuthors), v))
+		s.Where(sql.HasPrefix(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsHasSuffix applies the HasSuffix predicate on the "feed_authors" field.
-func FeedAuthorsHasSuffix(v string) predicate.Feed {
+// FeedAuthorEmailHasSuffix applies the HasSuffix predicate on the "feed_author_email" field.
+func FeedAuthorEmailHasSuffix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFeedAuthors), v))
+		s.Where(sql.HasSuffix(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
-// FeedAuthorsEqualFold applies the EqualFold predicate on the "feed_authors" field.
-func FeedAuthorsEqualFold(v string) predicate.Feed {
+// FeedAuthorEmailIsNil applies the IsNil predicate on the "feed_author_email" field.
+func FeedAuthorEmailIsNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFeedAuthors), v))
+		s.Where(sql.IsNull(s.C(FieldFeedAuthorEmail)))
 	})
 }
 
-// FeedAuthorsContainsFold applies the ContainsFold predicate on the "feed_authors" field.
-func FeedAuthorsContainsFold(v string) predicate.Feed {
+// FeedAuthorEmailNotNil applies the NotNil predicate on the "feed_author_email" field.
+func FeedAuthorEmailNotNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFeedAuthors), v))
+		s.Where(sql.NotNull(s.C(FieldFeedAuthorEmail)))
+	})
+}
+
+// FeedAuthorEmailEqualFold applies the EqualFold predicate on the "feed_author_email" field.
+func FeedAuthorEmailEqualFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldFeedAuthorEmail), v))
+	})
+}
+
+// FeedAuthorEmailContainsFold applies the ContainsFold predicate on the "feed_author_email" field.
+func FeedAuthorEmailContainsFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldFeedAuthorEmail), v))
 	})
 }
 
@@ -1431,102 +1466,229 @@ func FeedLanguageContainsFold(v string) predicate.Feed {
 	})
 }
 
-// FeedImageEQ applies the EQ predicate on the "feed_image" field.
-func FeedImageEQ(v string) predicate.Feed {
+// FeedImageTitleEQ applies the EQ predicate on the "feed_image_title" field.
+func FeedImageTitleEQ(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFeedImage), v))
+		s.Where(sql.EQ(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageNEQ applies the NEQ predicate on the "feed_image" field.
-func FeedImageNEQ(v string) predicate.Feed {
+// FeedImageTitleNEQ applies the NEQ predicate on the "feed_image_title" field.
+func FeedImageTitleNEQ(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFeedImage), v))
+		s.Where(sql.NEQ(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageIn applies the In predicate on the "feed_image" field.
-func FeedImageIn(vs ...string) predicate.Feed {
+// FeedImageTitleIn applies the In predicate on the "feed_image_title" field.
+func FeedImageTitleIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFeedImage), v...))
+		s.Where(sql.In(s.C(FieldFeedImageTitle), v...))
 	})
 }
 
-// FeedImageNotIn applies the NotIn predicate on the "feed_image" field.
-func FeedImageNotIn(vs ...string) predicate.Feed {
+// FeedImageTitleNotIn applies the NotIn predicate on the "feed_image_title" field.
+func FeedImageTitleNotIn(vs ...string) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFeedImage), v...))
+		s.Where(sql.NotIn(s.C(FieldFeedImageTitle), v...))
 	})
 }
 
-// FeedImageGT applies the GT predicate on the "feed_image" field.
-func FeedImageGT(v string) predicate.Feed {
+// FeedImageTitleGT applies the GT predicate on the "feed_image_title" field.
+func FeedImageTitleGT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFeedImage), v))
+		s.Where(sql.GT(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageGTE applies the GTE predicate on the "feed_image" field.
-func FeedImageGTE(v string) predicate.Feed {
+// FeedImageTitleGTE applies the GTE predicate on the "feed_image_title" field.
+func FeedImageTitleGTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFeedImage), v))
+		s.Where(sql.GTE(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageLT applies the LT predicate on the "feed_image" field.
-func FeedImageLT(v string) predicate.Feed {
+// FeedImageTitleLT applies the LT predicate on the "feed_image_title" field.
+func FeedImageTitleLT(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFeedImage), v))
+		s.Where(sql.LT(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageLTE applies the LTE predicate on the "feed_image" field.
-func FeedImageLTE(v string) predicate.Feed {
+// FeedImageTitleLTE applies the LTE predicate on the "feed_image_title" field.
+func FeedImageTitleLTE(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFeedImage), v))
+		s.Where(sql.LTE(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageContains applies the Contains predicate on the "feed_image" field.
-func FeedImageContains(v string) predicate.Feed {
+// FeedImageTitleContains applies the Contains predicate on the "feed_image_title" field.
+func FeedImageTitleContains(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFeedImage), v))
+		s.Where(sql.Contains(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageHasPrefix applies the HasPrefix predicate on the "feed_image" field.
-func FeedImageHasPrefix(v string) predicate.Feed {
+// FeedImageTitleHasPrefix applies the HasPrefix predicate on the "feed_image_title" field.
+func FeedImageTitleHasPrefix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFeedImage), v))
+		s.Where(sql.HasPrefix(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageHasSuffix applies the HasSuffix predicate on the "feed_image" field.
-func FeedImageHasSuffix(v string) predicate.Feed {
+// FeedImageTitleHasSuffix applies the HasSuffix predicate on the "feed_image_title" field.
+func FeedImageTitleHasSuffix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFeedImage), v))
+		s.Where(sql.HasSuffix(s.C(FieldFeedImageTitle), v))
 	})
 }
 
-// FeedImageEqualFold applies the EqualFold predicate on the "feed_image" field.
-func FeedImageEqualFold(v string) predicate.Feed {
+// FeedImageTitleIsNil applies the IsNil predicate on the "feed_image_title" field.
+func FeedImageTitleIsNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFeedImage), v))
+		s.Where(sql.IsNull(s.C(FieldFeedImageTitle)))
 	})
 }
 
-// FeedImageContainsFold applies the ContainsFold predicate on the "feed_image" field.
-func FeedImageContainsFold(v string) predicate.Feed {
+// FeedImageTitleNotNil applies the NotNil predicate on the "feed_image_title" field.
+func FeedImageTitleNotNil() predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFeedImage), v))
+		s.Where(sql.NotNull(s.C(FieldFeedImageTitle)))
+	})
+}
+
+// FeedImageTitleEqualFold applies the EqualFold predicate on the "feed_image_title" field.
+func FeedImageTitleEqualFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldFeedImageTitle), v))
+	})
+}
+
+// FeedImageTitleContainsFold applies the ContainsFold predicate on the "feed_image_title" field.
+func FeedImageTitleContainsFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldFeedImageTitle), v))
+	})
+}
+
+// FeedImageURLEQ applies the EQ predicate on the "feed_image_url" field.
+func FeedImageURLEQ(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLNEQ applies the NEQ predicate on the "feed_image_url" field.
+func FeedImageURLNEQ(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLIn applies the In predicate on the "feed_image_url" field.
+func FeedImageURLIn(vs ...string) predicate.Feed {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldFeedImageURL), v...))
+	})
+}
+
+// FeedImageURLNotIn applies the NotIn predicate on the "feed_image_url" field.
+func FeedImageURLNotIn(vs ...string) predicate.Feed {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldFeedImageURL), v...))
+	})
+}
+
+// FeedImageURLGT applies the GT predicate on the "feed_image_url" field.
+func FeedImageURLGT(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLGTE applies the GTE predicate on the "feed_image_url" field.
+func FeedImageURLGTE(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLLT applies the LT predicate on the "feed_image_url" field.
+func FeedImageURLLT(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLLTE applies the LTE predicate on the "feed_image_url" field.
+func FeedImageURLLTE(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLContains applies the Contains predicate on the "feed_image_url" field.
+func FeedImageURLContains(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLHasPrefix applies the HasPrefix predicate on the "feed_image_url" field.
+func FeedImageURLHasPrefix(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLHasSuffix applies the HasSuffix predicate on the "feed_image_url" field.
+func FeedImageURLHasSuffix(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLIsNil applies the IsNil predicate on the "feed_image_url" field.
+func FeedImageURLIsNil() predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldFeedImageURL)))
+	})
+}
+
+// FeedImageURLNotNil applies the NotNil predicate on the "feed_image_url" field.
+func FeedImageURLNotNil() predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldFeedImageURL)))
+	})
+}
+
+// FeedImageURLEqualFold applies the EqualFold predicate on the "feed_image_url" field.
+func FeedImageURLEqualFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldFeedImageURL), v))
+	})
+}
+
+// FeedImageURLContainsFold applies the ContainsFold predicate on the "feed_image_url" field.
+func FeedImageURLContainsFold(v string) predicate.Feed {
+	return predicate.Feed(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldFeedImageURL), v))
 	})
 }
 

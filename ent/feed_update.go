@@ -114,15 +114,43 @@ func (fu *FeedUpdate) SetFeedPublished(s string) *FeedUpdate {
 	return fu
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (fu *FeedUpdate) SetFeedAuthor(s string) *FeedUpdate {
-	fu.mutation.SetFeedAuthor(s)
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (fu *FeedUpdate) SetFeedAuthorName(s string) *FeedUpdate {
+	fu.mutation.SetFeedAuthorName(s)
 	return fu
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (fu *FeedUpdate) SetFeedAuthors(s string) *FeedUpdate {
-	fu.mutation.SetFeedAuthors(s)
+// SetNillableFeedAuthorName sets the "feed_author_name" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedAuthorName(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedAuthorName(*s)
+	}
+	return fu
+}
+
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (fu *FeedUpdate) ClearFeedAuthorName() *FeedUpdate {
+	fu.mutation.ClearFeedAuthorName()
+	return fu
+}
+
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (fu *FeedUpdate) SetFeedAuthorEmail(s string) *FeedUpdate {
+	fu.mutation.SetFeedAuthorEmail(s)
+	return fu
+}
+
+// SetNillableFeedAuthorEmail sets the "feed_author_email" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedAuthorEmail(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedAuthorEmail(*s)
+	}
+	return fu
+}
+
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (fu *FeedUpdate) ClearFeedAuthorEmail() *FeedUpdate {
+	fu.mutation.ClearFeedAuthorEmail()
 	return fu
 }
 
@@ -132,9 +160,43 @@ func (fu *FeedUpdate) SetFeedLanguage(s string) *FeedUpdate {
 	return fu
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (fu *FeedUpdate) SetFeedImage(s string) *FeedUpdate {
-	fu.mutation.SetFeedImage(s)
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (fu *FeedUpdate) SetFeedImageTitle(s string) *FeedUpdate {
+	fu.mutation.SetFeedImageTitle(s)
+	return fu
+}
+
+// SetNillableFeedImageTitle sets the "feed_image_title" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedImageTitle(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedImageTitle(*s)
+	}
+	return fu
+}
+
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (fu *FeedUpdate) ClearFeedImageTitle() *FeedUpdate {
+	fu.mutation.ClearFeedImageTitle()
+	return fu
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (fu *FeedUpdate) SetFeedImageURL(s string) *FeedUpdate {
+	fu.mutation.SetFeedImageURL(s)
+	return fu
+}
+
+// SetNillableFeedImageURL sets the "feed_image_url" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedImageURL(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedImageURL(*s)
+	}
+	return fu
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (fu *FeedUpdate) ClearFeedImageURL() *FeedUpdate {
+	fu.mutation.ClearFeedImageURL()
 	return fu
 }
 
@@ -481,18 +543,30 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: feed.FieldFeedPublished,
 		})
 	}
-	if value, ok := fu.mutation.FeedAuthor(); ok {
+	if value, ok := fu.mutation.FeedAuthorName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthor,
+			Column: feed.FieldFeedAuthorName,
 		})
 	}
-	if value, ok := fu.mutation.FeedAuthors(); ok {
+	if fu.mutation.FeedAuthorNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedAuthorName,
+		})
+	}
+	if value, ok := fu.mutation.FeedAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthors,
+			Column: feed.FieldFeedAuthorEmail,
+		})
+	}
+	if fu.mutation.FeedAuthorEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedAuthorEmail,
 		})
 	}
 	if value, ok := fu.mutation.FeedLanguage(); ok {
@@ -502,11 +576,30 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: feed.FieldFeedLanguage,
 		})
 	}
-	if value, ok := fu.mutation.FeedImage(); ok {
+	if value, ok := fu.mutation.FeedImageTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedImage,
+			Column: feed.FieldFeedImageTitle,
+		})
+	}
+	if fu.mutation.FeedImageTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedImageTitle,
+		})
+	}
+	if value, ok := fu.mutation.FeedImageURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImageURL,
+		})
+	}
+	if fu.mutation.FeedImageURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedImageURL,
 		})
 	}
 	if value, ok := fu.mutation.FeedCopyright(); ok {
@@ -841,15 +934,43 @@ func (fuo *FeedUpdateOne) SetFeedPublished(s string) *FeedUpdateOne {
 	return fuo
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (fuo *FeedUpdateOne) SetFeedAuthor(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedAuthor(s)
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (fuo *FeedUpdateOne) SetFeedAuthorName(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedAuthorName(s)
 	return fuo
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (fuo *FeedUpdateOne) SetFeedAuthors(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedAuthors(s)
+// SetNillableFeedAuthorName sets the "feed_author_name" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedAuthorName(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedAuthorName(*s)
+	}
+	return fuo
+}
+
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (fuo *FeedUpdateOne) ClearFeedAuthorName() *FeedUpdateOne {
+	fuo.mutation.ClearFeedAuthorName()
+	return fuo
+}
+
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (fuo *FeedUpdateOne) SetFeedAuthorEmail(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedAuthorEmail(s)
+	return fuo
+}
+
+// SetNillableFeedAuthorEmail sets the "feed_author_email" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedAuthorEmail(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedAuthorEmail(*s)
+	}
+	return fuo
+}
+
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (fuo *FeedUpdateOne) ClearFeedAuthorEmail() *FeedUpdateOne {
+	fuo.mutation.ClearFeedAuthorEmail()
 	return fuo
 }
 
@@ -859,9 +980,43 @@ func (fuo *FeedUpdateOne) SetFeedLanguage(s string) *FeedUpdateOne {
 	return fuo
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (fuo *FeedUpdateOne) SetFeedImage(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedImage(s)
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (fuo *FeedUpdateOne) SetFeedImageTitle(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedImageTitle(s)
+	return fuo
+}
+
+// SetNillableFeedImageTitle sets the "feed_image_title" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedImageTitle(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedImageTitle(*s)
+	}
+	return fuo
+}
+
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (fuo *FeedUpdateOne) ClearFeedImageTitle() *FeedUpdateOne {
+	fuo.mutation.ClearFeedImageTitle()
+	return fuo
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (fuo *FeedUpdateOne) SetFeedImageURL(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedImageURL(s)
+	return fuo
+}
+
+// SetNillableFeedImageURL sets the "feed_image_url" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedImageURL(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedImageURL(*s)
+	}
+	return fuo
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (fuo *FeedUpdateOne) ClearFeedImageURL() *FeedUpdateOne {
+	fuo.mutation.ClearFeedImageURL()
 	return fuo
 }
 
@@ -1238,18 +1393,30 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 			Column: feed.FieldFeedPublished,
 		})
 	}
-	if value, ok := fuo.mutation.FeedAuthor(); ok {
+	if value, ok := fuo.mutation.FeedAuthorName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthor,
+			Column: feed.FieldFeedAuthorName,
 		})
 	}
-	if value, ok := fuo.mutation.FeedAuthors(); ok {
+	if fuo.mutation.FeedAuthorNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedAuthorName,
+		})
+	}
+	if value, ok := fuo.mutation.FeedAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthors,
+			Column: feed.FieldFeedAuthorEmail,
+		})
+	}
+	if fuo.mutation.FeedAuthorEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedAuthorEmail,
 		})
 	}
 	if value, ok := fuo.mutation.FeedLanguage(); ok {
@@ -1259,11 +1426,30 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 			Column: feed.FieldFeedLanguage,
 		})
 	}
-	if value, ok := fuo.mutation.FeedImage(); ok {
+	if value, ok := fuo.mutation.FeedImageTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedImage,
+			Column: feed.FieldFeedImageTitle,
+		})
+	}
+	if fuo.mutation.FeedImageTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedImageTitle,
+		})
+	}
+	if value, ok := fuo.mutation.FeedImageURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImageURL,
+		})
+	}
+	if fuo.mutation.FeedImageURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: feed.FieldFeedImageURL,
 		})
 	}
 	if value, ok := fuo.mutation.FeedCopyright(); ok {

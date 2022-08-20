@@ -31,14 +31,16 @@ const (
 	FieldFeedUpdated = "feed_updated"
 	// FieldFeedPublished holds the string denoting the feed_published field in the database.
 	FieldFeedPublished = "feed_published"
-	// FieldFeedAuthor holds the string denoting the feed_author field in the database.
-	FieldFeedAuthor = "feed_author"
-	// FieldFeedAuthors holds the string denoting the feed_authors field in the database.
-	FieldFeedAuthors = "feed_authors"
+	// FieldFeedAuthorName holds the string denoting the feed_author_name field in the database.
+	FieldFeedAuthorName = "feed_author_name"
+	// FieldFeedAuthorEmail holds the string denoting the feed_author_email field in the database.
+	FieldFeedAuthorEmail = "feed_author_email"
 	// FieldFeedLanguage holds the string denoting the feed_language field in the database.
 	FieldFeedLanguage = "feed_language"
-	// FieldFeedImage holds the string denoting the feed_image field in the database.
-	FieldFeedImage = "feed_image"
+	// FieldFeedImageTitle holds the string denoting the feed_image_title field in the database.
+	FieldFeedImageTitle = "feed_image_title"
+	// FieldFeedImageURL holds the string denoting the feed_image_url field in the database.
+	FieldFeedImageURL = "feed_image_url"
 	// FieldFeedCopyright holds the string denoting the feed_copyright field in the database.
 	FieldFeedCopyright = "feed_copyright"
 	// FieldFeedGenerator holds the string denoting the feed_generator field in the database.
@@ -92,10 +94,11 @@ var Columns = []string{
 	FieldFeedFeedLink,
 	FieldFeedUpdated,
 	FieldFeedPublished,
-	FieldFeedAuthor,
-	FieldFeedAuthors,
+	FieldFeedAuthorName,
+	FieldFeedAuthorEmail,
 	FieldFeedLanguage,
-	FieldFeedImage,
+	FieldFeedImageTitle,
+	FieldFeedImageURL,
 	FieldFeedCopyright,
 	FieldFeedGenerator,
 	FieldFeedCategories,

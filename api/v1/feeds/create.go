@@ -1,15 +1,18 @@
 package feeds
 
 import (
+  "strings"
 	"context"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
-  "github.com/go-playground/validator/v10"
 
 	"github.com/gofiber/fiber/v2"
 	// "github.com/mrusme/journalist/ent/user"
 	// "github.com/mrusme/journalist/ent"
 
 	"github.com/mrusme/journalist/crawler"
+	"github.com/mrusme/journalist/rss"
 )
 
 func (h *handler) Create(ctx *fiber.Ctx) error {
@@ -67,10 +70,35 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
+  rssClient, err := rss.NewClient(feedLink)
+
+  if rssClient.Feed.Author != nil {
+    dbFeedTmp.
+      SetFeedAuthorName(rssClient.Feed.Author.Name).
+      SetFeedAuthorEmail(rssClient.Feed.Author.Email)
+  }
+  if rssClient.Feed.Image != nil {
+    dbFeedTmp.
+      SetFeedImageTitle(rssClient.Feed.Image.Title).
+      SetFeedImageURL(rssClient.Feed.Image.URL)
+  }
+
   feedId, err := dbFeedTmp.
     SetURL(feedLink).
+    SetFeedTitle(rssClient.Feed.Title).
+    SetFeedDescription(rssClient.Feed.Description).
+    SetFeedLink(rssClient.Feed.Link).
+    SetFeedFeedLink(rssClient.Feed.FeedLink).
+    SetFeedUpdated(rssClient.Feed.Updated).
+    SetFeedPublished(rssClient.Feed.Published).
+    SetFeedLanguage(rssClient.Feed.Language).
+    SetFeedCopyright(rssClient.Feed.Copyright).
+    SetFeedGenerator(rssClient.Feed.Generator).
+    SetFeedCopyright(rssClient.Feed.Copyright).
+    SetFeedCategories(strings.Join(rssClient.Feed.Categories, ", ")).
     OnConflict().
-    Ignore().
+    // Ignore().
+    UpdateNewValues().
     ID(context.Background())
   if err != nil {
     return ctx.

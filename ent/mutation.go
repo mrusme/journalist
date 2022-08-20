@@ -51,10 +51,11 @@ type FeedMutation struct {
 	feed_feed_link          *string
 	feed_updated            *string
 	feed_published          *string
-	feed_author             *string
-	feed_authors            *string
+	feed_author_name        *string
+	feed_author_email       *string
 	feed_language           *string
-	feed_image              *string
+	feed_image_title        *string
+	feed_image_url          *string
 	feed_copyright          *string
 	feed_generator          *string
 	feed_categories         *string
@@ -530,76 +531,102 @@ func (m *FeedMutation) ResetFeedPublished() {
 	m.feed_published = nil
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (m *FeedMutation) SetFeedAuthor(s string) {
-	m.feed_author = &s
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (m *FeedMutation) SetFeedAuthorName(s string) {
+	m.feed_author_name = &s
 }
 
-// FeedAuthor returns the value of the "feed_author" field in the mutation.
-func (m *FeedMutation) FeedAuthor() (r string, exists bool) {
-	v := m.feed_author
+// FeedAuthorName returns the value of the "feed_author_name" field in the mutation.
+func (m *FeedMutation) FeedAuthorName() (r string, exists bool) {
+	v := m.feed_author_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFeedAuthor returns the old "feed_author" field's value of the Feed entity.
+// OldFeedAuthorName returns the old "feed_author_name" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldFeedAuthor(ctx context.Context) (v string, err error) {
+func (m *FeedMutation) OldFeedAuthorName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFeedAuthor is only allowed on UpdateOne operations")
+		return v, errors.New("OldFeedAuthorName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFeedAuthor requires an ID field in the mutation")
+		return v, errors.New("OldFeedAuthorName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFeedAuthor: %w", err)
+		return v, fmt.Errorf("querying old value for OldFeedAuthorName: %w", err)
 	}
-	return oldValue.FeedAuthor, nil
+	return oldValue.FeedAuthorName, nil
 }
 
-// ResetFeedAuthor resets all changes to the "feed_author" field.
-func (m *FeedMutation) ResetFeedAuthor() {
-	m.feed_author = nil
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (m *FeedMutation) ClearFeedAuthorName() {
+	m.feed_author_name = nil
+	m.clearedFields[feed.FieldFeedAuthorName] = struct{}{}
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (m *FeedMutation) SetFeedAuthors(s string) {
-	m.feed_authors = &s
+// FeedAuthorNameCleared returns if the "feed_author_name" field was cleared in this mutation.
+func (m *FeedMutation) FeedAuthorNameCleared() bool {
+	_, ok := m.clearedFields[feed.FieldFeedAuthorName]
+	return ok
 }
 
-// FeedAuthors returns the value of the "feed_authors" field in the mutation.
-func (m *FeedMutation) FeedAuthors() (r string, exists bool) {
-	v := m.feed_authors
+// ResetFeedAuthorName resets all changes to the "feed_author_name" field.
+func (m *FeedMutation) ResetFeedAuthorName() {
+	m.feed_author_name = nil
+	delete(m.clearedFields, feed.FieldFeedAuthorName)
+}
+
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (m *FeedMutation) SetFeedAuthorEmail(s string) {
+	m.feed_author_email = &s
+}
+
+// FeedAuthorEmail returns the value of the "feed_author_email" field in the mutation.
+func (m *FeedMutation) FeedAuthorEmail() (r string, exists bool) {
+	v := m.feed_author_email
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFeedAuthors returns the old "feed_authors" field's value of the Feed entity.
+// OldFeedAuthorEmail returns the old "feed_author_email" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldFeedAuthors(ctx context.Context) (v string, err error) {
+func (m *FeedMutation) OldFeedAuthorEmail(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFeedAuthors is only allowed on UpdateOne operations")
+		return v, errors.New("OldFeedAuthorEmail is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFeedAuthors requires an ID field in the mutation")
+		return v, errors.New("OldFeedAuthorEmail requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFeedAuthors: %w", err)
+		return v, fmt.Errorf("querying old value for OldFeedAuthorEmail: %w", err)
 	}
-	return oldValue.FeedAuthors, nil
+	return oldValue.FeedAuthorEmail, nil
 }
 
-// ResetFeedAuthors resets all changes to the "feed_authors" field.
-func (m *FeedMutation) ResetFeedAuthors() {
-	m.feed_authors = nil
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (m *FeedMutation) ClearFeedAuthorEmail() {
+	m.feed_author_email = nil
+	m.clearedFields[feed.FieldFeedAuthorEmail] = struct{}{}
+}
+
+// FeedAuthorEmailCleared returns if the "feed_author_email" field was cleared in this mutation.
+func (m *FeedMutation) FeedAuthorEmailCleared() bool {
+	_, ok := m.clearedFields[feed.FieldFeedAuthorEmail]
+	return ok
+}
+
+// ResetFeedAuthorEmail resets all changes to the "feed_author_email" field.
+func (m *FeedMutation) ResetFeedAuthorEmail() {
+	m.feed_author_email = nil
+	delete(m.clearedFields, feed.FieldFeedAuthorEmail)
 }
 
 // SetFeedLanguage sets the "feed_language" field.
@@ -638,40 +665,102 @@ func (m *FeedMutation) ResetFeedLanguage() {
 	m.feed_language = nil
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (m *FeedMutation) SetFeedImage(s string) {
-	m.feed_image = &s
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (m *FeedMutation) SetFeedImageTitle(s string) {
+	m.feed_image_title = &s
 }
 
-// FeedImage returns the value of the "feed_image" field in the mutation.
-func (m *FeedMutation) FeedImage() (r string, exists bool) {
-	v := m.feed_image
+// FeedImageTitle returns the value of the "feed_image_title" field in the mutation.
+func (m *FeedMutation) FeedImageTitle() (r string, exists bool) {
+	v := m.feed_image_title
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFeedImage returns the old "feed_image" field's value of the Feed entity.
+// OldFeedImageTitle returns the old "feed_image_title" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldFeedImage(ctx context.Context) (v string, err error) {
+func (m *FeedMutation) OldFeedImageTitle(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFeedImage is only allowed on UpdateOne operations")
+		return v, errors.New("OldFeedImageTitle is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFeedImage requires an ID field in the mutation")
+		return v, errors.New("OldFeedImageTitle requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFeedImage: %w", err)
+		return v, fmt.Errorf("querying old value for OldFeedImageTitle: %w", err)
 	}
-	return oldValue.FeedImage, nil
+	return oldValue.FeedImageTitle, nil
 }
 
-// ResetFeedImage resets all changes to the "feed_image" field.
-func (m *FeedMutation) ResetFeedImage() {
-	m.feed_image = nil
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (m *FeedMutation) ClearFeedImageTitle() {
+	m.feed_image_title = nil
+	m.clearedFields[feed.FieldFeedImageTitle] = struct{}{}
+}
+
+// FeedImageTitleCleared returns if the "feed_image_title" field was cleared in this mutation.
+func (m *FeedMutation) FeedImageTitleCleared() bool {
+	_, ok := m.clearedFields[feed.FieldFeedImageTitle]
+	return ok
+}
+
+// ResetFeedImageTitle resets all changes to the "feed_image_title" field.
+func (m *FeedMutation) ResetFeedImageTitle() {
+	m.feed_image_title = nil
+	delete(m.clearedFields, feed.FieldFeedImageTitle)
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (m *FeedMutation) SetFeedImageURL(s string) {
+	m.feed_image_url = &s
+}
+
+// FeedImageURL returns the value of the "feed_image_url" field in the mutation.
+func (m *FeedMutation) FeedImageURL() (r string, exists bool) {
+	v := m.feed_image_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFeedImageURL returns the old "feed_image_url" field's value of the Feed entity.
+// If the Feed object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FeedMutation) OldFeedImageURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFeedImageURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFeedImageURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFeedImageURL: %w", err)
+	}
+	return oldValue.FeedImageURL, nil
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (m *FeedMutation) ClearFeedImageURL() {
+	m.feed_image_url = nil
+	m.clearedFields[feed.FieldFeedImageURL] = struct{}{}
+}
+
+// FeedImageURLCleared returns if the "feed_image_url" field was cleared in this mutation.
+func (m *FeedMutation) FeedImageURLCleared() bool {
+	_, ok := m.clearedFields[feed.FieldFeedImageURL]
+	return ok
+}
+
+// ResetFeedImageURL resets all changes to the "feed_image_url" field.
+func (m *FeedMutation) ResetFeedImageURL() {
+	m.feed_image_url = nil
+	delete(m.clearedFields, feed.FieldFeedImageURL)
 }
 
 // SetFeedCopyright sets the "feed_copyright" field.
@@ -1084,7 +1173,7 @@ func (m *FeedMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FeedMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 20)
 	if m.url != nil {
 		fields = append(fields, feed.FieldURL)
 	}
@@ -1112,17 +1201,20 @@ func (m *FeedMutation) Fields() []string {
 	if m.feed_published != nil {
 		fields = append(fields, feed.FieldFeedPublished)
 	}
-	if m.feed_author != nil {
-		fields = append(fields, feed.FieldFeedAuthor)
+	if m.feed_author_name != nil {
+		fields = append(fields, feed.FieldFeedAuthorName)
 	}
-	if m.feed_authors != nil {
-		fields = append(fields, feed.FieldFeedAuthors)
+	if m.feed_author_email != nil {
+		fields = append(fields, feed.FieldFeedAuthorEmail)
 	}
 	if m.feed_language != nil {
 		fields = append(fields, feed.FieldFeedLanguage)
 	}
-	if m.feed_image != nil {
-		fields = append(fields, feed.FieldFeedImage)
+	if m.feed_image_title != nil {
+		fields = append(fields, feed.FieldFeedImageTitle)
+	}
+	if m.feed_image_url != nil {
+		fields = append(fields, feed.FieldFeedImageURL)
 	}
 	if m.feed_copyright != nil {
 		fields = append(fields, feed.FieldFeedCopyright)
@@ -1168,14 +1260,16 @@ func (m *FeedMutation) Field(name string) (ent.Value, bool) {
 		return m.FeedUpdated()
 	case feed.FieldFeedPublished:
 		return m.FeedPublished()
-	case feed.FieldFeedAuthor:
-		return m.FeedAuthor()
-	case feed.FieldFeedAuthors:
-		return m.FeedAuthors()
+	case feed.FieldFeedAuthorName:
+		return m.FeedAuthorName()
+	case feed.FieldFeedAuthorEmail:
+		return m.FeedAuthorEmail()
 	case feed.FieldFeedLanguage:
 		return m.FeedLanguage()
-	case feed.FieldFeedImage:
-		return m.FeedImage()
+	case feed.FieldFeedImageTitle:
+		return m.FeedImageTitle()
+	case feed.FieldFeedImageURL:
+		return m.FeedImageURL()
 	case feed.FieldFeedCopyright:
 		return m.FeedCopyright()
 	case feed.FieldFeedGenerator:
@@ -1215,14 +1309,16 @@ func (m *FeedMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldFeedUpdated(ctx)
 	case feed.FieldFeedPublished:
 		return m.OldFeedPublished(ctx)
-	case feed.FieldFeedAuthor:
-		return m.OldFeedAuthor(ctx)
-	case feed.FieldFeedAuthors:
-		return m.OldFeedAuthors(ctx)
+	case feed.FieldFeedAuthorName:
+		return m.OldFeedAuthorName(ctx)
+	case feed.FieldFeedAuthorEmail:
+		return m.OldFeedAuthorEmail(ctx)
 	case feed.FieldFeedLanguage:
 		return m.OldFeedLanguage(ctx)
-	case feed.FieldFeedImage:
-		return m.OldFeedImage(ctx)
+	case feed.FieldFeedImageTitle:
+		return m.OldFeedImageTitle(ctx)
+	case feed.FieldFeedImageURL:
+		return m.OldFeedImageURL(ctx)
 	case feed.FieldFeedCopyright:
 		return m.OldFeedCopyright(ctx)
 	case feed.FieldFeedGenerator:
@@ -1307,19 +1403,19 @@ func (m *FeedMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFeedPublished(v)
 		return nil
-	case feed.FieldFeedAuthor:
+	case feed.FieldFeedAuthorName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFeedAuthor(v)
+		m.SetFeedAuthorName(v)
 		return nil
-	case feed.FieldFeedAuthors:
+	case feed.FieldFeedAuthorEmail:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFeedAuthors(v)
+		m.SetFeedAuthorEmail(v)
 		return nil
 	case feed.FieldFeedLanguage:
 		v, ok := value.(string)
@@ -1328,12 +1424,19 @@ func (m *FeedMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFeedLanguage(v)
 		return nil
-	case feed.FieldFeedImage:
+	case feed.FieldFeedImageTitle:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFeedImage(v)
+		m.SetFeedImageTitle(v)
+		return nil
+	case feed.FieldFeedImageURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFeedImageURL(v)
 		return nil
 	case feed.FieldFeedCopyright:
 		v, ok := value.(string)
@@ -1413,6 +1516,18 @@ func (m *FeedMutation) ClearedFields() []string {
 	if m.FieldCleared(feed.FieldPassword) {
 		fields = append(fields, feed.FieldPassword)
 	}
+	if m.FieldCleared(feed.FieldFeedAuthorName) {
+		fields = append(fields, feed.FieldFeedAuthorName)
+	}
+	if m.FieldCleared(feed.FieldFeedAuthorEmail) {
+		fields = append(fields, feed.FieldFeedAuthorEmail)
+	}
+	if m.FieldCleared(feed.FieldFeedImageTitle) {
+		fields = append(fields, feed.FieldFeedImageTitle)
+	}
+	if m.FieldCleared(feed.FieldFeedImageURL) {
+		fields = append(fields, feed.FieldFeedImageURL)
+	}
 	if m.FieldCleared(feed.FieldDeletedAt) {
 		fields = append(fields, feed.FieldDeletedAt)
 	}
@@ -1435,6 +1550,18 @@ func (m *FeedMutation) ClearField(name string) error {
 		return nil
 	case feed.FieldPassword:
 		m.ClearPassword()
+		return nil
+	case feed.FieldFeedAuthorName:
+		m.ClearFeedAuthorName()
+		return nil
+	case feed.FieldFeedAuthorEmail:
+		m.ClearFeedAuthorEmail()
+		return nil
+	case feed.FieldFeedImageTitle:
+		m.ClearFeedImageTitle()
+		return nil
+	case feed.FieldFeedImageURL:
+		m.ClearFeedImageURL()
 		return nil
 	case feed.FieldDeletedAt:
 		m.ClearDeletedAt()
@@ -1474,17 +1601,20 @@ func (m *FeedMutation) ResetField(name string) error {
 	case feed.FieldFeedPublished:
 		m.ResetFeedPublished()
 		return nil
-	case feed.FieldFeedAuthor:
-		m.ResetFeedAuthor()
+	case feed.FieldFeedAuthorName:
+		m.ResetFeedAuthorName()
 		return nil
-	case feed.FieldFeedAuthors:
-		m.ResetFeedAuthors()
+	case feed.FieldFeedAuthorEmail:
+		m.ResetFeedAuthorEmail()
 		return nil
 	case feed.FieldFeedLanguage:
 		m.ResetFeedLanguage()
 		return nil
-	case feed.FieldFeedImage:
-		m.ResetFeedImage()
+	case feed.FieldFeedImageTitle:
+		m.ResetFeedImageTitle()
+		return nil
+	case feed.FieldFeedImageURL:
+		m.ResetFeedImageURL()
 		return nil
 	case feed.FieldFeedCopyright:
 		m.ResetFeedCopyright()

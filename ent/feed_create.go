@@ -97,15 +97,31 @@ func (fc *FeedCreate) SetFeedPublished(s string) *FeedCreate {
 	return fc
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (fc *FeedCreate) SetFeedAuthor(s string) *FeedCreate {
-	fc.mutation.SetFeedAuthor(s)
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (fc *FeedCreate) SetFeedAuthorName(s string) *FeedCreate {
+	fc.mutation.SetFeedAuthorName(s)
 	return fc
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (fc *FeedCreate) SetFeedAuthors(s string) *FeedCreate {
-	fc.mutation.SetFeedAuthors(s)
+// SetNillableFeedAuthorName sets the "feed_author_name" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableFeedAuthorName(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetFeedAuthorName(*s)
+	}
+	return fc
+}
+
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (fc *FeedCreate) SetFeedAuthorEmail(s string) *FeedCreate {
+	fc.mutation.SetFeedAuthorEmail(s)
+	return fc
+}
+
+// SetNillableFeedAuthorEmail sets the "feed_author_email" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableFeedAuthorEmail(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetFeedAuthorEmail(*s)
+	}
 	return fc
 }
 
@@ -115,9 +131,31 @@ func (fc *FeedCreate) SetFeedLanguage(s string) *FeedCreate {
 	return fc
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (fc *FeedCreate) SetFeedImage(s string) *FeedCreate {
-	fc.mutation.SetFeedImage(s)
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (fc *FeedCreate) SetFeedImageTitle(s string) *FeedCreate {
+	fc.mutation.SetFeedImageTitle(s)
+	return fc
+}
+
+// SetNillableFeedImageTitle sets the "feed_image_title" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableFeedImageTitle(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetFeedImageTitle(*s)
+	}
+	return fc
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (fc *FeedCreate) SetFeedImageURL(s string) *FeedCreate {
+	fc.mutation.SetFeedImageURL(s)
+	return fc
+}
+
+// SetNillableFeedImageURL sets the "feed_image_url" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableFeedImageURL(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetFeedImageURL(*s)
+	}
 	return fc
 }
 
@@ -359,17 +397,8 @@ func (fc *FeedCreate) check() error {
 	if _, ok := fc.mutation.FeedPublished(); !ok {
 		return &ValidationError{Name: "feed_published", err: errors.New(`ent: missing required field "Feed.feed_published"`)}
 	}
-	if _, ok := fc.mutation.FeedAuthor(); !ok {
-		return &ValidationError{Name: "feed_author", err: errors.New(`ent: missing required field "Feed.feed_author"`)}
-	}
-	if _, ok := fc.mutation.FeedAuthors(); !ok {
-		return &ValidationError{Name: "feed_authors", err: errors.New(`ent: missing required field "Feed.feed_authors"`)}
-	}
 	if _, ok := fc.mutation.FeedLanguage(); !ok {
 		return &ValidationError{Name: "feed_language", err: errors.New(`ent: missing required field "Feed.feed_language"`)}
-	}
-	if _, ok := fc.mutation.FeedImage(); !ok {
-		return &ValidationError{Name: "feed_image", err: errors.New(`ent: missing required field "Feed.feed_image"`)}
 	}
 	if _, ok := fc.mutation.FeedCopyright(); !ok {
 		return &ValidationError{Name: "feed_copyright", err: errors.New(`ent: missing required field "Feed.feed_copyright"`)}
@@ -495,21 +524,21 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 		})
 		_node.FeedPublished = value
 	}
-	if value, ok := fc.mutation.FeedAuthor(); ok {
+	if value, ok := fc.mutation.FeedAuthorName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthor,
+			Column: feed.FieldFeedAuthorName,
 		})
-		_node.FeedAuthor = value
+		_node.FeedAuthorName = value
 	}
-	if value, ok := fc.mutation.FeedAuthors(); ok {
+	if value, ok := fc.mutation.FeedAuthorEmail(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedAuthors,
+			Column: feed.FieldFeedAuthorEmail,
 		})
-		_node.FeedAuthors = value
+		_node.FeedAuthorEmail = value
 	}
 	if value, ok := fc.mutation.FeedLanguage(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -519,13 +548,21 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 		})
 		_node.FeedLanguage = value
 	}
-	if value, ok := fc.mutation.FeedImage(); ok {
+	if value, ok := fc.mutation.FeedImageTitle(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedImage,
+			Column: feed.FieldFeedImageTitle,
 		})
-		_node.FeedImage = value
+		_node.FeedImageTitle = value
+	}
+	if value, ok := fc.mutation.FeedImageURL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImageURL,
+		})
+		_node.FeedImageURL = value
 	}
 	if value, ok := fc.mutation.FeedCopyright(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -813,27 +850,39 @@ func (u *FeedUpsert) UpdateFeedPublished() *FeedUpsert {
 	return u
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (u *FeedUpsert) SetFeedAuthor(v string) *FeedUpsert {
-	u.Set(feed.FieldFeedAuthor, v)
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (u *FeedUpsert) SetFeedAuthorName(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedAuthorName, v)
 	return u
 }
 
-// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
-func (u *FeedUpsert) UpdateFeedAuthor() *FeedUpsert {
-	u.SetExcluded(feed.FieldFeedAuthor)
+// UpdateFeedAuthorName sets the "feed_author_name" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedAuthorName() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedAuthorName)
 	return u
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (u *FeedUpsert) SetFeedAuthors(v string) *FeedUpsert {
-	u.Set(feed.FieldFeedAuthors, v)
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (u *FeedUpsert) ClearFeedAuthorName() *FeedUpsert {
+	u.SetNull(feed.FieldFeedAuthorName)
 	return u
 }
 
-// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
-func (u *FeedUpsert) UpdateFeedAuthors() *FeedUpsert {
-	u.SetExcluded(feed.FieldFeedAuthors)
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (u *FeedUpsert) SetFeedAuthorEmail(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedAuthorEmail, v)
+	return u
+}
+
+// UpdateFeedAuthorEmail sets the "feed_author_email" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedAuthorEmail() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedAuthorEmail)
+	return u
+}
+
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (u *FeedUpsert) ClearFeedAuthorEmail() *FeedUpsert {
+	u.SetNull(feed.FieldFeedAuthorEmail)
 	return u
 }
 
@@ -849,15 +898,39 @@ func (u *FeedUpsert) UpdateFeedLanguage() *FeedUpsert {
 	return u
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (u *FeedUpsert) SetFeedImage(v string) *FeedUpsert {
-	u.Set(feed.FieldFeedImage, v)
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (u *FeedUpsert) SetFeedImageTitle(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedImageTitle, v)
 	return u
 }
 
-// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
-func (u *FeedUpsert) UpdateFeedImage() *FeedUpsert {
-	u.SetExcluded(feed.FieldFeedImage)
+// UpdateFeedImageTitle sets the "feed_image_title" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedImageTitle() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedImageTitle)
+	return u
+}
+
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (u *FeedUpsert) ClearFeedImageTitle() *FeedUpsert {
+	u.SetNull(feed.FieldFeedImageTitle)
+	return u
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (u *FeedUpsert) SetFeedImageURL(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedImageURL, v)
+	return u
+}
+
+// UpdateFeedImageURL sets the "feed_image_url" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedImageURL() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedImageURL)
+	return u
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (u *FeedUpsert) ClearFeedImageURL() *FeedUpsert {
+	u.SetNull(feed.FieldFeedImageURL)
 	return u
 }
 
@@ -1129,31 +1202,45 @@ func (u *FeedUpsertOne) UpdateFeedPublished() *FeedUpsertOne {
 	})
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (u *FeedUpsertOne) SetFeedAuthor(v string) *FeedUpsertOne {
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (u *FeedUpsertOne) SetFeedAuthorName(v string) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedAuthor(v)
+		s.SetFeedAuthorName(v)
 	})
 }
 
-// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
-func (u *FeedUpsertOne) UpdateFeedAuthor() *FeedUpsertOne {
+// UpdateFeedAuthorName sets the "feed_author_name" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedAuthorName() *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedAuthor()
+		s.UpdateFeedAuthorName()
 	})
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (u *FeedUpsertOne) SetFeedAuthors(v string) *FeedUpsertOne {
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (u *FeedUpsertOne) ClearFeedAuthorName() *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedAuthors(v)
+		s.ClearFeedAuthorName()
 	})
 }
 
-// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
-func (u *FeedUpsertOne) UpdateFeedAuthors() *FeedUpsertOne {
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (u *FeedUpsertOne) SetFeedAuthorEmail(v string) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedAuthors()
+		s.SetFeedAuthorEmail(v)
+	})
+}
+
+// UpdateFeedAuthorEmail sets the "feed_author_email" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedAuthorEmail() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthorEmail()
+	})
+}
+
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (u *FeedUpsertOne) ClearFeedAuthorEmail() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedAuthorEmail()
 	})
 }
 
@@ -1171,17 +1258,45 @@ func (u *FeedUpsertOne) UpdateFeedLanguage() *FeedUpsertOne {
 	})
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (u *FeedUpsertOne) SetFeedImage(v string) *FeedUpsertOne {
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (u *FeedUpsertOne) SetFeedImageTitle(v string) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedImage(v)
+		s.SetFeedImageTitle(v)
 	})
 }
 
-// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
-func (u *FeedUpsertOne) UpdateFeedImage() *FeedUpsertOne {
+// UpdateFeedImageTitle sets the "feed_image_title" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedImageTitle() *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedImage()
+		s.UpdateFeedImageTitle()
+	})
+}
+
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (u *FeedUpsertOne) ClearFeedImageTitle() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedImageTitle()
+	})
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (u *FeedUpsertOne) SetFeedImageURL(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedImageURL(v)
+	})
+}
+
+// UpdateFeedImageURL sets the "feed_image_url" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedImageURL() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedImageURL()
+	})
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (u *FeedUpsertOne) ClearFeedImageURL() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedImageURL()
 	})
 }
 
@@ -1632,31 +1747,45 @@ func (u *FeedUpsertBulk) UpdateFeedPublished() *FeedUpsertBulk {
 	})
 }
 
-// SetFeedAuthor sets the "feed_author" field.
-func (u *FeedUpsertBulk) SetFeedAuthor(v string) *FeedUpsertBulk {
+// SetFeedAuthorName sets the "feed_author_name" field.
+func (u *FeedUpsertBulk) SetFeedAuthorName(v string) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedAuthor(v)
+		s.SetFeedAuthorName(v)
 	})
 }
 
-// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
-func (u *FeedUpsertBulk) UpdateFeedAuthor() *FeedUpsertBulk {
+// UpdateFeedAuthorName sets the "feed_author_name" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedAuthorName() *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedAuthor()
+		s.UpdateFeedAuthorName()
 	})
 }
 
-// SetFeedAuthors sets the "feed_authors" field.
-func (u *FeedUpsertBulk) SetFeedAuthors(v string) *FeedUpsertBulk {
+// ClearFeedAuthorName clears the value of the "feed_author_name" field.
+func (u *FeedUpsertBulk) ClearFeedAuthorName() *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedAuthors(v)
+		s.ClearFeedAuthorName()
 	})
 }
 
-// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
-func (u *FeedUpsertBulk) UpdateFeedAuthors() *FeedUpsertBulk {
+// SetFeedAuthorEmail sets the "feed_author_email" field.
+func (u *FeedUpsertBulk) SetFeedAuthorEmail(v string) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedAuthors()
+		s.SetFeedAuthorEmail(v)
+	})
+}
+
+// UpdateFeedAuthorEmail sets the "feed_author_email" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedAuthorEmail() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthorEmail()
+	})
+}
+
+// ClearFeedAuthorEmail clears the value of the "feed_author_email" field.
+func (u *FeedUpsertBulk) ClearFeedAuthorEmail() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedAuthorEmail()
 	})
 }
 
@@ -1674,17 +1803,45 @@ func (u *FeedUpsertBulk) UpdateFeedLanguage() *FeedUpsertBulk {
 	})
 }
 
-// SetFeedImage sets the "feed_image" field.
-func (u *FeedUpsertBulk) SetFeedImage(v string) *FeedUpsertBulk {
+// SetFeedImageTitle sets the "feed_image_title" field.
+func (u *FeedUpsertBulk) SetFeedImageTitle(v string) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.SetFeedImage(v)
+		s.SetFeedImageTitle(v)
 	})
 }
 
-// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
-func (u *FeedUpsertBulk) UpdateFeedImage() *FeedUpsertBulk {
+// UpdateFeedImageTitle sets the "feed_image_title" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedImageTitle() *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
-		s.UpdateFeedImage()
+		s.UpdateFeedImageTitle()
+	})
+}
+
+// ClearFeedImageTitle clears the value of the "feed_image_title" field.
+func (u *FeedUpsertBulk) ClearFeedImageTitle() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedImageTitle()
+	})
+}
+
+// SetFeedImageURL sets the "feed_image_url" field.
+func (u *FeedUpsertBulk) SetFeedImageURL(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedImageURL(v)
+	})
+}
+
+// UpdateFeedImageURL sets the "feed_image_url" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedImageURL() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedImageURL()
+	})
+}
+
+// ClearFeedImageURL clears the value of the "feed_image_url" field.
+func (u *FeedUpsertBulk) ClearFeedImageURL() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearFeedImageURL()
 	})
 }
 

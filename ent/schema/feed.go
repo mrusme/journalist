@@ -43,10 +43,15 @@ func (Feed) Fields() []ent.Field {
     field.String("feed_feed_link"),
     field.String("feed_updated"),
     field.String("feed_published"),
-    field.String("feed_author"),
-    field.String("feed_authors"),
+    field.String("feed_author_name").
+      Optional(),
+    field.String("feed_author_email").
+      Optional(),
     field.String("feed_language"),
-    field.String("feed_image"),
+    field.String("feed_image_title").
+      Optional(),
+    field.String("feed_image_url").
+      Optional(),
     field.String("feed_copyright"),
     field.String("feed_generator"),
     field.String("feed_categories"),
