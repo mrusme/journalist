@@ -8,6 +8,10 @@ user1_id=""
 user1_user="user1"
 user1_pass="p4sS!"
 
+user2_id=""
+user2_user="user2"
+user2_pass="p4sS!"
+
 feed1_url="https://xn--gckvb8fzb.com"
 
 perform() {
@@ -141,6 +145,26 @@ failfast $? "$out"
 
 #------------------------------------------------------------------------------#
 printf "\
+## Creating user as admin with username %s \
+\n" "$user2_user"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
+out=$(
+  perform post \
+       on users \
+       as $admin_user $admin_pass \
+     with "{
+       \"username\": \"$user2_user\",
+       \"password\": \"$user2_pass\",
+       \"role\": \"user\"
+     }"
+)
+failfast $? "$out"
+#------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
 ## Creating feed as %s with URL %s \
 \n" "$user1_user" "$feed1_url"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
@@ -148,6 +172,26 @@ out=$(
   perform post \
        on feeds \
        as $user1_user $user1_pass \
+     with "{
+       \"name\": \"xn--gckvb8fzb.com\",
+       \"url\": \"$feed1_url\",
+       \"group\": \"Journals\"
+     }"
+)
+failfast $? "$out"
+#------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Creating feed as %s with URL %s \
+\n" "$user2_user" "$feed1_url"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
+out=$(
+  perform post \
+       on feeds \
+       as $user2_user $user2_pass \
      with "{
        \"name\": \"xn--gckvb8fzb.com\",
        \"url\": \"$feed1_url\",

@@ -24,6 +24,14 @@ func init() {
 	feedDescURL := feedFields[1].Descriptor()
 	// feed.URLValidator is a validator for the "url" field. It is called by the builders before save.
 	feed.URLValidator = feedDescURL.Validators[0].(func(string) error)
+	// feedDescUsername is the schema descriptor for username field.
+	feedDescUsername := feedFields[2].Descriptor()
+	// feed.DefaultUsername holds the default value on creation for the username field.
+	feed.DefaultUsername = feedDescUsername.Default.(string)
+	// feedDescPassword is the schema descriptor for password field.
+	feedDescPassword := feedFields[3].Descriptor()
+	// feed.DefaultPassword holds the default value on creation for the password field.
+	feed.DefaultPassword = feedDescPassword.Default.(string)
 	// feedDescCreatedAt is the schema descriptor for created_at field.
 	feedDescCreatedAt := feedFields[18].Descriptor()
 	// feed.DefaultCreatedAt holds the default value on creation for the created_at field.

@@ -34,8 +34,8 @@ func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
   endpoint.EntClient = entClient
 
   feedsRouter := (*fiberRouter).Group("/feeds")
-  // feedsRouter.Get("/", endpoint.List)
-  // feedsRouter.Get("/:id", endpoint.Show)
+  feedsRouter.Get("/", endpoint.List)
+  feedsRouter.Get("/:id", endpoint.Show)
   feedsRouter.Post("/", endpoint.Create)
   // feedsRouter.Put("/:id", endpoint.Update)
   // feedsRouter.Delete("/:id", endpoint.Destroy)

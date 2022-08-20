@@ -12,8 +12,8 @@ var (
 	FeedsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "url", Type: field.TypeString},
-		{Name: "username", Type: field.TypeString, Nullable: true},
-		{Name: "password", Type: field.TypeString, Nullable: true},
+		{Name: "username", Type: field.TypeString, Default: ""},
+		{Name: "password", Type: field.TypeString, Default: ""},
 		{Name: "feed_title", Type: field.TypeString},
 		{Name: "feed_description", Type: field.TypeString},
 		{Name: "feed_link", Type: field.TypeString},

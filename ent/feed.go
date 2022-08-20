@@ -20,9 +20,9 @@ type Feed struct {
 	// URL holds the value of the "url" field.
 	URL string `json:"url,omitempty"`
 	// Username holds the value of the "username" field.
-	Username *string `json:"-"`
+	Username string `json:"-"`
 	// Password holds the value of the "password" field.
-	Password *string `json:"-"`
+	Password string `json:"-"`
 	// FeedTitle holds the value of the "feed_title" field.
 	FeedTitle string `json:"feed_title,omitempty"`
 	// FeedDescription holds the value of the "feed_description" field.
@@ -144,15 +144,13 @@ func (f *Feed) assignValues(columns []string, values []interface{}) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				f.Username = new(string)
-				*f.Username = value.String
+				f.Username = value.String
 			}
 		case feed.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				f.Password = new(string)
-				*f.Password = value.String
+				f.Password = value.String
 			}
 		case feed.FieldFeedTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {

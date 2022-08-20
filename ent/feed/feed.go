@@ -126,6 +126,10 @@ func ValidColumn(column string) bool {
 var (
 	// URLValidator is a validator for the "url" field. It is called by the builders before save.
 	URLValidator func(string) error
+	// DefaultUsername holds the default value on creation for the "username" field.
+	DefaultUsername string
+	// DefaultPassword holds the default value on creation for the "password" field.
+	DefaultPassword string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

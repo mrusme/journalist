@@ -234,7 +234,7 @@ func (m *FeedMutation) Username() (r string, exists bool) {
 // OldUsername returns the old "username" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldUsername(ctx context.Context) (v *string, err error) {
+func (m *FeedMutation) OldUsername(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
 	}
@@ -248,22 +248,9 @@ func (m *FeedMutation) OldUsername(ctx context.Context) (v *string, err error) {
 	return oldValue.Username, nil
 }
 
-// ClearUsername clears the value of the "username" field.
-func (m *FeedMutation) ClearUsername() {
-	m.username = nil
-	m.clearedFields[feed.FieldUsername] = struct{}{}
-}
-
-// UsernameCleared returns if the "username" field was cleared in this mutation.
-func (m *FeedMutation) UsernameCleared() bool {
-	_, ok := m.clearedFields[feed.FieldUsername]
-	return ok
-}
-
 // ResetUsername resets all changes to the "username" field.
 func (m *FeedMutation) ResetUsername() {
 	m.username = nil
-	delete(m.clearedFields, feed.FieldUsername)
 }
 
 // SetPassword sets the "password" field.
@@ -283,7 +270,7 @@ func (m *FeedMutation) Password() (r string, exists bool) {
 // OldPassword returns the old "password" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldPassword(ctx context.Context) (v *string, err error) {
+func (m *FeedMutation) OldPassword(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldPassword is only allowed on UpdateOne operations")
 	}
@@ -297,22 +284,9 @@ func (m *FeedMutation) OldPassword(ctx context.Context) (v *string, err error) {
 	return oldValue.Password, nil
 }
 
-// ClearPassword clears the value of the "password" field.
-func (m *FeedMutation) ClearPassword() {
-	m.password = nil
-	m.clearedFields[feed.FieldPassword] = struct{}{}
-}
-
-// PasswordCleared returns if the "password" field was cleared in this mutation.
-func (m *FeedMutation) PasswordCleared() bool {
-	_, ok := m.clearedFields[feed.FieldPassword]
-	return ok
-}
-
 // ResetPassword resets all changes to the "password" field.
 func (m *FeedMutation) ResetPassword() {
 	m.password = nil
-	delete(m.clearedFields, feed.FieldPassword)
 }
 
 // SetFeedTitle sets the "feed_title" field.
@@ -1510,12 +1484,6 @@ func (m *FeedMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *FeedMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(feed.FieldUsername) {
-		fields = append(fields, feed.FieldUsername)
-	}
-	if m.FieldCleared(feed.FieldPassword) {
-		fields = append(fields, feed.FieldPassword)
-	}
 	if m.FieldCleared(feed.FieldFeedAuthorName) {
 		fields = append(fields, feed.FieldFeedAuthorName)
 	}
@@ -1545,12 +1513,6 @@ func (m *FeedMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *FeedMutation) ClearField(name string) error {
 	switch name {
-	case feed.FieldUsername:
-		m.ClearUsername()
-		return nil
-	case feed.FieldPassword:
-		m.ClearPassword()
-		return nil
 	case feed.FieldFeedAuthorName:
 		m.ClearFeedAuthorName()
 		return nil

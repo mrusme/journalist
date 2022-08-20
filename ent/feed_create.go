@@ -355,6 +355,14 @@ func (fc *FeedCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fc *FeedCreate) defaults() {
+	if _, ok := fc.mutation.Username(); !ok {
+		v := feed.DefaultUsername
+		fc.mutation.SetUsername(v)
+	}
+	if _, ok := fc.mutation.Password(); !ok {
+		v := feed.DefaultPassword
+		fc.mutation.SetPassword(v)
+	}
 	if _, ok := fc.mutation.CreatedAt(); !ok {
 		v := feed.DefaultCreatedAt()
 		fc.mutation.SetCreatedAt(v)
@@ -378,6 +386,12 @@ func (fc *FeedCreate) check() error {
 		if err := feed.URLValidator(v); err != nil {
 			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Feed.url": %w`, err)}
 		}
+	}
+	if _, ok := fc.mutation.Username(); !ok {
+		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "Feed.username"`)}
+	}
+	if _, ok := fc.mutation.Password(); !ok {
+		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "Feed.password"`)}
 	}
 	if _, ok := fc.mutation.FeedTitle(); !ok {
 		return &ValidationError{Name: "feed_title", err: errors.New(`ent: missing required field "Feed.feed_title"`)}
@@ -466,7 +480,7 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: feed.FieldUsername,
 		})
-		_node.Username = &value
+		_node.Username = value
 	}
 	if value, ok := fc.mutation.Password(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -474,7 +488,7 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 			Value:  value,
 			Column: feed.FieldPassword,
 		})
-		_node.Password = &value
+		_node.Password = value
 	}
 	if value, ok := fc.mutation.FeedTitle(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -754,12 +768,6 @@ func (u *FeedUpsert) UpdateUsername() *FeedUpsert {
 	return u
 }
 
-// ClearUsername clears the value of the "username" field.
-func (u *FeedUpsert) ClearUsername() *FeedUpsert {
-	u.SetNull(feed.FieldUsername)
-	return u
-}
-
 // SetPassword sets the "password" field.
 func (u *FeedUpsert) SetPassword(v string) *FeedUpsert {
 	u.Set(feed.FieldPassword, v)
@@ -769,12 +777,6 @@ func (u *FeedUpsert) SetPassword(v string) *FeedUpsert {
 // UpdatePassword sets the "password" field to the value that was provided on create.
 func (u *FeedUpsert) UpdatePassword() *FeedUpsert {
 	u.SetExcluded(feed.FieldPassword)
-	return u
-}
-
-// ClearPassword clears the value of the "password" field.
-func (u *FeedUpsert) ClearPassword() *FeedUpsert {
-	u.SetNull(feed.FieldPassword)
 	return u
 }
 
@@ -1090,13 +1092,6 @@ func (u *FeedUpsertOne) UpdateUsername() *FeedUpsertOne {
 	})
 }
 
-// ClearUsername clears the value of the "username" field.
-func (u *FeedUpsertOne) ClearUsername() *FeedUpsertOne {
-	return u.Update(func(s *FeedUpsert) {
-		s.ClearUsername()
-	})
-}
-
 // SetPassword sets the "password" field.
 func (u *FeedUpsertOne) SetPassword(v string) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
@@ -1108,13 +1103,6 @@ func (u *FeedUpsertOne) SetPassword(v string) *FeedUpsertOne {
 func (u *FeedUpsertOne) UpdatePassword() *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
 		s.UpdatePassword()
-	})
-}
-
-// ClearPassword clears the value of the "password" field.
-func (u *FeedUpsertOne) ClearPassword() *FeedUpsertOne {
-	return u.Update(func(s *FeedUpsert) {
-		s.ClearPassword()
 	})
 }
 
@@ -1635,13 +1623,6 @@ func (u *FeedUpsertBulk) UpdateUsername() *FeedUpsertBulk {
 	})
 }
 
-// ClearUsername clears the value of the "username" field.
-func (u *FeedUpsertBulk) ClearUsername() *FeedUpsertBulk {
-	return u.Update(func(s *FeedUpsert) {
-		s.ClearUsername()
-	})
-}
-
 // SetPassword sets the "password" field.
 func (u *FeedUpsertBulk) SetPassword(v string) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
@@ -1653,13 +1634,6 @@ func (u *FeedUpsertBulk) SetPassword(v string) *FeedUpsertBulk {
 func (u *FeedUpsertBulk) UpdatePassword() *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
 		s.UpdatePassword()
-	})
-}
-
-// ClearPassword clears the value of the "password" field.
-func (u *FeedUpsertBulk) ClearPassword() *FeedUpsertBulk {
-	return u.Update(func(s *FeedUpsert) {
-		s.ClearPassword()
 	})
 }
 

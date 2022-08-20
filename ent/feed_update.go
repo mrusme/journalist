@@ -52,12 +52,6 @@ func (fu *FeedUpdate) SetNillableUsername(s *string) *FeedUpdate {
 	return fu
 }
 
-// ClearUsername clears the value of the "username" field.
-func (fu *FeedUpdate) ClearUsername() *FeedUpdate {
-	fu.mutation.ClearUsername()
-	return fu
-}
-
 // SetPassword sets the "password" field.
 func (fu *FeedUpdate) SetPassword(s string) *FeedUpdate {
 	fu.mutation.SetPassword(s)
@@ -69,12 +63,6 @@ func (fu *FeedUpdate) SetNillablePassword(s *string) *FeedUpdate {
 	if s != nil {
 		fu.SetPassword(*s)
 	}
-	return fu
-}
-
-// ClearPassword clears the value of the "password" field.
-func (fu *FeedUpdate) ClearPassword() *FeedUpdate {
-	fu.mutation.ClearPassword()
 	return fu
 }
 
@@ -482,22 +470,10 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: feed.FieldUsername,
 		})
 	}
-	if fu.mutation.UsernameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldUsername,
-		})
-	}
 	if value, ok := fu.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldPassword,
-		})
-	}
-	if fu.mutation.PasswordCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: feed.FieldPassword,
 		})
 	}
@@ -872,12 +848,6 @@ func (fuo *FeedUpdateOne) SetNillableUsername(s *string) *FeedUpdateOne {
 	return fuo
 }
 
-// ClearUsername clears the value of the "username" field.
-func (fuo *FeedUpdateOne) ClearUsername() *FeedUpdateOne {
-	fuo.mutation.ClearUsername()
-	return fuo
-}
-
 // SetPassword sets the "password" field.
 func (fuo *FeedUpdateOne) SetPassword(s string) *FeedUpdateOne {
 	fuo.mutation.SetPassword(s)
@@ -889,12 +859,6 @@ func (fuo *FeedUpdateOne) SetNillablePassword(s *string) *FeedUpdateOne {
 	if s != nil {
 		fuo.SetPassword(*s)
 	}
-	return fuo
-}
-
-// ClearPassword clears the value of the "password" field.
-func (fuo *FeedUpdateOne) ClearPassword() *FeedUpdateOne {
-	fuo.mutation.ClearPassword()
 	return fuo
 }
 
@@ -1332,22 +1296,10 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 			Column: feed.FieldUsername,
 		})
 	}
-	if fuo.mutation.UsernameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldUsername,
-		})
-	}
 	if value, ok := fuo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldPassword,
-		})
-	}
-	if fuo.mutation.PasswordCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: feed.FieldPassword,
 		})
 	}

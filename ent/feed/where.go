@@ -406,20 +406,6 @@ func UsernameHasSuffix(v string) predicate.Feed {
 	})
 }
 
-// UsernameIsNil applies the IsNil predicate on the "username" field.
-func UsernameIsNil() predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldUsername)))
-	})
-}
-
-// UsernameNotNil applies the NotNil predicate on the "username" field.
-func UsernameNotNil() predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldUsername)))
-	})
-}
-
 // UsernameEqualFold applies the EqualFold predicate on the "username" field.
 func UsernameEqualFold(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
@@ -516,20 +502,6 @@ func PasswordHasPrefix(v string) predicate.Feed {
 func PasswordHasSuffix(v string) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldPassword), v))
-	})
-}
-
-// PasswordIsNil applies the IsNil predicate on the "password" field.
-func PasswordIsNil() predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldPassword)))
-	})
-}
-
-// PasswordNotNil applies the NotNil predicate on the "password" field.
-func PasswordNotNil() predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldPassword)))
 	})
 }
 

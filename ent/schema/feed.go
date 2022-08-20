@@ -29,12 +29,10 @@ func (Feed) Fields() []ent.Field {
         return validate.Var(s, "required,url")
       }),
     field.String("username").
-      Optional().
-      Nillable().
+      Default("").
       Sensitive(),
     field.String("password").
-      Optional().
-      Nillable().
+      Default("").
       Sensitive(),
 
     field.String("feed_title"),
