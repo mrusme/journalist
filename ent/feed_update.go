@@ -32,63 +32,127 @@ func (fu *FeedUpdate) Where(ps ...predicate.Feed) *FeedUpdate {
 	return fu
 }
 
-// SetTitle sets the "title" field.
-func (fu *FeedUpdate) SetTitle(s string) *FeedUpdate {
-	fu.mutation.SetTitle(s)
+// SetURL sets the "url" field.
+func (fu *FeedUpdate) SetURL(s string) *FeedUpdate {
+	fu.mutation.SetURL(s)
 	return fu
 }
 
-// SetDescription sets the "description" field.
-func (fu *FeedUpdate) SetDescription(s string) *FeedUpdate {
-	fu.mutation.SetDescription(s)
+// SetUsername sets the "username" field.
+func (fu *FeedUpdate) SetUsername(s string) *FeedUpdate {
+	fu.mutation.SetUsername(s)
 	return fu
 }
 
-// SetSiteURL sets the "site_url" field.
-func (fu *FeedUpdate) SetSiteURL(s string) *FeedUpdate {
-	fu.mutation.SetSiteURL(s)
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableUsername(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetUsername(*s)
+	}
 	return fu
 }
 
-// SetFeedURL sets the "feed_url" field.
-func (fu *FeedUpdate) SetFeedURL(s string) *FeedUpdate {
-	fu.mutation.SetFeedURL(s)
+// ClearUsername clears the value of the "username" field.
+func (fu *FeedUpdate) ClearUsername() *FeedUpdate {
+	fu.mutation.ClearUsername()
 	return fu
 }
 
-// SetAuthor sets the "author" field.
-func (fu *FeedUpdate) SetAuthor(s string) *FeedUpdate {
-	fu.mutation.SetAuthor(s)
+// SetPassword sets the "password" field.
+func (fu *FeedUpdate) SetPassword(s string) *FeedUpdate {
+	fu.mutation.SetPassword(s)
 	return fu
 }
 
-// SetLanguage sets the "language" field.
-func (fu *FeedUpdate) SetLanguage(s string) *FeedUpdate {
-	fu.mutation.SetLanguage(s)
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillablePassword(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetPassword(*s)
+	}
 	return fu
 }
 
-// SetImage sets the "image" field.
-func (fu *FeedUpdate) SetImage(s string) *FeedUpdate {
-	fu.mutation.SetImage(s)
+// ClearPassword clears the value of the "password" field.
+func (fu *FeedUpdate) ClearPassword() *FeedUpdate {
+	fu.mutation.ClearPassword()
 	return fu
 }
 
-// SetCopyright sets the "copyright" field.
-func (fu *FeedUpdate) SetCopyright(s string) *FeedUpdate {
-	fu.mutation.SetCopyright(s)
+// SetFeedTitle sets the "feed_title" field.
+func (fu *FeedUpdate) SetFeedTitle(s string) *FeedUpdate {
+	fu.mutation.SetFeedTitle(s)
 	return fu
 }
 
-// SetGenerator sets the "generator" field.
-func (fu *FeedUpdate) SetGenerator(s string) *FeedUpdate {
-	fu.mutation.SetGenerator(s)
+// SetFeedDescription sets the "feed_description" field.
+func (fu *FeedUpdate) SetFeedDescription(s string) *FeedUpdate {
+	fu.mutation.SetFeedDescription(s)
 	return fu
 }
 
-// SetCategories sets the "categories" field.
-func (fu *FeedUpdate) SetCategories(s string) *FeedUpdate {
-	fu.mutation.SetCategories(s)
+// SetFeedLink sets the "feed_link" field.
+func (fu *FeedUpdate) SetFeedLink(s string) *FeedUpdate {
+	fu.mutation.SetFeedLink(s)
+	return fu
+}
+
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (fu *FeedUpdate) SetFeedFeedLink(s string) *FeedUpdate {
+	fu.mutation.SetFeedFeedLink(s)
+	return fu
+}
+
+// SetFeedUpdated sets the "feed_updated" field.
+func (fu *FeedUpdate) SetFeedUpdated(s string) *FeedUpdate {
+	fu.mutation.SetFeedUpdated(s)
+	return fu
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (fu *FeedUpdate) SetFeedPublished(s string) *FeedUpdate {
+	fu.mutation.SetFeedPublished(s)
+	return fu
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (fu *FeedUpdate) SetFeedAuthor(s string) *FeedUpdate {
+	fu.mutation.SetFeedAuthor(s)
+	return fu
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (fu *FeedUpdate) SetFeedAuthors(s string) *FeedUpdate {
+	fu.mutation.SetFeedAuthors(s)
+	return fu
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (fu *FeedUpdate) SetFeedLanguage(s string) *FeedUpdate {
+	fu.mutation.SetFeedLanguage(s)
+	return fu
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (fu *FeedUpdate) SetFeedImage(s string) *FeedUpdate {
+	fu.mutation.SetFeedImage(s)
+	return fu
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (fu *FeedUpdate) SetFeedCopyright(s string) *FeedUpdate {
+	fu.mutation.SetFeedCopyright(s)
+	return fu
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (fu *FeedUpdate) SetFeedGenerator(s string) *FeedUpdate {
+	fu.mutation.SetFeedGenerator(s)
+	return fu
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (fu *FeedUpdate) SetFeedCategories(s string) *FeedUpdate {
+	fu.mutation.SetFeedCategories(s)
 	return fu
 }
 
@@ -316,14 +380,9 @@ func (fu *FeedUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (fu *FeedUpdate) check() error {
-	if v, ok := fu.mutation.SiteURL(); ok {
-		if err := feed.SiteURLValidator(v); err != nil {
-			return &ValidationError{Name: "site_url", err: fmt.Errorf(`ent: validator failed for field "Feed.site_url": %w`, err)}
-		}
-	}
-	if v, ok := fu.mutation.FeedURL(); ok {
-		if err := feed.FeedURLValidator(v); err != nil {
-			return &ValidationError{Name: "feed_url", err: fmt.Errorf(`ent: validator failed for field "Feed.feed_url": %w`, err)}
+	if v, ok := fu.mutation.URL(); ok {
+		if err := feed.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Feed.url": %w`, err)}
 		}
 	}
 	return nil
@@ -347,74 +406,128 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := fu.mutation.Title(); ok {
+	if value, ok := fu.mutation.URL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldTitle,
+			Column: feed.FieldURL,
 		})
 	}
-	if value, ok := fu.mutation.Description(); ok {
+	if value, ok := fu.mutation.Username(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldDescription,
+			Column: feed.FieldUsername,
 		})
 	}
-	if value, ok := fu.mutation.SiteURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if fu.mutation.UsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldSiteURL,
+			Column: feed.FieldUsername,
 		})
 	}
-	if value, ok := fu.mutation.FeedURL(); ok {
+	if value, ok := fu.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedURL,
+			Column: feed.FieldPassword,
 		})
 	}
-	if value, ok := fu.mutation.Author(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if fu.mutation.PasswordCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldAuthor,
+			Column: feed.FieldPassword,
 		})
 	}
-	if value, ok := fu.mutation.Language(); ok {
+	if value, ok := fu.mutation.FeedTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldLanguage,
+			Column: feed.FieldFeedTitle,
 		})
 	}
-	if value, ok := fu.mutation.Image(); ok {
+	if value, ok := fu.mutation.FeedDescription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldImage,
+			Column: feed.FieldFeedDescription,
 		})
 	}
-	if value, ok := fu.mutation.Copyright(); ok {
+	if value, ok := fu.mutation.FeedLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCopyright,
+			Column: feed.FieldFeedLink,
 		})
 	}
-	if value, ok := fu.mutation.Generator(); ok {
+	if value, ok := fu.mutation.FeedFeedLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldGenerator,
+			Column: feed.FieldFeedFeedLink,
 		})
 	}
-	if value, ok := fu.mutation.Categories(); ok {
+	if value, ok := fu.mutation.FeedUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCategories,
+			Column: feed.FieldFeedUpdated,
+		})
+	}
+	if value, ok := fu.mutation.FeedPublished(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedPublished,
+		})
+	}
+	if value, ok := fu.mutation.FeedAuthor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedAuthor,
+		})
+	}
+	if value, ok := fu.mutation.FeedAuthors(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedAuthors,
+		})
+	}
+	if value, ok := fu.mutation.FeedLanguage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedLanguage,
+		})
+	}
+	if value, ok := fu.mutation.FeedImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImage,
+		})
+	}
+	if value, ok := fu.mutation.FeedCopyright(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCopyright,
+		})
+	}
+	if value, ok := fu.mutation.FeedGenerator(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedGenerator,
+		})
+	}
+	if value, ok := fu.mutation.FeedCategories(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCategories,
 		})
 	}
 	if value, ok := fu.mutation.CreatedAt(); ok {
@@ -646,63 +759,127 @@ type FeedUpdateOne struct {
 	mutation *FeedMutation
 }
 
-// SetTitle sets the "title" field.
-func (fuo *FeedUpdateOne) SetTitle(s string) *FeedUpdateOne {
-	fuo.mutation.SetTitle(s)
+// SetURL sets the "url" field.
+func (fuo *FeedUpdateOne) SetURL(s string) *FeedUpdateOne {
+	fuo.mutation.SetURL(s)
 	return fuo
 }
 
-// SetDescription sets the "description" field.
-func (fuo *FeedUpdateOne) SetDescription(s string) *FeedUpdateOne {
-	fuo.mutation.SetDescription(s)
+// SetUsername sets the "username" field.
+func (fuo *FeedUpdateOne) SetUsername(s string) *FeedUpdateOne {
+	fuo.mutation.SetUsername(s)
 	return fuo
 }
 
-// SetSiteURL sets the "site_url" field.
-func (fuo *FeedUpdateOne) SetSiteURL(s string) *FeedUpdateOne {
-	fuo.mutation.SetSiteURL(s)
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableUsername(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetUsername(*s)
+	}
 	return fuo
 }
 
-// SetFeedURL sets the "feed_url" field.
-func (fuo *FeedUpdateOne) SetFeedURL(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedURL(s)
+// ClearUsername clears the value of the "username" field.
+func (fuo *FeedUpdateOne) ClearUsername() *FeedUpdateOne {
+	fuo.mutation.ClearUsername()
 	return fuo
 }
 
-// SetAuthor sets the "author" field.
-func (fuo *FeedUpdateOne) SetAuthor(s string) *FeedUpdateOne {
-	fuo.mutation.SetAuthor(s)
+// SetPassword sets the "password" field.
+func (fuo *FeedUpdateOne) SetPassword(s string) *FeedUpdateOne {
+	fuo.mutation.SetPassword(s)
 	return fuo
 }
 
-// SetLanguage sets the "language" field.
-func (fuo *FeedUpdateOne) SetLanguage(s string) *FeedUpdateOne {
-	fuo.mutation.SetLanguage(s)
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillablePassword(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetPassword(*s)
+	}
 	return fuo
 }
 
-// SetImage sets the "image" field.
-func (fuo *FeedUpdateOne) SetImage(s string) *FeedUpdateOne {
-	fuo.mutation.SetImage(s)
+// ClearPassword clears the value of the "password" field.
+func (fuo *FeedUpdateOne) ClearPassword() *FeedUpdateOne {
+	fuo.mutation.ClearPassword()
 	return fuo
 }
 
-// SetCopyright sets the "copyright" field.
-func (fuo *FeedUpdateOne) SetCopyright(s string) *FeedUpdateOne {
-	fuo.mutation.SetCopyright(s)
+// SetFeedTitle sets the "feed_title" field.
+func (fuo *FeedUpdateOne) SetFeedTitle(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedTitle(s)
 	return fuo
 }
 
-// SetGenerator sets the "generator" field.
-func (fuo *FeedUpdateOne) SetGenerator(s string) *FeedUpdateOne {
-	fuo.mutation.SetGenerator(s)
+// SetFeedDescription sets the "feed_description" field.
+func (fuo *FeedUpdateOne) SetFeedDescription(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedDescription(s)
 	return fuo
 }
 
-// SetCategories sets the "categories" field.
-func (fuo *FeedUpdateOne) SetCategories(s string) *FeedUpdateOne {
-	fuo.mutation.SetCategories(s)
+// SetFeedLink sets the "feed_link" field.
+func (fuo *FeedUpdateOne) SetFeedLink(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedLink(s)
+	return fuo
+}
+
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (fuo *FeedUpdateOne) SetFeedFeedLink(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedFeedLink(s)
+	return fuo
+}
+
+// SetFeedUpdated sets the "feed_updated" field.
+func (fuo *FeedUpdateOne) SetFeedUpdated(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedUpdated(s)
+	return fuo
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (fuo *FeedUpdateOne) SetFeedPublished(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedPublished(s)
+	return fuo
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (fuo *FeedUpdateOne) SetFeedAuthor(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedAuthor(s)
+	return fuo
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (fuo *FeedUpdateOne) SetFeedAuthors(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedAuthors(s)
+	return fuo
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (fuo *FeedUpdateOne) SetFeedLanguage(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedLanguage(s)
+	return fuo
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (fuo *FeedUpdateOne) SetFeedImage(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedImage(s)
+	return fuo
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (fuo *FeedUpdateOne) SetFeedCopyright(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedCopyright(s)
+	return fuo
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (fuo *FeedUpdateOne) SetFeedGenerator(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedGenerator(s)
+	return fuo
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (fuo *FeedUpdateOne) SetFeedCategories(s string) *FeedUpdateOne {
+	fuo.mutation.SetFeedCategories(s)
 	return fuo
 }
 
@@ -943,14 +1120,9 @@ func (fuo *FeedUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (fuo *FeedUpdateOne) check() error {
-	if v, ok := fuo.mutation.SiteURL(); ok {
-		if err := feed.SiteURLValidator(v); err != nil {
-			return &ValidationError{Name: "site_url", err: fmt.Errorf(`ent: validator failed for field "Feed.site_url": %w`, err)}
-		}
-	}
-	if v, ok := fuo.mutation.FeedURL(); ok {
-		if err := feed.FeedURLValidator(v); err != nil {
-			return &ValidationError{Name: "feed_url", err: fmt.Errorf(`ent: validator failed for field "Feed.feed_url": %w`, err)}
+	if v, ok := fuo.mutation.URL(); ok {
+		if err := feed.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Feed.url": %w`, err)}
 		}
 	}
 	return nil
@@ -991,74 +1163,128 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 			}
 		}
 	}
-	if value, ok := fuo.mutation.Title(); ok {
+	if value, ok := fuo.mutation.URL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldTitle,
+			Column: feed.FieldURL,
 		})
 	}
-	if value, ok := fuo.mutation.Description(); ok {
+	if value, ok := fuo.mutation.Username(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldDescription,
+			Column: feed.FieldUsername,
 		})
 	}
-	if value, ok := fuo.mutation.SiteURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if fuo.mutation.UsernameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldSiteURL,
+			Column: feed.FieldUsername,
 		})
 	}
-	if value, ok := fuo.mutation.FeedURL(); ok {
+	if value, ok := fuo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedURL,
+			Column: feed.FieldPassword,
 		})
 	}
-	if value, ok := fuo.mutation.Author(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+	if fuo.mutation.PasswordCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldAuthor,
+			Column: feed.FieldPassword,
 		})
 	}
-	if value, ok := fuo.mutation.Language(); ok {
+	if value, ok := fuo.mutation.FeedTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldLanguage,
+			Column: feed.FieldFeedTitle,
 		})
 	}
-	if value, ok := fuo.mutation.Image(); ok {
+	if value, ok := fuo.mutation.FeedDescription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldImage,
+			Column: feed.FieldFeedDescription,
 		})
 	}
-	if value, ok := fuo.mutation.Copyright(); ok {
+	if value, ok := fuo.mutation.FeedLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCopyright,
+			Column: feed.FieldFeedLink,
 		})
 	}
-	if value, ok := fuo.mutation.Generator(); ok {
+	if value, ok := fuo.mutation.FeedFeedLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldGenerator,
+			Column: feed.FieldFeedFeedLink,
 		})
 	}
-	if value, ok := fuo.mutation.Categories(); ok {
+	if value, ok := fuo.mutation.FeedUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCategories,
+			Column: feed.FieldFeedUpdated,
+		})
+	}
+	if value, ok := fuo.mutation.FeedPublished(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedPublished,
+		})
+	}
+	if value, ok := fuo.mutation.FeedAuthor(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedAuthor,
+		})
+	}
+	if value, ok := fuo.mutation.FeedAuthors(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedAuthors,
+		})
+	}
+	if value, ok := fuo.mutation.FeedLanguage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedLanguage,
+		})
+	}
+	if value, ok := fuo.mutation.FeedImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImage,
+		})
+	}
+	if value, ok := fuo.mutation.FeedCopyright(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCopyright,
+		})
+	}
+	if value, ok := fuo.mutation.FeedGenerator(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedGenerator,
+		})
+	}
+	if value, ok := fuo.mutation.FeedCategories(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCategories,
 		})
 	}
 	if value, ok := fuo.mutation.CreatedAt(); ok {

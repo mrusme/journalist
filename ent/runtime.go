@@ -20,20 +20,16 @@ import (
 func init() {
 	feedFields := schema.Feed{}.Fields()
 	_ = feedFields
-	// feedDescSiteURL is the schema descriptor for site_url field.
-	feedDescSiteURL := feedFields[3].Descriptor()
-	// feed.SiteURLValidator is a validator for the "site_url" field. It is called by the builders before save.
-	feed.SiteURLValidator = feedDescSiteURL.Validators[0].(func(string) error)
-	// feedDescFeedURL is the schema descriptor for feed_url field.
-	feedDescFeedURL := feedFields[4].Descriptor()
-	// feed.FeedURLValidator is a validator for the "feed_url" field. It is called by the builders before save.
-	feed.FeedURLValidator = feedDescFeedURL.Validators[0].(func(string) error)
+	// feedDescURL is the schema descriptor for url field.
+	feedDescURL := feedFields[1].Descriptor()
+	// feed.URLValidator is a validator for the "url" field. It is called by the builders before save.
+	feed.URLValidator = feedDescURL.Validators[0].(func(string) error)
 	// feedDescCreatedAt is the schema descriptor for created_at field.
-	feedDescCreatedAt := feedFields[11].Descriptor()
+	feedDescCreatedAt := feedFields[17].Descriptor()
 	// feed.DefaultCreatedAt holds the default value on creation for the created_at field.
 	feed.DefaultCreatedAt = feedDescCreatedAt.Default.(func() time.Time)
 	// feedDescUpdatedAt is the schema descriptor for updated_at field.
-	feedDescUpdatedAt := feedFields[12].Descriptor()
+	feedDescUpdatedAt := feedFields[18].Descriptor()
 	// feed.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	feed.DefaultUpdatedAt = feedDescUpdatedAt.Default.(func() time.Time)
 	// feed.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
@@ -44,16 +40,16 @@ func init() {
 	feed.DefaultID = feedDescID.Default.(func() uuid.UUID)
 	itemFields := schema.Item{}.Fields()
 	_ = itemFields
-	// itemDescURL is the schema descriptor for url field.
-	itemDescURL := itemFields[4].Descriptor()
-	// item.URLValidator is a validator for the "url" field. It is called by the builders before save.
-	item.URLValidator = itemDescURL.Validators[0].(func(string) error)
+	// itemDescItemLink is the schema descriptor for item_link field.
+	itemDescItemLink := itemFields[4].Descriptor()
+	// item.ItemLinkValidator is a validator for the "item_link" field. It is called by the builders before save.
+	item.ItemLinkValidator = itemDescItemLink.Validators[0].(func(string) error)
 	// itemDescCreatedAt is the schema descriptor for created_at field.
-	itemDescCreatedAt := itemFields[15].Descriptor()
+	itemDescCreatedAt := itemFields[20].Descriptor()
 	// item.DefaultCreatedAt holds the default value on creation for the created_at field.
 	item.DefaultCreatedAt = itemDescCreatedAt.Default.(func() time.Time)
 	// itemDescUpdatedAt is the schema descriptor for updated_at field.
-	itemDescUpdatedAt := itemFields[16].Descriptor()
+	itemDescUpdatedAt := itemFields[21].Descriptor()
 	// item.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	item.DefaultUpdatedAt = itemDescUpdatedAt.Default.(func() time.Time)
 	// item.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
@@ -74,12 +70,16 @@ func init() {
 	read.DefaultID = readDescID.Default.(func() uuid.UUID)
 	subscriptionFields := schema.Subscription{}.Fields()
 	_ = subscriptionFields
+	// subscriptionDescName is the schema descriptor for name field.
+	subscriptionDescName := subscriptionFields[3].Descriptor()
+	// subscription.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	subscription.NameValidator = subscriptionDescName.Validators[0].(func(string) error)
 	// subscriptionDescGroup is the schema descriptor for group field.
-	subscriptionDescGroup := subscriptionFields[3].Descriptor()
+	subscriptionDescGroup := subscriptionFields[4].Descriptor()
 	// subscription.GroupValidator is a validator for the "group" field. It is called by the builders before save.
 	subscription.GroupValidator = subscriptionDescGroup.Validators[0].(func(string) error)
 	// subscriptionDescCreatedAt is the schema descriptor for created_at field.
-	subscriptionDescCreatedAt := subscriptionFields[4].Descriptor()
+	subscriptionDescCreatedAt := subscriptionFields[5].Descriptor()
 	// subscription.DefaultCreatedAt holds the default value on creation for the created_at field.
 	subscription.DefaultCreatedAt = subscriptionDescCreatedAt.Default.(func() time.Time)
 	// subscriptionDescID is the schema descriptor for id field.

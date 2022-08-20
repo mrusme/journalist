@@ -17,6 +17,8 @@ const (
 	FieldUserID = "user_id"
 	// FieldFeedID holds the string denoting the feed_id field in the database.
 	FieldFeedID = "feed_id"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
 	// FieldGroup holds the string denoting the group field in the database.
 	FieldGroup = "group"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
@@ -48,6 +50,7 @@ var Columns = []string{
 	FieldID,
 	FieldUserID,
 	FieldFeedID,
+	FieldName,
 	FieldGroup,
 	FieldCreatedAt,
 }
@@ -63,6 +66,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
 	// GroupValidator is a validator for the "group" field. It is called by the builders before save.
 	GroupValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.

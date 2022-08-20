@@ -13,34 +13,44 @@ const (
 	Label = "item"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldTitle holds the string denoting the title field in the database.
-	FieldTitle = "title"
-	// FieldDescription holds the string denoting the description field in the database.
-	FieldDescription = "description"
-	// FieldContent holds the string denoting the content field in the database.
-	FieldContent = "content"
-	// FieldURL holds the string denoting the url field in the database.
-	FieldURL = "url"
-	// FieldAuthor holds the string denoting the author field in the database.
-	FieldAuthor = "author"
-	// FieldImage holds the string denoting the image field in the database.
-	FieldImage = "image"
-	// FieldCategories holds the string denoting the categories field in the database.
-	FieldCategories = "categories"
-	// FieldCrawledTitle holds the string denoting the crawled_title field in the database.
-	FieldCrawledTitle = "crawled_title"
-	// FieldCrawledAuthor holds the string denoting the crawled_author field in the database.
-	FieldCrawledAuthor = "crawled_author"
-	// FieldCrawledExcerpt holds the string denoting the crawled_excerpt field in the database.
-	FieldCrawledExcerpt = "crawled_excerpt"
-	// FieldCrawledSiteName holds the string denoting the crawled_site_name field in the database.
-	FieldCrawledSiteName = "crawled_site_name"
-	// FieldCrawledImage holds the string denoting the crawled_image field in the database.
-	FieldCrawledImage = "crawled_image"
-	// FieldCrawledContentHTML holds the string denoting the crawled_content_html field in the database.
-	FieldCrawledContentHTML = "crawled_content_html"
-	// FieldCrawledContentText holds the string denoting the crawled_content_text field in the database.
-	FieldCrawledContentText = "crawled_content_text"
+	// FieldItemTitle holds the string denoting the item_title field in the database.
+	FieldItemTitle = "item_title"
+	// FieldItemDescription holds the string denoting the item_description field in the database.
+	FieldItemDescription = "item_description"
+	// FieldItemContent holds the string denoting the item_content field in the database.
+	FieldItemContent = "item_content"
+	// FieldItemLink holds the string denoting the item_link field in the database.
+	FieldItemLink = "item_link"
+	// FieldItemUpdated holds the string denoting the item_updated field in the database.
+	FieldItemUpdated = "item_updated"
+	// FieldItemPublished holds the string denoting the item_published field in the database.
+	FieldItemPublished = "item_published"
+	// FieldItemAuthor holds the string denoting the item_author field in the database.
+	FieldItemAuthor = "item_author"
+	// FieldItemAuthors holds the string denoting the item_authors field in the database.
+	FieldItemAuthors = "item_authors"
+	// FieldItemGUID holds the string denoting the item_guid field in the database.
+	FieldItemGUID = "item_guid"
+	// FieldItemImage holds the string denoting the item_image field in the database.
+	FieldItemImage = "item_image"
+	// FieldItemCategories holds the string denoting the item_categories field in the database.
+	FieldItemCategories = "item_categories"
+	// FieldItemEnclosures holds the string denoting the item_enclosures field in the database.
+	FieldItemEnclosures = "item_enclosures"
+	// FieldCrawlerTitle holds the string denoting the crawler_title field in the database.
+	FieldCrawlerTitle = "crawler_title"
+	// FieldCrawlerAuthor holds the string denoting the crawler_author field in the database.
+	FieldCrawlerAuthor = "crawler_author"
+	// FieldCrawlerExcerpt holds the string denoting the crawler_excerpt field in the database.
+	FieldCrawlerExcerpt = "crawler_excerpt"
+	// FieldCrawlerSiteName holds the string denoting the crawler_site_name field in the database.
+	FieldCrawlerSiteName = "crawler_site_name"
+	// FieldCrawlerImage holds the string denoting the crawler_image field in the database.
+	FieldCrawlerImage = "crawler_image"
+	// FieldCrawlerContentHTML holds the string denoting the crawler_content_html field in the database.
+	FieldCrawlerContentHTML = "crawler_content_html"
+	// FieldCrawlerContentText holds the string denoting the crawler_content_text field in the database.
+	FieldCrawlerContentText = "crawler_content_text"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -77,20 +87,25 @@ const (
 // Columns holds all SQL columns for item fields.
 var Columns = []string{
 	FieldID,
-	FieldTitle,
-	FieldDescription,
-	FieldContent,
-	FieldURL,
-	FieldAuthor,
-	FieldImage,
-	FieldCategories,
-	FieldCrawledTitle,
-	FieldCrawledAuthor,
-	FieldCrawledExcerpt,
-	FieldCrawledSiteName,
-	FieldCrawledImage,
-	FieldCrawledContentHTML,
-	FieldCrawledContentText,
+	FieldItemTitle,
+	FieldItemDescription,
+	FieldItemContent,
+	FieldItemLink,
+	FieldItemUpdated,
+	FieldItemPublished,
+	FieldItemAuthor,
+	FieldItemAuthors,
+	FieldItemGUID,
+	FieldItemImage,
+	FieldItemCategories,
+	FieldItemEnclosures,
+	FieldCrawlerTitle,
+	FieldCrawlerAuthor,
+	FieldCrawlerExcerpt,
+	FieldCrawlerSiteName,
+	FieldCrawlerImage,
+	FieldCrawlerContentHTML,
+	FieldCrawlerContentText,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -123,8 +138,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// URLValidator is a validator for the "url" field. It is called by the builders before save.
-	URLValidator func(string) error
+	// ItemLinkValidator is a validator for the "item_link" field. It is called by the builders before save.
+	ItemLinkValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

@@ -13,26 +13,38 @@ const (
 	Label = "feed"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldTitle holds the string denoting the title field in the database.
-	FieldTitle = "title"
-	// FieldDescription holds the string denoting the description field in the database.
-	FieldDescription = "description"
-	// FieldSiteURL holds the string denoting the site_url field in the database.
-	FieldSiteURL = "site_url"
-	// FieldFeedURL holds the string denoting the feed_url field in the database.
-	FieldFeedURL = "feed_url"
-	// FieldAuthor holds the string denoting the author field in the database.
-	FieldAuthor = "author"
-	// FieldLanguage holds the string denoting the language field in the database.
-	FieldLanguage = "language"
-	// FieldImage holds the string denoting the image field in the database.
-	FieldImage = "image"
-	// FieldCopyright holds the string denoting the copyright field in the database.
-	FieldCopyright = "copyright"
-	// FieldGenerator holds the string denoting the generator field in the database.
-	FieldGenerator = "generator"
-	// FieldCategories holds the string denoting the categories field in the database.
-	FieldCategories = "categories"
+	// FieldURL holds the string denoting the url field in the database.
+	FieldURL = "url"
+	// FieldUsername holds the string denoting the username field in the database.
+	FieldUsername = "username"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
+	// FieldFeedTitle holds the string denoting the feed_title field in the database.
+	FieldFeedTitle = "feed_title"
+	// FieldFeedDescription holds the string denoting the feed_description field in the database.
+	FieldFeedDescription = "feed_description"
+	// FieldFeedLink holds the string denoting the feed_link field in the database.
+	FieldFeedLink = "feed_link"
+	// FieldFeedFeedLink holds the string denoting the feed_feed_link field in the database.
+	FieldFeedFeedLink = "feed_feed_link"
+	// FieldFeedUpdated holds the string denoting the feed_updated field in the database.
+	FieldFeedUpdated = "feed_updated"
+	// FieldFeedPublished holds the string denoting the feed_published field in the database.
+	FieldFeedPublished = "feed_published"
+	// FieldFeedAuthor holds the string denoting the feed_author field in the database.
+	FieldFeedAuthor = "feed_author"
+	// FieldFeedAuthors holds the string denoting the feed_authors field in the database.
+	FieldFeedAuthors = "feed_authors"
+	// FieldFeedLanguage holds the string denoting the feed_language field in the database.
+	FieldFeedLanguage = "feed_language"
+	// FieldFeedImage holds the string denoting the feed_image field in the database.
+	FieldFeedImage = "feed_image"
+	// FieldFeedCopyright holds the string denoting the feed_copyright field in the database.
+	FieldFeedCopyright = "feed_copyright"
+	// FieldFeedGenerator holds the string denoting the feed_generator field in the database.
+	FieldFeedGenerator = "feed_generator"
+	// FieldFeedCategories holds the string denoting the feed_categories field in the database.
+	FieldFeedCategories = "feed_categories"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -71,16 +83,22 @@ const (
 // Columns holds all SQL columns for feed fields.
 var Columns = []string{
 	FieldID,
-	FieldTitle,
-	FieldDescription,
-	FieldSiteURL,
-	FieldFeedURL,
-	FieldAuthor,
-	FieldLanguage,
-	FieldImage,
-	FieldCopyright,
-	FieldGenerator,
-	FieldCategories,
+	FieldURL,
+	FieldUsername,
+	FieldPassword,
+	FieldFeedTitle,
+	FieldFeedDescription,
+	FieldFeedLink,
+	FieldFeedFeedLink,
+	FieldFeedUpdated,
+	FieldFeedPublished,
+	FieldFeedAuthor,
+	FieldFeedAuthors,
+	FieldFeedLanguage,
+	FieldFeedImage,
+	FieldFeedCopyright,
+	FieldFeedGenerator,
+	FieldFeedCategories,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
@@ -103,10 +121,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// SiteURLValidator is a validator for the "site_url" field. It is called by the builders before save.
-	SiteURLValidator func(string) error
-	// FeedURLValidator is a validator for the "feed_url" field. It is called by the builders before save.
-	FeedURLValidator func(string) error
+	// URLValidator is a validator for the "url" field. It is called by the builders before save.
+	URLValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

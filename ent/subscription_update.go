@@ -43,6 +43,12 @@ func (su *SubscriptionUpdate) SetFeedID(u uuid.UUID) *SubscriptionUpdate {
 	return su
 }
 
+// SetName sets the "name" field.
+func (su *SubscriptionUpdate) SetName(s string) *SubscriptionUpdate {
+	su.mutation.SetName(s)
+	return su
+}
+
 // SetGroup sets the "group" field.
 func (su *SubscriptionUpdate) SetGroup(s string) *SubscriptionUpdate {
 	su.mutation.SetGroup(s)
@@ -152,6 +158,11 @@ func (su *SubscriptionUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (su *SubscriptionUpdate) check() error {
+	if v, ok := su.mutation.Name(); ok {
+		if err := subscription.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Subscription.name": %w`, err)}
+		}
+	}
 	if v, ok := su.mutation.Group(); ok {
 		if err := subscription.GroupValidator(v); err != nil {
 			return &ValidationError{Name: "group", err: fmt.Errorf(`ent: validator failed for field "Subscription.group": %w`, err)}
@@ -183,6 +194,13 @@ func (su *SubscriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := su.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldName,
+		})
 	}
 	if value, ok := su.mutation.Group(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -296,6 +314,12 @@ func (suo *SubscriptionUpdateOne) SetUserID(u uuid.UUID) *SubscriptionUpdateOne 
 // SetFeedID sets the "feed_id" field.
 func (suo *SubscriptionUpdateOne) SetFeedID(u uuid.UUID) *SubscriptionUpdateOne {
 	suo.mutation.SetFeedID(u)
+	return suo
+}
+
+// SetName sets the "name" field.
+func (suo *SubscriptionUpdateOne) SetName(s string) *SubscriptionUpdateOne {
+	suo.mutation.SetName(s)
 	return suo
 }
 
@@ -421,6 +445,11 @@ func (suo *SubscriptionUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (suo *SubscriptionUpdateOne) check() error {
+	if v, ok := suo.mutation.Name(); ok {
+		if err := subscription.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Subscription.name": %w`, err)}
+		}
+	}
 	if v, ok := suo.mutation.Group(); ok {
 		if err := subscription.GroupValidator(v); err != nil {
 			return &ValidationError{Name: "group", err: fmt.Errorf(`ent: validator failed for field "Subscription.group": %w`, err)}
@@ -469,6 +498,13 @@ func (suo *SubscriptionUpdateOne) sqlSave(ctx context.Context) (_node *Subscript
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := suo.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldName,
+		})
 	}
 	if value, ok := suo.mutation.Group(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

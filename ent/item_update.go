@@ -32,87 +32,117 @@ func (iu *ItemUpdate) Where(ps ...predicate.Item) *ItemUpdate {
 	return iu
 }
 
-// SetTitle sets the "title" field.
-func (iu *ItemUpdate) SetTitle(s string) *ItemUpdate {
-	iu.mutation.SetTitle(s)
+// SetItemTitle sets the "item_title" field.
+func (iu *ItemUpdate) SetItemTitle(s string) *ItemUpdate {
+	iu.mutation.SetItemTitle(s)
 	return iu
 }
 
-// SetDescription sets the "description" field.
-func (iu *ItemUpdate) SetDescription(s string) *ItemUpdate {
-	iu.mutation.SetDescription(s)
+// SetItemDescription sets the "item_description" field.
+func (iu *ItemUpdate) SetItemDescription(s string) *ItemUpdate {
+	iu.mutation.SetItemDescription(s)
 	return iu
 }
 
-// SetContent sets the "content" field.
-func (iu *ItemUpdate) SetContent(s string) *ItemUpdate {
-	iu.mutation.SetContent(s)
+// SetItemContent sets the "item_content" field.
+func (iu *ItemUpdate) SetItemContent(s string) *ItemUpdate {
+	iu.mutation.SetItemContent(s)
 	return iu
 }
 
-// SetURL sets the "url" field.
-func (iu *ItemUpdate) SetURL(s string) *ItemUpdate {
-	iu.mutation.SetURL(s)
+// SetItemLink sets the "item_link" field.
+func (iu *ItemUpdate) SetItemLink(s string) *ItemUpdate {
+	iu.mutation.SetItemLink(s)
 	return iu
 }
 
-// SetAuthor sets the "author" field.
-func (iu *ItemUpdate) SetAuthor(s string) *ItemUpdate {
-	iu.mutation.SetAuthor(s)
+// SetItemUpdated sets the "item_updated" field.
+func (iu *ItemUpdate) SetItemUpdated(s string) *ItemUpdate {
+	iu.mutation.SetItemUpdated(s)
 	return iu
 }
 
-// SetImage sets the "image" field.
-func (iu *ItemUpdate) SetImage(s string) *ItemUpdate {
-	iu.mutation.SetImage(s)
+// SetItemPublished sets the "item_published" field.
+func (iu *ItemUpdate) SetItemPublished(s string) *ItemUpdate {
+	iu.mutation.SetItemPublished(s)
 	return iu
 }
 
-// SetCategories sets the "categories" field.
-func (iu *ItemUpdate) SetCategories(s string) *ItemUpdate {
-	iu.mutation.SetCategories(s)
+// SetItemAuthor sets the "item_author" field.
+func (iu *ItemUpdate) SetItemAuthor(s string) *ItemUpdate {
+	iu.mutation.SetItemAuthor(s)
 	return iu
 }
 
-// SetCrawledTitle sets the "crawled_title" field.
-func (iu *ItemUpdate) SetCrawledTitle(s string) *ItemUpdate {
-	iu.mutation.SetCrawledTitle(s)
+// SetItemAuthors sets the "item_authors" field.
+func (iu *ItemUpdate) SetItemAuthors(s string) *ItemUpdate {
+	iu.mutation.SetItemAuthors(s)
 	return iu
 }
 
-// SetCrawledAuthor sets the "crawled_author" field.
-func (iu *ItemUpdate) SetCrawledAuthor(s string) *ItemUpdate {
-	iu.mutation.SetCrawledAuthor(s)
+// SetItemGUID sets the "item_guid" field.
+func (iu *ItemUpdate) SetItemGUID(s string) *ItemUpdate {
+	iu.mutation.SetItemGUID(s)
 	return iu
 }
 
-// SetCrawledExcerpt sets the "crawled_excerpt" field.
-func (iu *ItemUpdate) SetCrawledExcerpt(s string) *ItemUpdate {
-	iu.mutation.SetCrawledExcerpt(s)
+// SetItemImage sets the "item_image" field.
+func (iu *ItemUpdate) SetItemImage(s string) *ItemUpdate {
+	iu.mutation.SetItemImage(s)
 	return iu
 }
 
-// SetCrawledSiteName sets the "crawled_site_name" field.
-func (iu *ItemUpdate) SetCrawledSiteName(s string) *ItemUpdate {
-	iu.mutation.SetCrawledSiteName(s)
+// SetItemCategories sets the "item_categories" field.
+func (iu *ItemUpdate) SetItemCategories(s string) *ItemUpdate {
+	iu.mutation.SetItemCategories(s)
 	return iu
 }
 
-// SetCrawledImage sets the "crawled_image" field.
-func (iu *ItemUpdate) SetCrawledImage(s string) *ItemUpdate {
-	iu.mutation.SetCrawledImage(s)
+// SetItemEnclosures sets the "item_enclosures" field.
+func (iu *ItemUpdate) SetItemEnclosures(s string) *ItemUpdate {
+	iu.mutation.SetItemEnclosures(s)
 	return iu
 }
 
-// SetCrawledContentHTML sets the "crawled_content_html" field.
-func (iu *ItemUpdate) SetCrawledContentHTML(s string) *ItemUpdate {
-	iu.mutation.SetCrawledContentHTML(s)
+// SetCrawlerTitle sets the "crawler_title" field.
+func (iu *ItemUpdate) SetCrawlerTitle(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerTitle(s)
 	return iu
 }
 
-// SetCrawledContentText sets the "crawled_content_text" field.
-func (iu *ItemUpdate) SetCrawledContentText(s string) *ItemUpdate {
-	iu.mutation.SetCrawledContentText(s)
+// SetCrawlerAuthor sets the "crawler_author" field.
+func (iu *ItemUpdate) SetCrawlerAuthor(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerAuthor(s)
+	return iu
+}
+
+// SetCrawlerExcerpt sets the "crawler_excerpt" field.
+func (iu *ItemUpdate) SetCrawlerExcerpt(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerExcerpt(s)
+	return iu
+}
+
+// SetCrawlerSiteName sets the "crawler_site_name" field.
+func (iu *ItemUpdate) SetCrawlerSiteName(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerSiteName(s)
+	return iu
+}
+
+// SetCrawlerImage sets the "crawler_image" field.
+func (iu *ItemUpdate) SetCrawlerImage(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerImage(s)
+	return iu
+}
+
+// SetCrawlerContentHTML sets the "crawler_content_html" field.
+func (iu *ItemUpdate) SetCrawlerContentHTML(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerContentHTML(s)
+	return iu
+}
+
+// SetCrawlerContentText sets the "crawler_content_text" field.
+func (iu *ItemUpdate) SetCrawlerContentText(s string) *ItemUpdate {
+	iu.mutation.SetCrawlerContentText(s)
 	return iu
 }
 
@@ -309,9 +339,9 @@ func (iu *ItemUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (iu *ItemUpdate) check() error {
-	if v, ok := iu.mutation.URL(); ok {
-		if err := item.URLValidator(v); err != nil {
-			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Item.url": %w`, err)}
+	if v, ok := iu.mutation.ItemLink(); ok {
+		if err := item.ItemLinkValidator(v); err != nil {
+			return &ValidationError{Name: "item_link", err: fmt.Errorf(`ent: validator failed for field "Item.item_link": %w`, err)}
 		}
 	}
 	return nil
@@ -335,102 +365,137 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := iu.mutation.Title(); ok {
+	if value, ok := iu.mutation.ItemTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldTitle,
+			Column: item.FieldItemTitle,
 		})
 	}
-	if value, ok := iu.mutation.Description(); ok {
+	if value, ok := iu.mutation.ItemDescription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldDescription,
+			Column: item.FieldItemDescription,
 		})
 	}
-	if value, ok := iu.mutation.Content(); ok {
+	if value, ok := iu.mutation.ItemContent(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldContent,
+			Column: item.FieldItemContent,
 		})
 	}
-	if value, ok := iu.mutation.URL(); ok {
+	if value, ok := iu.mutation.ItemLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldURL,
+			Column: item.FieldItemLink,
 		})
 	}
-	if value, ok := iu.mutation.Author(); ok {
+	if value, ok := iu.mutation.ItemUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldAuthor,
+			Column: item.FieldItemUpdated,
 		})
 	}
-	if value, ok := iu.mutation.Image(); ok {
+	if value, ok := iu.mutation.ItemPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldImage,
+			Column: item.FieldItemPublished,
 		})
 	}
-	if value, ok := iu.mutation.Categories(); ok {
+	if value, ok := iu.mutation.ItemAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCategories,
+			Column: item.FieldItemAuthor,
 		})
 	}
-	if value, ok := iu.mutation.CrawledTitle(); ok {
+	if value, ok := iu.mutation.ItemAuthors(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledTitle,
+			Column: item.FieldItemAuthors,
 		})
 	}
-	if value, ok := iu.mutation.CrawledAuthor(); ok {
+	if value, ok := iu.mutation.ItemGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledAuthor,
+			Column: item.FieldItemGUID,
 		})
 	}
-	if value, ok := iu.mutation.CrawledExcerpt(); ok {
+	if value, ok := iu.mutation.ItemImage(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledExcerpt,
+			Column: item.FieldItemImage,
 		})
 	}
-	if value, ok := iu.mutation.CrawledSiteName(); ok {
+	if value, ok := iu.mutation.ItemCategories(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledSiteName,
+			Column: item.FieldItemCategories,
 		})
 	}
-	if value, ok := iu.mutation.CrawledImage(); ok {
+	if value, ok := iu.mutation.ItemEnclosures(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledImage,
+			Column: item.FieldItemEnclosures,
 		})
 	}
-	if value, ok := iu.mutation.CrawledContentHTML(); ok {
+	if value, ok := iu.mutation.CrawlerTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledContentHTML,
+			Column: item.FieldCrawlerTitle,
 		})
 	}
-	if value, ok := iu.mutation.CrawledContentText(); ok {
+	if value, ok := iu.mutation.CrawlerAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledContentText,
+			Column: item.FieldCrawlerAuthor,
+		})
+	}
+	if value, ok := iu.mutation.CrawlerExcerpt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerExcerpt,
+		})
+	}
+	if value, ok := iu.mutation.CrawlerSiteName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerSiteName,
+		})
+	}
+	if value, ok := iu.mutation.CrawlerImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerImage,
+		})
+	}
+	if value, ok := iu.mutation.CrawlerContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerContentHTML,
+		})
+	}
+	if value, ok := iu.mutation.CrawlerContentText(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerContentText,
 		})
 	}
 	if value, ok := iu.mutation.CreatedAt(); ok {
@@ -630,87 +695,117 @@ type ItemUpdateOne struct {
 	mutation *ItemMutation
 }
 
-// SetTitle sets the "title" field.
-func (iuo *ItemUpdateOne) SetTitle(s string) *ItemUpdateOne {
-	iuo.mutation.SetTitle(s)
+// SetItemTitle sets the "item_title" field.
+func (iuo *ItemUpdateOne) SetItemTitle(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemTitle(s)
 	return iuo
 }
 
-// SetDescription sets the "description" field.
-func (iuo *ItemUpdateOne) SetDescription(s string) *ItemUpdateOne {
-	iuo.mutation.SetDescription(s)
+// SetItemDescription sets the "item_description" field.
+func (iuo *ItemUpdateOne) SetItemDescription(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemDescription(s)
 	return iuo
 }
 
-// SetContent sets the "content" field.
-func (iuo *ItemUpdateOne) SetContent(s string) *ItemUpdateOne {
-	iuo.mutation.SetContent(s)
+// SetItemContent sets the "item_content" field.
+func (iuo *ItemUpdateOne) SetItemContent(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemContent(s)
 	return iuo
 }
 
-// SetURL sets the "url" field.
-func (iuo *ItemUpdateOne) SetURL(s string) *ItemUpdateOne {
-	iuo.mutation.SetURL(s)
+// SetItemLink sets the "item_link" field.
+func (iuo *ItemUpdateOne) SetItemLink(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemLink(s)
 	return iuo
 }
 
-// SetAuthor sets the "author" field.
-func (iuo *ItemUpdateOne) SetAuthor(s string) *ItemUpdateOne {
-	iuo.mutation.SetAuthor(s)
+// SetItemUpdated sets the "item_updated" field.
+func (iuo *ItemUpdateOne) SetItemUpdated(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemUpdated(s)
 	return iuo
 }
 
-// SetImage sets the "image" field.
-func (iuo *ItemUpdateOne) SetImage(s string) *ItemUpdateOne {
-	iuo.mutation.SetImage(s)
+// SetItemPublished sets the "item_published" field.
+func (iuo *ItemUpdateOne) SetItemPublished(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemPublished(s)
 	return iuo
 }
 
-// SetCategories sets the "categories" field.
-func (iuo *ItemUpdateOne) SetCategories(s string) *ItemUpdateOne {
-	iuo.mutation.SetCategories(s)
+// SetItemAuthor sets the "item_author" field.
+func (iuo *ItemUpdateOne) SetItemAuthor(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemAuthor(s)
 	return iuo
 }
 
-// SetCrawledTitle sets the "crawled_title" field.
-func (iuo *ItemUpdateOne) SetCrawledTitle(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledTitle(s)
+// SetItemAuthors sets the "item_authors" field.
+func (iuo *ItemUpdateOne) SetItemAuthors(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemAuthors(s)
 	return iuo
 }
 
-// SetCrawledAuthor sets the "crawled_author" field.
-func (iuo *ItemUpdateOne) SetCrawledAuthor(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledAuthor(s)
+// SetItemGUID sets the "item_guid" field.
+func (iuo *ItemUpdateOne) SetItemGUID(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemGUID(s)
 	return iuo
 }
 
-// SetCrawledExcerpt sets the "crawled_excerpt" field.
-func (iuo *ItemUpdateOne) SetCrawledExcerpt(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledExcerpt(s)
+// SetItemImage sets the "item_image" field.
+func (iuo *ItemUpdateOne) SetItemImage(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemImage(s)
 	return iuo
 }
 
-// SetCrawledSiteName sets the "crawled_site_name" field.
-func (iuo *ItemUpdateOne) SetCrawledSiteName(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledSiteName(s)
+// SetItemCategories sets the "item_categories" field.
+func (iuo *ItemUpdateOne) SetItemCategories(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemCategories(s)
 	return iuo
 }
 
-// SetCrawledImage sets the "crawled_image" field.
-func (iuo *ItemUpdateOne) SetCrawledImage(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledImage(s)
+// SetItemEnclosures sets the "item_enclosures" field.
+func (iuo *ItemUpdateOne) SetItemEnclosures(s string) *ItemUpdateOne {
+	iuo.mutation.SetItemEnclosures(s)
 	return iuo
 }
 
-// SetCrawledContentHTML sets the "crawled_content_html" field.
-func (iuo *ItemUpdateOne) SetCrawledContentHTML(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledContentHTML(s)
+// SetCrawlerTitle sets the "crawler_title" field.
+func (iuo *ItemUpdateOne) SetCrawlerTitle(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerTitle(s)
 	return iuo
 }
 
-// SetCrawledContentText sets the "crawled_content_text" field.
-func (iuo *ItemUpdateOne) SetCrawledContentText(s string) *ItemUpdateOne {
-	iuo.mutation.SetCrawledContentText(s)
+// SetCrawlerAuthor sets the "crawler_author" field.
+func (iuo *ItemUpdateOne) SetCrawlerAuthor(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerAuthor(s)
+	return iuo
+}
+
+// SetCrawlerExcerpt sets the "crawler_excerpt" field.
+func (iuo *ItemUpdateOne) SetCrawlerExcerpt(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerExcerpt(s)
+	return iuo
+}
+
+// SetCrawlerSiteName sets the "crawler_site_name" field.
+func (iuo *ItemUpdateOne) SetCrawlerSiteName(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerSiteName(s)
+	return iuo
+}
+
+// SetCrawlerImage sets the "crawler_image" field.
+func (iuo *ItemUpdateOne) SetCrawlerImage(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerImage(s)
+	return iuo
+}
+
+// SetCrawlerContentHTML sets the "crawler_content_html" field.
+func (iuo *ItemUpdateOne) SetCrawlerContentHTML(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerContentHTML(s)
+	return iuo
+}
+
+// SetCrawlerContentText sets the "crawler_content_text" field.
+func (iuo *ItemUpdateOne) SetCrawlerContentText(s string) *ItemUpdateOne {
+	iuo.mutation.SetCrawlerContentText(s)
 	return iuo
 }
 
@@ -920,9 +1015,9 @@ func (iuo *ItemUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (iuo *ItemUpdateOne) check() error {
-	if v, ok := iuo.mutation.URL(); ok {
-		if err := item.URLValidator(v); err != nil {
-			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Item.url": %w`, err)}
+	if v, ok := iuo.mutation.ItemLink(); ok {
+		if err := item.ItemLinkValidator(v); err != nil {
+			return &ValidationError{Name: "item_link", err: fmt.Errorf(`ent: validator failed for field "Item.item_link": %w`, err)}
 		}
 	}
 	return nil
@@ -963,102 +1058,137 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			}
 		}
 	}
-	if value, ok := iuo.mutation.Title(); ok {
+	if value, ok := iuo.mutation.ItemTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldTitle,
+			Column: item.FieldItemTitle,
 		})
 	}
-	if value, ok := iuo.mutation.Description(); ok {
+	if value, ok := iuo.mutation.ItemDescription(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldDescription,
+			Column: item.FieldItemDescription,
 		})
 	}
-	if value, ok := iuo.mutation.Content(); ok {
+	if value, ok := iuo.mutation.ItemContent(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldContent,
+			Column: item.FieldItemContent,
 		})
 	}
-	if value, ok := iuo.mutation.URL(); ok {
+	if value, ok := iuo.mutation.ItemLink(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldURL,
+			Column: item.FieldItemLink,
 		})
 	}
-	if value, ok := iuo.mutation.Author(); ok {
+	if value, ok := iuo.mutation.ItemUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldAuthor,
+			Column: item.FieldItemUpdated,
 		})
 	}
-	if value, ok := iuo.mutation.Image(); ok {
+	if value, ok := iuo.mutation.ItemPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldImage,
+			Column: item.FieldItemPublished,
 		})
 	}
-	if value, ok := iuo.mutation.Categories(); ok {
+	if value, ok := iuo.mutation.ItemAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCategories,
+			Column: item.FieldItemAuthor,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledTitle(); ok {
+	if value, ok := iuo.mutation.ItemAuthors(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledTitle,
+			Column: item.FieldItemAuthors,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledAuthor(); ok {
+	if value, ok := iuo.mutation.ItemGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledAuthor,
+			Column: item.FieldItemGUID,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledExcerpt(); ok {
+	if value, ok := iuo.mutation.ItemImage(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledExcerpt,
+			Column: item.FieldItemImage,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledSiteName(); ok {
+	if value, ok := iuo.mutation.ItemCategories(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledSiteName,
+			Column: item.FieldItemCategories,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledImage(); ok {
+	if value, ok := iuo.mutation.ItemEnclosures(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledImage,
+			Column: item.FieldItemEnclosures,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledContentHTML(); ok {
+	if value, ok := iuo.mutation.CrawlerTitle(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledContentHTML,
+			Column: item.FieldCrawlerTitle,
 		})
 	}
-	if value, ok := iuo.mutation.CrawledContentText(); ok {
+	if value, ok := iuo.mutation.CrawlerAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: item.FieldCrawledContentText,
+			Column: item.FieldCrawlerAuthor,
+		})
+	}
+	if value, ok := iuo.mutation.CrawlerExcerpt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerExcerpt,
+		})
+	}
+	if value, ok := iuo.mutation.CrawlerSiteName(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerSiteName,
+		})
+	}
+	if value, ok := iuo.mutation.CrawlerImage(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerImage,
+		})
+	}
+	if value, ok := iuo.mutation.CrawlerContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerContentHTML,
+		})
+	}
+	if value, ok := iuo.mutation.CrawlerContentText(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: item.FieldCrawlerContentText,
 		})
 	}
 	if value, ok := iuo.mutation.CreatedAt(); ok {

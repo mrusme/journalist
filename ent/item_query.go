@@ -364,12 +364,12 @@ func (iq *ItemQuery) WithReads(opts ...func(*ReadQuery)) *ItemQuery {
 // Example:
 //
 //	var v []struct {
-//		Title string `json:"title,omitempty"`
+//		ItemTitle string `json:"item_title,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Item.Query().
-//		GroupBy(item.FieldTitle).
+//		GroupBy(item.FieldItemTitle).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -393,11 +393,11 @@ func (iq *ItemQuery) GroupBy(field string, fields ...string) *ItemGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Title string `json:"title,omitempty"`
+//		ItemTitle string `json:"item_title,omitempty"`
 //	}
 //
 //	client.Item.Query().
-//		Select(item.FieldTitle).
+//		Select(item.FieldItemTitle).
 //		Scan(ctx, &v)
 //
 func (iq *ItemQuery) Select(fields ...string) *ItemSelect {

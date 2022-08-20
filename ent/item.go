@@ -18,34 +18,44 @@ type Item struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Title holds the value of the "title" field.
-	Title string `json:"title,omitempty"`
-	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
-	// Content holds the value of the "content" field.
-	Content string `json:"content,omitempty"`
-	// URL holds the value of the "url" field.
-	URL string `json:"url,omitempty"`
-	// Author holds the value of the "author" field.
-	Author string `json:"author,omitempty"`
-	// Image holds the value of the "image" field.
-	Image string `json:"image,omitempty"`
-	// Categories holds the value of the "categories" field.
-	Categories string `json:"categories,omitempty"`
-	// CrawledTitle holds the value of the "crawled_title" field.
-	CrawledTitle string `json:"crawled_title,omitempty"`
-	// CrawledAuthor holds the value of the "crawled_author" field.
-	CrawledAuthor string `json:"crawled_author,omitempty"`
-	// CrawledExcerpt holds the value of the "crawled_excerpt" field.
-	CrawledExcerpt string `json:"crawled_excerpt,omitempty"`
-	// CrawledSiteName holds the value of the "crawled_site_name" field.
-	CrawledSiteName string `json:"crawled_site_name,omitempty"`
-	// CrawledImage holds the value of the "crawled_image" field.
-	CrawledImage string `json:"crawled_image,omitempty"`
-	// CrawledContentHTML holds the value of the "crawled_content_html" field.
-	CrawledContentHTML string `json:"crawled_content_html,omitempty"`
-	// CrawledContentText holds the value of the "crawled_content_text" field.
-	CrawledContentText string `json:"crawled_content_text,omitempty"`
+	// ItemTitle holds the value of the "item_title" field.
+	ItemTitle string `json:"item_title,omitempty"`
+	// ItemDescription holds the value of the "item_description" field.
+	ItemDescription string `json:"item_description,omitempty"`
+	// ItemContent holds the value of the "item_content" field.
+	ItemContent string `json:"item_content,omitempty"`
+	// ItemLink holds the value of the "item_link" field.
+	ItemLink string `json:"item_link,omitempty"`
+	// ItemUpdated holds the value of the "item_updated" field.
+	ItemUpdated string `json:"item_updated,omitempty"`
+	// ItemPublished holds the value of the "item_published" field.
+	ItemPublished string `json:"item_published,omitempty"`
+	// ItemAuthor holds the value of the "item_author" field.
+	ItemAuthor string `json:"item_author,omitempty"`
+	// ItemAuthors holds the value of the "item_authors" field.
+	ItemAuthors string `json:"item_authors,omitempty"`
+	// ItemGUID holds the value of the "item_guid" field.
+	ItemGUID string `json:"item_guid,omitempty"`
+	// ItemImage holds the value of the "item_image" field.
+	ItemImage string `json:"item_image,omitempty"`
+	// ItemCategories holds the value of the "item_categories" field.
+	ItemCategories string `json:"item_categories,omitempty"`
+	// ItemEnclosures holds the value of the "item_enclosures" field.
+	ItemEnclosures string `json:"item_enclosures,omitempty"`
+	// CrawlerTitle holds the value of the "crawler_title" field.
+	CrawlerTitle string `json:"crawler_title,omitempty"`
+	// CrawlerAuthor holds the value of the "crawler_author" field.
+	CrawlerAuthor string `json:"crawler_author,omitempty"`
+	// CrawlerExcerpt holds the value of the "crawler_excerpt" field.
+	CrawlerExcerpt string `json:"crawler_excerpt,omitempty"`
+	// CrawlerSiteName holds the value of the "crawler_site_name" field.
+	CrawlerSiteName string `json:"crawler_site_name,omitempty"`
+	// CrawlerImage holds the value of the "crawler_image" field.
+	CrawlerImage string `json:"crawler_image,omitempty"`
+	// CrawlerContentHTML holds the value of the "crawler_content_html" field.
+	CrawlerContentHTML string `json:"crawler_content_html,omitempty"`
+	// CrawlerContentText holds the value of the "crawler_content_text" field.
+	CrawlerContentText string `json:"crawler_content_text,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -105,7 +115,7 @@ func (*Item) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case item.FieldTitle, item.FieldDescription, item.FieldContent, item.FieldURL, item.FieldAuthor, item.FieldImage, item.FieldCategories, item.FieldCrawledTitle, item.FieldCrawledAuthor, item.FieldCrawledExcerpt, item.FieldCrawledSiteName, item.FieldCrawledImage, item.FieldCrawledContentHTML, item.FieldCrawledContentText:
+		case item.FieldItemTitle, item.FieldItemDescription, item.FieldItemContent, item.FieldItemLink, item.FieldItemUpdated, item.FieldItemPublished, item.FieldItemAuthor, item.FieldItemAuthors, item.FieldItemGUID, item.FieldItemImage, item.FieldItemCategories, item.FieldItemEnclosures, item.FieldCrawlerTitle, item.FieldCrawlerAuthor, item.FieldCrawlerExcerpt, item.FieldCrawlerSiteName, item.FieldCrawlerImage, item.FieldCrawlerContentHTML, item.FieldCrawlerContentText:
 			values[i] = new(sql.NullString)
 		case item.FieldCreatedAt, item.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -134,89 +144,119 @@ func (i *Item) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				i.ID = *value
 			}
-		case item.FieldTitle:
+		case item.FieldItemTitle:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field title", values[j])
+				return fmt.Errorf("unexpected type %T for field item_title", values[j])
 			} else if value.Valid {
-				i.Title = value.String
+				i.ItemTitle = value.String
 			}
-		case item.FieldDescription:
+		case item.FieldItemDescription:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[j])
+				return fmt.Errorf("unexpected type %T for field item_description", values[j])
 			} else if value.Valid {
-				i.Description = value.String
+				i.ItemDescription = value.String
 			}
-		case item.FieldContent:
+		case item.FieldItemContent:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field content", values[j])
+				return fmt.Errorf("unexpected type %T for field item_content", values[j])
 			} else if value.Valid {
-				i.Content = value.String
+				i.ItemContent = value.String
 			}
-		case item.FieldURL:
+		case item.FieldItemLink:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field url", values[j])
+				return fmt.Errorf("unexpected type %T for field item_link", values[j])
 			} else if value.Valid {
-				i.URL = value.String
+				i.ItemLink = value.String
 			}
-		case item.FieldAuthor:
+		case item.FieldItemUpdated:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field author", values[j])
+				return fmt.Errorf("unexpected type %T for field item_updated", values[j])
 			} else if value.Valid {
-				i.Author = value.String
+				i.ItemUpdated = value.String
 			}
-		case item.FieldImage:
+		case item.FieldItemPublished:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field image", values[j])
+				return fmt.Errorf("unexpected type %T for field item_published", values[j])
 			} else if value.Valid {
-				i.Image = value.String
+				i.ItemPublished = value.String
 			}
-		case item.FieldCategories:
+		case item.FieldItemAuthor:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field categories", values[j])
+				return fmt.Errorf("unexpected type %T for field item_author", values[j])
 			} else if value.Valid {
-				i.Categories = value.String
+				i.ItemAuthor = value.String
 			}
-		case item.FieldCrawledTitle:
+		case item.FieldItemAuthors:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_title", values[j])
+				return fmt.Errorf("unexpected type %T for field item_authors", values[j])
 			} else if value.Valid {
-				i.CrawledTitle = value.String
+				i.ItemAuthors = value.String
 			}
-		case item.FieldCrawledAuthor:
+		case item.FieldItemGUID:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_author", values[j])
+				return fmt.Errorf("unexpected type %T for field item_guid", values[j])
 			} else if value.Valid {
-				i.CrawledAuthor = value.String
+				i.ItemGUID = value.String
 			}
-		case item.FieldCrawledExcerpt:
+		case item.FieldItemImage:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_excerpt", values[j])
+				return fmt.Errorf("unexpected type %T for field item_image", values[j])
 			} else if value.Valid {
-				i.CrawledExcerpt = value.String
+				i.ItemImage = value.String
 			}
-		case item.FieldCrawledSiteName:
+		case item.FieldItemCategories:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_site_name", values[j])
+				return fmt.Errorf("unexpected type %T for field item_categories", values[j])
 			} else if value.Valid {
-				i.CrawledSiteName = value.String
+				i.ItemCategories = value.String
 			}
-		case item.FieldCrawledImage:
+		case item.FieldItemEnclosures:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_image", values[j])
+				return fmt.Errorf("unexpected type %T for field item_enclosures", values[j])
 			} else if value.Valid {
-				i.CrawledImage = value.String
+				i.ItemEnclosures = value.String
 			}
-		case item.FieldCrawledContentHTML:
+		case item.FieldCrawlerTitle:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_content_html", values[j])
+				return fmt.Errorf("unexpected type %T for field crawler_title", values[j])
 			} else if value.Valid {
-				i.CrawledContentHTML = value.String
+				i.CrawlerTitle = value.String
 			}
-		case item.FieldCrawledContentText:
+		case item.FieldCrawlerAuthor:
 			if value, ok := values[j].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field crawled_content_text", values[j])
+				return fmt.Errorf("unexpected type %T for field crawler_author", values[j])
 			} else if value.Valid {
-				i.CrawledContentText = value.String
+				i.CrawlerAuthor = value.String
+			}
+		case item.FieldCrawlerExcerpt:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field crawler_excerpt", values[j])
+			} else if value.Valid {
+				i.CrawlerExcerpt = value.String
+			}
+		case item.FieldCrawlerSiteName:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field crawler_site_name", values[j])
+			} else if value.Valid {
+				i.CrawlerSiteName = value.String
+			}
+		case item.FieldCrawlerImage:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field crawler_image", values[j])
+			} else if value.Valid {
+				i.CrawlerImage = value.String
+			}
+		case item.FieldCrawlerContentHTML:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field crawler_content_html", values[j])
+			} else if value.Valid {
+				i.CrawlerContentHTML = value.String
+			}
+		case item.FieldCrawlerContentText:
+			if value, ok := values[j].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field crawler_content_text", values[j])
+			} else if value.Valid {
+				i.CrawlerContentText = value.String
 			}
 		case item.FieldCreatedAt:
 			if value, ok := values[j].(*sql.NullTime); !ok {
@@ -280,47 +320,62 @@ func (i *Item) String() string {
 	var builder strings.Builder
 	builder.WriteString("Item(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", i.ID))
-	builder.WriteString("title=")
-	builder.WriteString(i.Title)
+	builder.WriteString("item_title=")
+	builder.WriteString(i.ItemTitle)
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(i.Description)
+	builder.WriteString("item_description=")
+	builder.WriteString(i.ItemDescription)
 	builder.WriteString(", ")
-	builder.WriteString("content=")
-	builder.WriteString(i.Content)
+	builder.WriteString("item_content=")
+	builder.WriteString(i.ItemContent)
 	builder.WriteString(", ")
-	builder.WriteString("url=")
-	builder.WriteString(i.URL)
+	builder.WriteString("item_link=")
+	builder.WriteString(i.ItemLink)
 	builder.WriteString(", ")
-	builder.WriteString("author=")
-	builder.WriteString(i.Author)
+	builder.WriteString("item_updated=")
+	builder.WriteString(i.ItemUpdated)
 	builder.WriteString(", ")
-	builder.WriteString("image=")
-	builder.WriteString(i.Image)
+	builder.WriteString("item_published=")
+	builder.WriteString(i.ItemPublished)
 	builder.WriteString(", ")
-	builder.WriteString("categories=")
-	builder.WriteString(i.Categories)
+	builder.WriteString("item_author=")
+	builder.WriteString(i.ItemAuthor)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_title=")
-	builder.WriteString(i.CrawledTitle)
+	builder.WriteString("item_authors=")
+	builder.WriteString(i.ItemAuthors)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_author=")
-	builder.WriteString(i.CrawledAuthor)
+	builder.WriteString("item_guid=")
+	builder.WriteString(i.ItemGUID)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_excerpt=")
-	builder.WriteString(i.CrawledExcerpt)
+	builder.WriteString("item_image=")
+	builder.WriteString(i.ItemImage)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_site_name=")
-	builder.WriteString(i.CrawledSiteName)
+	builder.WriteString("item_categories=")
+	builder.WriteString(i.ItemCategories)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_image=")
-	builder.WriteString(i.CrawledImage)
+	builder.WriteString("item_enclosures=")
+	builder.WriteString(i.ItemEnclosures)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_content_html=")
-	builder.WriteString(i.CrawledContentHTML)
+	builder.WriteString("crawler_title=")
+	builder.WriteString(i.CrawlerTitle)
 	builder.WriteString(", ")
-	builder.WriteString("crawled_content_text=")
-	builder.WriteString(i.CrawledContentText)
+	builder.WriteString("crawler_author=")
+	builder.WriteString(i.CrawlerAuthor)
+	builder.WriteString(", ")
+	builder.WriteString("crawler_excerpt=")
+	builder.WriteString(i.CrawlerExcerpt)
+	builder.WriteString(", ")
+	builder.WriteString("crawler_site_name=")
+	builder.WriteString(i.CrawlerSiteName)
+	builder.WriteString(", ")
+	builder.WriteString("crawler_image=")
+	builder.WriteString(i.CrawlerImage)
+	builder.WriteString(", ")
+	builder.WriteString("crawler_content_html=")
+	builder.WriteString(i.CrawlerContentHTML)
+	builder.WriteString(", ")
+	builder.WriteString("crawler_content_text=")
+	builder.WriteString(i.CrawlerContentText)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(i.CreatedAt.Format(time.ANSIC))

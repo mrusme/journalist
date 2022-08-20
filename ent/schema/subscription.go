@@ -23,8 +23,14 @@ func (Subscription) Fields() []ent.Field {
     field.UUID("id", uuid.UUID{}).
       Default(uuid.New),
       // StorageKey("oid"),
+
     field.UUID("user_id", uuid.UUID{}),
     field.UUID("feed_id", uuid.UUID{}),
+
+    field.String("name").
+      Validate(func(s string) error {
+        return validate.Var(s, "required")
+      }),
     field.String("group").
       Validate(func(s string) error {
         return validate.Var(s, "required,alphanum,max=32")

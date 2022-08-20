@@ -35,6 +35,12 @@ func (sc *SubscriptionCreate) SetFeedID(u uuid.UUID) *SubscriptionCreate {
 	return sc
 }
 
+// SetName sets the "name" field.
+func (sc *SubscriptionCreate) SetName(s string) *SubscriptionCreate {
+	sc.mutation.SetName(s)
+	return sc
+}
+
 // SetGroup sets the "group" field.
 func (sc *SubscriptionCreate) SetGroup(s string) *SubscriptionCreate {
 	sc.mutation.SetGroup(s)
@@ -174,6 +180,14 @@ func (sc *SubscriptionCreate) check() error {
 	if _, ok := sc.mutation.FeedID(); !ok {
 		return &ValidationError{Name: "feed_id", err: errors.New(`ent: missing required field "Subscription.feed_id"`)}
 	}
+	if _, ok := sc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Subscription.name"`)}
+	}
+	if v, ok := sc.mutation.Name(); ok {
+		if err := subscription.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Subscription.name": %w`, err)}
+		}
+	}
 	if _, ok := sc.mutation.Group(); !ok {
 		return &ValidationError{Name: "group", err: errors.New(`ent: missing required field "Subscription.group"`)}
 	}
@@ -226,6 +240,14 @@ func (sc *SubscriptionCreate) createSpec() (*Subscription, *sqlgraph.CreateSpec)
 	if id, ok := sc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := sc.mutation.Name(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: subscription.FieldName,
+		})
+		_node.Name = value
 	}
 	if value, ok := sc.mutation.Group(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

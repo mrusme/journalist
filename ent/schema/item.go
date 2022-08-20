@@ -23,24 +23,30 @@ func (Item) Fields() []ent.Field {
     field.UUID("id", uuid.UUID{}).
       Default(uuid.New),
       // StorageKey("oid"),
-    field.String("title"),
-    field.String("description"),
-    field.String("content"),
-    field.String("url").
+
+    field.String("item_title"),
+    field.String("item_description"),
+    field.String("item_content"),
+    field.String("item_link").
       Validate(func(s string) error {
         return validate.Var(s, "required,url")
       }),
-    field.String("author"),
-    field.String("image"),
-    field.String("categories"),
+    field.String("item_updated"),
+    field.String("item_published"),
+    field.String("item_author"),
+    field.String("item_authors"),
+    field.String("item_guid"),
+    field.String("item_image"),
+    field.String("item_categories"),
+    field.String("item_enclosures"),
 
-    field.String("crawled_title"),
-    field.String("crawled_author"),
-    field.String("crawled_excerpt"),
-    field.String("crawled_site_name"),
-    field.String("crawled_image"),
-    field.String("crawled_content_html"),
-    field.String("crawled_content_text"),
+    field.String("crawler_title"),
+    field.String("crawler_author"),
+    field.String("crawler_excerpt"),
+    field.String("crawler_site_name"),
+    field.String("crawler_image"),
+    field.String("crawler_content_html"),
+    field.String("crawler_content_text"),
 
     field.Time("created_at").
       Default(time.Now),

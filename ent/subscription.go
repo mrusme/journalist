@@ -23,6 +23,8 @@ type Subscription struct {
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// FeedID holds the value of the "feed_id" field.
 	FeedID uuid.UUID `json:"feed_id,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
 	// Group holds the value of the "group" field.
 	Group string `json:"group,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -74,7 +76,7 @@ func (*Subscription) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case subscription.FieldGroup:
+		case subscription.FieldName, subscription.FieldGroup:
 			values[i] = new(sql.NullString)
 		case subscription.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -112,6 +114,12 @@ func (s *Subscription) assignValues(columns []string, values []interface{}) erro
 				return fmt.Errorf("unexpected type %T for field feed_id", values[i])
 			} else if value != nil {
 				s.FeedID = *value
+			}
+		case subscription.FieldName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name", values[i])
+			} else if value.Valid {
+				s.Name = value.String
 			}
 		case subscription.FieldGroup:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -168,6 +176,9 @@ func (s *Subscription) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("feed_id=")
 	builder.WriteString(fmt.Sprintf("%v", s.FeedID))
+	builder.WriteString(", ")
+	builder.WriteString("name=")
+	builder.WriteString(s.Name)
 	builder.WriteString(", ")
 	builder.WriteString("group=")
 	builder.WriteString(s.Group)

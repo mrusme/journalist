@@ -363,12 +363,12 @@ func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQu
 // Example:
 //
 //	var v []struct {
-//		Title string `json:"title,omitempty"`
+//		URL string `json:"url,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Feed.Query().
-//		GroupBy(feed.FieldTitle).
+//		GroupBy(feed.FieldURL).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -392,11 +392,11 @@ func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Title string `json:"title,omitempty"`
+//		URL string `json:"url,omitempty"`
 //	}
 //
 //	client.Feed.Query().
-//		Select(feed.FieldTitle).
+//		Select(feed.FieldURL).
 //		Scan(ctx, &v)
 //
 func (fq *FeedQuery) Select(fields ...string) *FeedSelect {

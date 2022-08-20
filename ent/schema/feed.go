@@ -23,22 +23,33 @@ func (Feed) Fields() []ent.Field {
     field.UUID("id", uuid.UUID{}).
       Default(uuid.New),
       // StorageKey("oid"),
-    field.String("title"),
-    field.String("description"),
-    field.String("site_url").
+    field.String("url").
       Validate(func(s string) error {
         return validate.Var(s, "required,url")
       }),
-    field.String("feed_url").
-      Validate(func(s string) error {
-        return validate.Var(s, "required,url")
-      }),
-    field.String("author"),
-    field.String("language"),
-    field.String("image"),
-    field.String("copyright"),
-    field.String("generator"),
-    field.String("categories"),
+    field.String("username").
+      Optional().
+      Nillable().
+      Sensitive(),
+    field.String("password").
+      Optional().
+      Nillable().
+      Sensitive(),
+
+    field.String("feed_title"),
+    field.String("feed_description"),
+    field.String("feed_link"),
+    field.String("feed_feed_link"),
+    field.String("feed_updated"),
+    field.String("feed_published"),
+    field.String("feed_author"),
+    field.String("feed_authors"),
+    field.String("feed_language"),
+    field.String("feed_image"),
+    field.String("feed_copyright"),
+    field.String("feed_generator"),
+    field.String("feed_categories"),
+
     field.Time("created_at").
       Default(time.Now),
     field.Time("updated_at").

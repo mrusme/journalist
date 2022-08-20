@@ -17,26 +17,38 @@ type Feed struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Title holds the value of the "title" field.
-	Title string `json:"title,omitempty"`
-	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
-	// SiteURL holds the value of the "site_url" field.
-	SiteURL string `json:"site_url,omitempty"`
-	// FeedURL holds the value of the "feed_url" field.
-	FeedURL string `json:"feed_url,omitempty"`
-	// Author holds the value of the "author" field.
-	Author string `json:"author,omitempty"`
-	// Language holds the value of the "language" field.
-	Language string `json:"language,omitempty"`
-	// Image holds the value of the "image" field.
-	Image string `json:"image,omitempty"`
-	// Copyright holds the value of the "copyright" field.
-	Copyright string `json:"copyright,omitempty"`
-	// Generator holds the value of the "generator" field.
-	Generator string `json:"generator,omitempty"`
-	// Categories holds the value of the "categories" field.
-	Categories string `json:"categories,omitempty"`
+	// URL holds the value of the "url" field.
+	URL string `json:"url,omitempty"`
+	// Username holds the value of the "username" field.
+	Username *string `json:"-"`
+	// Password holds the value of the "password" field.
+	Password *string `json:"-"`
+	// FeedTitle holds the value of the "feed_title" field.
+	FeedTitle string `json:"feed_title,omitempty"`
+	// FeedDescription holds the value of the "feed_description" field.
+	FeedDescription string `json:"feed_description,omitempty"`
+	// FeedLink holds the value of the "feed_link" field.
+	FeedLink string `json:"feed_link,omitempty"`
+	// FeedFeedLink holds the value of the "feed_feed_link" field.
+	FeedFeedLink string `json:"feed_feed_link,omitempty"`
+	// FeedUpdated holds the value of the "feed_updated" field.
+	FeedUpdated string `json:"feed_updated,omitempty"`
+	// FeedPublished holds the value of the "feed_published" field.
+	FeedPublished string `json:"feed_published,omitempty"`
+	// FeedAuthor holds the value of the "feed_author" field.
+	FeedAuthor string `json:"feed_author,omitempty"`
+	// FeedAuthors holds the value of the "feed_authors" field.
+	FeedAuthors string `json:"feed_authors,omitempty"`
+	// FeedLanguage holds the value of the "feed_language" field.
+	FeedLanguage string `json:"feed_language,omitempty"`
+	// FeedImage holds the value of the "feed_image" field.
+	FeedImage string `json:"feed_image,omitempty"`
+	// FeedCopyright holds the value of the "feed_copyright" field.
+	FeedCopyright string `json:"feed_copyright,omitempty"`
+	// FeedGenerator holds the value of the "feed_generator" field.
+	FeedGenerator string `json:"feed_generator,omitempty"`
+	// FeedCategories holds the value of the "feed_categories" field.
+	FeedCategories string `json:"feed_categories,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -93,7 +105,7 @@ func (*Feed) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case feed.FieldTitle, feed.FieldDescription, feed.FieldSiteURL, feed.FieldFeedURL, feed.FieldAuthor, feed.FieldLanguage, feed.FieldImage, feed.FieldCopyright, feed.FieldGenerator, feed.FieldCategories:
+		case feed.FieldURL, feed.FieldUsername, feed.FieldPassword, feed.FieldFeedTitle, feed.FieldFeedDescription, feed.FieldFeedLink, feed.FieldFeedFeedLink, feed.FieldFeedUpdated, feed.FieldFeedPublished, feed.FieldFeedAuthor, feed.FieldFeedAuthors, feed.FieldFeedLanguage, feed.FieldFeedImage, feed.FieldFeedCopyright, feed.FieldFeedGenerator, feed.FieldFeedCategories:
 			values[i] = new(sql.NullString)
 		case feed.FieldCreatedAt, feed.FieldUpdatedAt, feed.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
@@ -120,65 +132,103 @@ func (f *Feed) assignValues(columns []string, values []interface{}) error {
 			} else if value != nil {
 				f.ID = *value
 			}
-		case feed.FieldTitle:
+		case feed.FieldURL:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field title", values[i])
+				return fmt.Errorf("unexpected type %T for field url", values[i])
 			} else if value.Valid {
-				f.Title = value.String
+				f.URL = value.String
 			}
-		case feed.FieldDescription:
+		case feed.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				f.Description = value.String
+				f.Username = new(string)
+				*f.Username = value.String
 			}
-		case feed.FieldSiteURL:
+		case feed.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field site_url", values[i])
+				return fmt.Errorf("unexpected type %T for field password", values[i])
 			} else if value.Valid {
-				f.SiteURL = value.String
+				f.Password = new(string)
+				*f.Password = value.String
 			}
-		case feed.FieldFeedURL:
+		case feed.FieldFeedTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field feed_url", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_title", values[i])
 			} else if value.Valid {
-				f.FeedURL = value.String
+				f.FeedTitle = value.String
 			}
-		case feed.FieldAuthor:
+		case feed.FieldFeedDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field author", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_description", values[i])
 			} else if value.Valid {
-				f.Author = value.String
+				f.FeedDescription = value.String
 			}
-		case feed.FieldLanguage:
+		case feed.FieldFeedLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field language", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_link", values[i])
 			} else if value.Valid {
-				f.Language = value.String
+				f.FeedLink = value.String
 			}
-		case feed.FieldImage:
+		case feed.FieldFeedFeedLink:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field image", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_feed_link", values[i])
 			} else if value.Valid {
-				f.Image = value.String
+				f.FeedFeedLink = value.String
 			}
-		case feed.FieldCopyright:
+		case feed.FieldFeedUpdated:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field copyright", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_updated", values[i])
 			} else if value.Valid {
-				f.Copyright = value.String
+				f.FeedUpdated = value.String
 			}
-		case feed.FieldGenerator:
+		case feed.FieldFeedPublished:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field generator", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_published", values[i])
 			} else if value.Valid {
-				f.Generator = value.String
+				f.FeedPublished = value.String
 			}
-		case feed.FieldCategories:
+		case feed.FieldFeedAuthor:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field categories", values[i])
+				return fmt.Errorf("unexpected type %T for field feed_author", values[i])
 			} else if value.Valid {
-				f.Categories = value.String
+				f.FeedAuthor = value.String
+			}
+		case feed.FieldFeedAuthors:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_authors", values[i])
+			} else if value.Valid {
+				f.FeedAuthors = value.String
+			}
+		case feed.FieldFeedLanguage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_language", values[i])
+			} else if value.Valid {
+				f.FeedLanguage = value.String
+			}
+		case feed.FieldFeedImage:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_image", values[i])
+			} else if value.Valid {
+				f.FeedImage = value.String
+			}
+		case feed.FieldFeedCopyright:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_copyright", values[i])
+			} else if value.Valid {
+				f.FeedCopyright = value.String
+			}
+		case feed.FieldFeedGenerator:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_generator", values[i])
+			} else if value.Valid {
+				f.FeedGenerator = value.String
+			}
+		case feed.FieldFeedCategories:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field feed_categories", values[i])
+			} else if value.Valid {
+				f.FeedCategories = value.String
 			}
 		case feed.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -242,35 +292,51 @@ func (f *Feed) String() string {
 	var builder strings.Builder
 	builder.WriteString("Feed(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", f.ID))
-	builder.WriteString("title=")
-	builder.WriteString(f.Title)
+	builder.WriteString("url=")
+	builder.WriteString(f.URL)
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(f.Description)
+	builder.WriteString("username=<sensitive>")
 	builder.WriteString(", ")
-	builder.WriteString("site_url=")
-	builder.WriteString(f.SiteURL)
+	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
-	builder.WriteString("feed_url=")
-	builder.WriteString(f.FeedURL)
+	builder.WriteString("feed_title=")
+	builder.WriteString(f.FeedTitle)
 	builder.WriteString(", ")
-	builder.WriteString("author=")
-	builder.WriteString(f.Author)
+	builder.WriteString("feed_description=")
+	builder.WriteString(f.FeedDescription)
 	builder.WriteString(", ")
-	builder.WriteString("language=")
-	builder.WriteString(f.Language)
+	builder.WriteString("feed_link=")
+	builder.WriteString(f.FeedLink)
 	builder.WriteString(", ")
-	builder.WriteString("image=")
-	builder.WriteString(f.Image)
+	builder.WriteString("feed_feed_link=")
+	builder.WriteString(f.FeedFeedLink)
 	builder.WriteString(", ")
-	builder.WriteString("copyright=")
-	builder.WriteString(f.Copyright)
+	builder.WriteString("feed_updated=")
+	builder.WriteString(f.FeedUpdated)
 	builder.WriteString(", ")
-	builder.WriteString("generator=")
-	builder.WriteString(f.Generator)
+	builder.WriteString("feed_published=")
+	builder.WriteString(f.FeedPublished)
 	builder.WriteString(", ")
-	builder.WriteString("categories=")
-	builder.WriteString(f.Categories)
+	builder.WriteString("feed_author=")
+	builder.WriteString(f.FeedAuthor)
+	builder.WriteString(", ")
+	builder.WriteString("feed_authors=")
+	builder.WriteString(f.FeedAuthors)
+	builder.WriteString(", ")
+	builder.WriteString("feed_language=")
+	builder.WriteString(f.FeedLanguage)
+	builder.WriteString(", ")
+	builder.WriteString("feed_image=")
+	builder.WriteString(f.FeedImage)
+	builder.WriteString(", ")
+	builder.WriteString("feed_copyright=")
+	builder.WriteString(f.FeedCopyright)
+	builder.WriteString(", ")
+	builder.WriteString("feed_generator=")
+	builder.WriteString(f.FeedGenerator)
+	builder.WriteString(", ")
+	builder.WriteString("feed_categories=")
+	builder.WriteString(f.FeedCategories)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(f.CreatedAt.Format(time.ANSIC))

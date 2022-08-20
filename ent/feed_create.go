@@ -24,63 +24,115 @@ type FeedCreate struct {
 	hooks    []Hook
 }
 
-// SetTitle sets the "title" field.
-func (fc *FeedCreate) SetTitle(s string) *FeedCreate {
-	fc.mutation.SetTitle(s)
+// SetURL sets the "url" field.
+func (fc *FeedCreate) SetURL(s string) *FeedCreate {
+	fc.mutation.SetURL(s)
 	return fc
 }
 
-// SetDescription sets the "description" field.
-func (fc *FeedCreate) SetDescription(s string) *FeedCreate {
-	fc.mutation.SetDescription(s)
+// SetUsername sets the "username" field.
+func (fc *FeedCreate) SetUsername(s string) *FeedCreate {
+	fc.mutation.SetUsername(s)
 	return fc
 }
 
-// SetSiteURL sets the "site_url" field.
-func (fc *FeedCreate) SetSiteURL(s string) *FeedCreate {
-	fc.mutation.SetSiteURL(s)
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (fc *FeedCreate) SetNillableUsername(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetUsername(*s)
+	}
 	return fc
 }
 
-// SetFeedURL sets the "feed_url" field.
-func (fc *FeedCreate) SetFeedURL(s string) *FeedCreate {
-	fc.mutation.SetFeedURL(s)
+// SetPassword sets the "password" field.
+func (fc *FeedCreate) SetPassword(s string) *FeedCreate {
+	fc.mutation.SetPassword(s)
 	return fc
 }
 
-// SetAuthor sets the "author" field.
-func (fc *FeedCreate) SetAuthor(s string) *FeedCreate {
-	fc.mutation.SetAuthor(s)
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (fc *FeedCreate) SetNillablePassword(s *string) *FeedCreate {
+	if s != nil {
+		fc.SetPassword(*s)
+	}
 	return fc
 }
 
-// SetLanguage sets the "language" field.
-func (fc *FeedCreate) SetLanguage(s string) *FeedCreate {
-	fc.mutation.SetLanguage(s)
+// SetFeedTitle sets the "feed_title" field.
+func (fc *FeedCreate) SetFeedTitle(s string) *FeedCreate {
+	fc.mutation.SetFeedTitle(s)
 	return fc
 }
 
-// SetImage sets the "image" field.
-func (fc *FeedCreate) SetImage(s string) *FeedCreate {
-	fc.mutation.SetImage(s)
+// SetFeedDescription sets the "feed_description" field.
+func (fc *FeedCreate) SetFeedDescription(s string) *FeedCreate {
+	fc.mutation.SetFeedDescription(s)
 	return fc
 }
 
-// SetCopyright sets the "copyright" field.
-func (fc *FeedCreate) SetCopyright(s string) *FeedCreate {
-	fc.mutation.SetCopyright(s)
+// SetFeedLink sets the "feed_link" field.
+func (fc *FeedCreate) SetFeedLink(s string) *FeedCreate {
+	fc.mutation.SetFeedLink(s)
 	return fc
 }
 
-// SetGenerator sets the "generator" field.
-func (fc *FeedCreate) SetGenerator(s string) *FeedCreate {
-	fc.mutation.SetGenerator(s)
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (fc *FeedCreate) SetFeedFeedLink(s string) *FeedCreate {
+	fc.mutation.SetFeedFeedLink(s)
 	return fc
 }
 
-// SetCategories sets the "categories" field.
-func (fc *FeedCreate) SetCategories(s string) *FeedCreate {
-	fc.mutation.SetCategories(s)
+// SetFeedUpdated sets the "feed_updated" field.
+func (fc *FeedCreate) SetFeedUpdated(s string) *FeedCreate {
+	fc.mutation.SetFeedUpdated(s)
+	return fc
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (fc *FeedCreate) SetFeedPublished(s string) *FeedCreate {
+	fc.mutation.SetFeedPublished(s)
+	return fc
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (fc *FeedCreate) SetFeedAuthor(s string) *FeedCreate {
+	fc.mutation.SetFeedAuthor(s)
+	return fc
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (fc *FeedCreate) SetFeedAuthors(s string) *FeedCreate {
+	fc.mutation.SetFeedAuthors(s)
+	return fc
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (fc *FeedCreate) SetFeedLanguage(s string) *FeedCreate {
+	fc.mutation.SetFeedLanguage(s)
+	return fc
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (fc *FeedCreate) SetFeedImage(s string) *FeedCreate {
+	fc.mutation.SetFeedImage(s)
+	return fc
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (fc *FeedCreate) SetFeedCopyright(s string) *FeedCreate {
+	fc.mutation.SetFeedCopyright(s)
+	return fc
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (fc *FeedCreate) SetFeedGenerator(s string) *FeedCreate {
+	fc.mutation.SetFeedGenerator(s)
+	return fc
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (fc *FeedCreate) SetFeedCategories(s string) *FeedCreate {
+	fc.mutation.SetFeedCategories(s)
 	return fc
 }
 
@@ -278,45 +330,52 @@ func (fc *FeedCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (fc *FeedCreate) check() error {
-	if _, ok := fc.mutation.Title(); !ok {
-		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Feed.title"`)}
+	if _, ok := fc.mutation.URL(); !ok {
+		return &ValidationError{Name: "url", err: errors.New(`ent: missing required field "Feed.url"`)}
 	}
-	if _, ok := fc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Feed.description"`)}
-	}
-	if _, ok := fc.mutation.SiteURL(); !ok {
-		return &ValidationError{Name: "site_url", err: errors.New(`ent: missing required field "Feed.site_url"`)}
-	}
-	if v, ok := fc.mutation.SiteURL(); ok {
-		if err := feed.SiteURLValidator(v); err != nil {
-			return &ValidationError{Name: "site_url", err: fmt.Errorf(`ent: validator failed for field "Feed.site_url": %w`, err)}
+	if v, ok := fc.mutation.URL(); ok {
+		if err := feed.URLValidator(v); err != nil {
+			return &ValidationError{Name: "url", err: fmt.Errorf(`ent: validator failed for field "Feed.url": %w`, err)}
 		}
 	}
-	if _, ok := fc.mutation.FeedURL(); !ok {
-		return &ValidationError{Name: "feed_url", err: errors.New(`ent: missing required field "Feed.feed_url"`)}
+	if _, ok := fc.mutation.FeedTitle(); !ok {
+		return &ValidationError{Name: "feed_title", err: errors.New(`ent: missing required field "Feed.feed_title"`)}
 	}
-	if v, ok := fc.mutation.FeedURL(); ok {
-		if err := feed.FeedURLValidator(v); err != nil {
-			return &ValidationError{Name: "feed_url", err: fmt.Errorf(`ent: validator failed for field "Feed.feed_url": %w`, err)}
-		}
+	if _, ok := fc.mutation.FeedDescription(); !ok {
+		return &ValidationError{Name: "feed_description", err: errors.New(`ent: missing required field "Feed.feed_description"`)}
 	}
-	if _, ok := fc.mutation.Author(); !ok {
-		return &ValidationError{Name: "author", err: errors.New(`ent: missing required field "Feed.author"`)}
+	if _, ok := fc.mutation.FeedLink(); !ok {
+		return &ValidationError{Name: "feed_link", err: errors.New(`ent: missing required field "Feed.feed_link"`)}
 	}
-	if _, ok := fc.mutation.Language(); !ok {
-		return &ValidationError{Name: "language", err: errors.New(`ent: missing required field "Feed.language"`)}
+	if _, ok := fc.mutation.FeedFeedLink(); !ok {
+		return &ValidationError{Name: "feed_feed_link", err: errors.New(`ent: missing required field "Feed.feed_feed_link"`)}
 	}
-	if _, ok := fc.mutation.Image(); !ok {
-		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Feed.image"`)}
+	if _, ok := fc.mutation.FeedUpdated(); !ok {
+		return &ValidationError{Name: "feed_updated", err: errors.New(`ent: missing required field "Feed.feed_updated"`)}
 	}
-	if _, ok := fc.mutation.Copyright(); !ok {
-		return &ValidationError{Name: "copyright", err: errors.New(`ent: missing required field "Feed.copyright"`)}
+	if _, ok := fc.mutation.FeedPublished(); !ok {
+		return &ValidationError{Name: "feed_published", err: errors.New(`ent: missing required field "Feed.feed_published"`)}
 	}
-	if _, ok := fc.mutation.Generator(); !ok {
-		return &ValidationError{Name: "generator", err: errors.New(`ent: missing required field "Feed.generator"`)}
+	if _, ok := fc.mutation.FeedAuthor(); !ok {
+		return &ValidationError{Name: "feed_author", err: errors.New(`ent: missing required field "Feed.feed_author"`)}
 	}
-	if _, ok := fc.mutation.Categories(); !ok {
-		return &ValidationError{Name: "categories", err: errors.New(`ent: missing required field "Feed.categories"`)}
+	if _, ok := fc.mutation.FeedAuthors(); !ok {
+		return &ValidationError{Name: "feed_authors", err: errors.New(`ent: missing required field "Feed.feed_authors"`)}
+	}
+	if _, ok := fc.mutation.FeedLanguage(); !ok {
+		return &ValidationError{Name: "feed_language", err: errors.New(`ent: missing required field "Feed.feed_language"`)}
+	}
+	if _, ok := fc.mutation.FeedImage(); !ok {
+		return &ValidationError{Name: "feed_image", err: errors.New(`ent: missing required field "Feed.feed_image"`)}
+	}
+	if _, ok := fc.mutation.FeedCopyright(); !ok {
+		return &ValidationError{Name: "feed_copyright", err: errors.New(`ent: missing required field "Feed.feed_copyright"`)}
+	}
+	if _, ok := fc.mutation.FeedGenerator(); !ok {
+		return &ValidationError{Name: "feed_generator", err: errors.New(`ent: missing required field "Feed.feed_generator"`)}
+	}
+	if _, ok := fc.mutation.FeedCategories(); !ok {
+		return &ValidationError{Name: "feed_categories", err: errors.New(`ent: missing required field "Feed.feed_categories"`)}
 	}
 	if _, ok := fc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Feed.created_at"`)}
@@ -360,85 +419,133 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := fc.mutation.Title(); ok {
+	if value, ok := fc.mutation.URL(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldTitle,
+			Column: feed.FieldURL,
 		})
-		_node.Title = value
+		_node.URL = value
 	}
-	if value, ok := fc.mutation.Description(); ok {
+	if value, ok := fc.mutation.Username(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldDescription,
+			Column: feed.FieldUsername,
 		})
-		_node.Description = value
+		_node.Username = &value
 	}
-	if value, ok := fc.mutation.SiteURL(); ok {
+	if value, ok := fc.mutation.Password(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldSiteURL,
+			Column: feed.FieldPassword,
 		})
-		_node.SiteURL = value
+		_node.Password = &value
 	}
-	if value, ok := fc.mutation.FeedURL(); ok {
+	if value, ok := fc.mutation.FeedTitle(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldFeedURL,
+			Column: feed.FieldFeedTitle,
 		})
-		_node.FeedURL = value
+		_node.FeedTitle = value
 	}
-	if value, ok := fc.mutation.Author(); ok {
+	if value, ok := fc.mutation.FeedDescription(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldAuthor,
+			Column: feed.FieldFeedDescription,
 		})
-		_node.Author = value
+		_node.FeedDescription = value
 	}
-	if value, ok := fc.mutation.Language(); ok {
+	if value, ok := fc.mutation.FeedLink(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldLanguage,
+			Column: feed.FieldFeedLink,
 		})
-		_node.Language = value
+		_node.FeedLink = value
 	}
-	if value, ok := fc.mutation.Image(); ok {
+	if value, ok := fc.mutation.FeedFeedLink(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldImage,
+			Column: feed.FieldFeedFeedLink,
 		})
-		_node.Image = value
+		_node.FeedFeedLink = value
 	}
-	if value, ok := fc.mutation.Copyright(); ok {
+	if value, ok := fc.mutation.FeedUpdated(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCopyright,
+			Column: feed.FieldFeedUpdated,
 		})
-		_node.Copyright = value
+		_node.FeedUpdated = value
 	}
-	if value, ok := fc.mutation.Generator(); ok {
+	if value, ok := fc.mutation.FeedPublished(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldGenerator,
+			Column: feed.FieldFeedPublished,
 		})
-		_node.Generator = value
+		_node.FeedPublished = value
 	}
-	if value, ok := fc.mutation.Categories(); ok {
+	if value, ok := fc.mutation.FeedAuthor(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: feed.FieldCategories,
+			Column: feed.FieldFeedAuthor,
 		})
-		_node.Categories = value
+		_node.FeedAuthor = value
+	}
+	if value, ok := fc.mutation.FeedAuthors(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedAuthors,
+		})
+		_node.FeedAuthors = value
+	}
+	if value, ok := fc.mutation.FeedLanguage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedLanguage,
+		})
+		_node.FeedLanguage = value
+	}
+	if value, ok := fc.mutation.FeedImage(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedImage,
+		})
+		_node.FeedImage = value
+	}
+	if value, ok := fc.mutation.FeedCopyright(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCopyright,
+		})
+		_node.FeedCopyright = value
+	}
+	if value, ok := fc.mutation.FeedGenerator(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedGenerator,
+		})
+		_node.FeedGenerator = value
+	}
+	if value, ok := fc.mutation.FeedCategories(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: feed.FieldFeedCategories,
+		})
+		_node.FeedCategories = value
 	}
 	if value, ok := fc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
