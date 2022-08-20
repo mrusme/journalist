@@ -84,11 +84,11 @@ func main() {
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
   crwlr := crawler.New()
-  url := "https://xn--gckvb8fzb.com"
-  crwlr.FromHTTP(&url, nil)
+  url := "https://xn--gckvb8fzb.com/index.xml"
+  crwlr.FromHTTP(&url)
   crwlr.Detect()
   log.Printf("Content type: %s", crwlr.GetContentType())
-  fT, fH, _ := crwlr.GetFeedLinkFromHTML()
+  fT, fH, _ := crwlr.GetFeedLink()
   log.Printf("%s: %s\n", fT, fH)
 
   if functionName == "" {

@@ -18,14 +18,15 @@ import (
 	scraper "github.com/tinoquang/go-cloudflare-scraper"
 )
 
-var DEFAULT_USER_AGENT string =
-  "Mozilla/5.0 AppleWebKit/537.36 " +
-  "(KHTML, like Gecko; compatible; " +
-  "Googlebot/2.1; +http://www.google.com/bot.html)"
-
 type Crawler struct {
   source         io.ReadCloser
   sourceLocation string
+
+  UserAgent      string
+
+  username       string
+  password       string
+
   contentType    string
 }
 
@@ -43,17 +44,26 @@ func (c *Crawler) Reset() {
     c.source = nil
   }
   c.sourceLocation = ""
+
+  c.UserAgent =
+    "Mozilla/5.0 AppleWebKit/537.36 " +
+    "(KHTML, like Gecko; compatible; " +
+    "Googlebot/2.1; +http://www.google.com/bot.html)"
+
+  c.username = ""
+  c.password = ""
+
   c.contentType = ""
+}
+
+func (c *Crawler) SetBasicAuth(username string, password string) {
+  c.username = username
+  c.password = password
 }
 
 func (c *Crawler) FromHTTP(
   rawUrl *string,
-  userAgent *string,
 ) (error) {
-  if userAgent == nil {
-    userAgent = &DEFAULT_USER_AGENT
-  }
-
   jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
   if err != nil {
     return err
@@ -71,7 +81,7 @@ func (c *Crawler) FromHTTP(
   }
 
   req.Header.Set("User-Agent",
-    *userAgent)
+    c.UserAgent)
   req.Header.Set("Accept",
     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif," +
       "image/webp,*/*;q=0.8")
@@ -79,6 +89,10 @@ func (c *Crawler) FromHTTP(
     "en-US,en;q=0.5")
   req.Header.Set("DNT",
     "1")
+
+  if c.username != "" && c.password != "" {
+    req.SetBasicAuth(c.username, c.password)
+  }
 
   resp, err := client.Do(req)
   if err != nil {
@@ -114,22 +128,28 @@ func (c *Crawler) Detect() (error) {
   return nil
 }
 
-func (c *Crawler) GetFeedLink() (string, error) {
+func (c *Crawler) GetFeedLink() (string, string, error) {
   if c.source == nil {
-    return "", errors.New("No source available!")
+    return "", "", errors.New("No source available!")
   }
 
   if c.contentType == "" {
     if err := c.Detect(); err != nil {
-      return "", err
+      return "", "", err
     }
 
     if c.contentType == "" {
-      return "", errors.New("Could not detect content type!")
+      return "", "", errors.New("Could not detect content type!")
     }
   }
 
-  return "", nil
+  if strings.Contains(c.contentType, "text/xml") {
+    return "", c.sourceLocation, nil
+  } else if strings.Contains(c.contentType, "text/html") {
+    return c.GetFeedLinkFromHTML()
+  }
+
+  return "", "", nil
 }
 
 func (c *Crawler) GetContentType() string {
@@ -160,8 +180,6 @@ func (c *Crawler) GetFeedLinkFromHTML() (string, string, error) {
       }
 
       if feedType != nil && feedHref != nil {
-        fmt.Printf("%v\n", *feedType)
-        fmt.Printf("%v\n", *feedHref)
         return true, *feedType, *feedHref
       }
 
