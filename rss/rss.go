@@ -2,7 +2,9 @@ package rss
 
 import (
 	// log "github.com/sirupsen/logrus"
+	"crypto/sha256"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"strings"
@@ -135,8 +137,12 @@ func (c* Client) SetItem(
     }
   }
 
+  h := sha256.New()
+  h.Write([]byte(fmt.Sprintf("%s%s", item.Link, item.Updated)))
+  sum := h.Sum(nil)
+
   dbItemTemp = dbItemTemp.
-    SetItemGUID("").
+    SetItemGUID(string(sum)).
     SetItemTitle(item.Title).
     SetItemDescription(item.Description).
     SetItemContent(item.Content).

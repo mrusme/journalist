@@ -6,6 +6,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/edge"
 	"github.com/google/uuid"
 )
@@ -24,7 +25,8 @@ func (Item) Fields() []ent.Field {
       Default(uuid.New),
       // StorageKey("oid"),
 
-    field.String("item_guid"),
+    field.String("item_guid").
+      Unique(),
     field.String("item_title"),
     field.String("item_description"),
     field.String("item_content"),
@@ -34,26 +36,44 @@ func (Item) Fields() []ent.Field {
       }),
     field.String("item_updated"),
     field.String("item_published"),
-    field.String("item_author_name"),
-    field.String("item_author_email"),
-    field.String("item_image_title"),
-    field.String("item_image_url"),
+    field.String("item_author_name").
+      Optional(),
+    field.String("item_author_email").
+      Optional(),
+    field.String("item_image_title").
+      Optional(),
+    field.String("item_image_url").
+      Optional(),
     field.String("item_categories"),
     field.String("item_enclosures"),
 
-    field.String("crawler_title"),
-    field.String("crawler_author"),
-    field.String("crawler_excerpt"),
-    field.String("crawler_site_name"),
-    field.String("crawler_image"),
-    field.String("crawler_content_html"),
-    field.String("crawler_content_text"),
+    field.String("crawler_title").
+      Optional(),
+    field.String("crawler_author").
+      Optional(),
+    field.String("crawler_excerpt").
+      Optional(),
+    field.String("crawler_site_name").
+      Optional(),
+    field.String("crawler_image").
+      Optional(),
+    field.String("crawler_content_html").
+      Optional(),
+    field.String("crawler_content_text").
+      Optional(),
 
     field.Time("created_at").
       Default(time.Now),
     field.Time("updated_at").
       Default(time.Now).
       UpdateDefault(time.Now),
+  }
+}
+
+func (Item) Indexes() []ent.Index {
+  return []ent.Index{
+    index.Fields("item_guid").
+      Unique(),
   }
 }
 

@@ -21,6 +21,25 @@ func New(entClient *ent.Client) (*Journalistd) {
   return jd
 }
 
+func (jd *Journalistd) RefreshAll() ([]error) {
+  var errs []error
+
+  dbFeeds, err := jd.entClient.Feed.
+    Query().
+    All(context.Background())
+  if err != nil {
+    errs = append(errs, err)
+    return errs
+  }
+
+  var feedIds []uuid.UUID = make([]uuid.UUID, len(dbFeeds))
+  for i, dbFeed := range dbFeeds {
+    feedIds[i] = dbFeed.ID
+  }
+
+  return jd.Refresh(feedIds)
+}
+
 func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
   var errs []error
 
@@ -36,7 +55,12 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
   }
 
   for _, dbFeed := range dbFeeds {
-    rc, err := rss.NewClient(dbFeed.FeedFeedLink, true)
+    rc, err := rss.NewClient(
+      dbFeed.URL,
+      dbFeed.Username,
+      dbFeed.Password,
+      true,
+    )
     if err != nil {
       errs = append(errs, err)
       continue

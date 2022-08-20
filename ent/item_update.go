@@ -80,9 +80,37 @@ func (iu *ItemUpdate) SetItemAuthorName(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemAuthorName sets the "item_author_name" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemAuthorName(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemAuthorName(*s)
+	}
+	return iu
+}
+
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (iu *ItemUpdate) ClearItemAuthorName() *ItemUpdate {
+	iu.mutation.ClearItemAuthorName()
+	return iu
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (iu *ItemUpdate) SetItemAuthorEmail(s string) *ItemUpdate {
 	iu.mutation.SetItemAuthorEmail(s)
+	return iu
+}
+
+// SetNillableItemAuthorEmail sets the "item_author_email" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemAuthorEmail(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemAuthorEmail(*s)
+	}
+	return iu
+}
+
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (iu *ItemUpdate) ClearItemAuthorEmail() *ItemUpdate {
+	iu.mutation.ClearItemAuthorEmail()
 	return iu
 }
 
@@ -92,9 +120,37 @@ func (iu *ItemUpdate) SetItemImageTitle(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemImageTitle sets the "item_image_title" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemImageTitle(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemImageTitle(*s)
+	}
+	return iu
+}
+
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (iu *ItemUpdate) ClearItemImageTitle() *ItemUpdate {
+	iu.mutation.ClearItemImageTitle()
+	return iu
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (iu *ItemUpdate) SetItemImageURL(s string) *ItemUpdate {
 	iu.mutation.SetItemImageURL(s)
+	return iu
+}
+
+// SetNillableItemImageURL sets the "item_image_url" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemImageURL(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemImageURL(*s)
+	}
+	return iu
+}
+
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (iu *ItemUpdate) ClearItemImageURL() *ItemUpdate {
+	iu.mutation.ClearItemImageURL()
 	return iu
 }
 
@@ -116,9 +172,37 @@ func (iu *ItemUpdate) SetCrawlerTitle(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableCrawlerTitle sets the "crawler_title" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerTitle(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerTitle(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (iu *ItemUpdate) ClearCrawlerTitle() *ItemUpdate {
+	iu.mutation.ClearCrawlerTitle()
+	return iu
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (iu *ItemUpdate) SetCrawlerAuthor(s string) *ItemUpdate {
 	iu.mutation.SetCrawlerAuthor(s)
+	return iu
+}
+
+// SetNillableCrawlerAuthor sets the "crawler_author" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerAuthor(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerAuthor(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (iu *ItemUpdate) ClearCrawlerAuthor() *ItemUpdate {
+	iu.mutation.ClearCrawlerAuthor()
 	return iu
 }
 
@@ -128,9 +212,37 @@ func (iu *ItemUpdate) SetCrawlerExcerpt(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableCrawlerExcerpt sets the "crawler_excerpt" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerExcerpt(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerExcerpt(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (iu *ItemUpdate) ClearCrawlerExcerpt() *ItemUpdate {
+	iu.mutation.ClearCrawlerExcerpt()
+	return iu
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (iu *ItemUpdate) SetCrawlerSiteName(s string) *ItemUpdate {
 	iu.mutation.SetCrawlerSiteName(s)
+	return iu
+}
+
+// SetNillableCrawlerSiteName sets the "crawler_site_name" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerSiteName(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerSiteName(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (iu *ItemUpdate) ClearCrawlerSiteName() *ItemUpdate {
+	iu.mutation.ClearCrawlerSiteName()
 	return iu
 }
 
@@ -140,15 +252,57 @@ func (iu *ItemUpdate) SetCrawlerImage(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableCrawlerImage sets the "crawler_image" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerImage(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerImage(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (iu *ItemUpdate) ClearCrawlerImage() *ItemUpdate {
+	iu.mutation.ClearCrawlerImage()
+	return iu
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (iu *ItemUpdate) SetCrawlerContentHTML(s string) *ItemUpdate {
 	iu.mutation.SetCrawlerContentHTML(s)
 	return iu
 }
 
+// SetNillableCrawlerContentHTML sets the "crawler_content_html" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerContentHTML(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerContentHTML(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (iu *ItemUpdate) ClearCrawlerContentHTML() *ItemUpdate {
+	iu.mutation.ClearCrawlerContentHTML()
+	return iu
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (iu *ItemUpdate) SetCrawlerContentText(s string) *ItemUpdate {
 	iu.mutation.SetCrawlerContentText(s)
+	return iu
+}
+
+// SetNillableCrawlerContentText sets the "crawler_content_text" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableCrawlerContentText(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetCrawlerContentText(*s)
+	}
+	return iu
+}
+
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (iu *ItemUpdate) ClearCrawlerContentText() *ItemUpdate {
+	iu.mutation.ClearCrawlerContentText()
 	return iu
 }
 
@@ -427,10 +581,22 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldItemAuthorName,
 		})
 	}
+	if iu.mutation.ItemAuthorNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldItemAuthorName,
+		})
+	}
 	if value, ok := iu.mutation.ItemAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldItemAuthorEmail,
+		})
+	}
+	if iu.mutation.ItemAuthorEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldItemAuthorEmail,
 		})
 	}
@@ -441,10 +607,22 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldItemImageTitle,
 		})
 	}
+	if iu.mutation.ItemImageTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldItemImageTitle,
+		})
+	}
 	if value, ok := iu.mutation.ItemImageURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldItemImageURL,
+		})
+	}
+	if iu.mutation.ItemImageURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldItemImageURL,
 		})
 	}
@@ -469,10 +647,22 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldCrawlerTitle,
 		})
 	}
+	if iu.mutation.CrawlerTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerTitle,
+		})
+	}
 	if value, ok := iu.mutation.CrawlerAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerAuthor,
+		})
+	}
+	if iu.mutation.CrawlerAuthorCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerAuthor,
 		})
 	}
@@ -483,10 +673,22 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldCrawlerExcerpt,
 		})
 	}
+	if iu.mutation.CrawlerExcerptCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerExcerpt,
+		})
+	}
 	if value, ok := iu.mutation.CrawlerSiteName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerSiteName,
+		})
+	}
+	if iu.mutation.CrawlerSiteNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerSiteName,
 		})
 	}
@@ -497,6 +699,12 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldCrawlerImage,
 		})
 	}
+	if iu.mutation.CrawlerImageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerImage,
+		})
+	}
 	if value, ok := iu.mutation.CrawlerContentHTML(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -504,10 +712,22 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: item.FieldCrawlerContentHTML,
 		})
 	}
+	if iu.mutation.CrawlerContentHTMLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerContentHTML,
+		})
+	}
 	if value, ok := iu.mutation.CrawlerContentText(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerContentText,
+		})
+	}
+	if iu.mutation.CrawlerContentTextCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerContentText,
 		})
 	}
@@ -756,9 +976,37 @@ func (iuo *ItemUpdateOne) SetItemAuthorName(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemAuthorName sets the "item_author_name" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemAuthorName(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemAuthorName(*s)
+	}
+	return iuo
+}
+
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (iuo *ItemUpdateOne) ClearItemAuthorName() *ItemUpdateOne {
+	iuo.mutation.ClearItemAuthorName()
+	return iuo
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (iuo *ItemUpdateOne) SetItemAuthorEmail(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemAuthorEmail(s)
+	return iuo
+}
+
+// SetNillableItemAuthorEmail sets the "item_author_email" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemAuthorEmail(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemAuthorEmail(*s)
+	}
+	return iuo
+}
+
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (iuo *ItemUpdateOne) ClearItemAuthorEmail() *ItemUpdateOne {
+	iuo.mutation.ClearItemAuthorEmail()
 	return iuo
 }
 
@@ -768,9 +1016,37 @@ func (iuo *ItemUpdateOne) SetItemImageTitle(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemImageTitle sets the "item_image_title" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemImageTitle(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemImageTitle(*s)
+	}
+	return iuo
+}
+
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (iuo *ItemUpdateOne) ClearItemImageTitle() *ItemUpdateOne {
+	iuo.mutation.ClearItemImageTitle()
+	return iuo
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (iuo *ItemUpdateOne) SetItemImageURL(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemImageURL(s)
+	return iuo
+}
+
+// SetNillableItemImageURL sets the "item_image_url" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemImageURL(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemImageURL(*s)
+	}
+	return iuo
+}
+
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (iuo *ItemUpdateOne) ClearItemImageURL() *ItemUpdateOne {
+	iuo.mutation.ClearItemImageURL()
 	return iuo
 }
 
@@ -792,9 +1068,37 @@ func (iuo *ItemUpdateOne) SetCrawlerTitle(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableCrawlerTitle sets the "crawler_title" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerTitle(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerTitle(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (iuo *ItemUpdateOne) ClearCrawlerTitle() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerTitle()
+	return iuo
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (iuo *ItemUpdateOne) SetCrawlerAuthor(s string) *ItemUpdateOne {
 	iuo.mutation.SetCrawlerAuthor(s)
+	return iuo
+}
+
+// SetNillableCrawlerAuthor sets the "crawler_author" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerAuthor(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerAuthor(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (iuo *ItemUpdateOne) ClearCrawlerAuthor() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerAuthor()
 	return iuo
 }
 
@@ -804,9 +1108,37 @@ func (iuo *ItemUpdateOne) SetCrawlerExcerpt(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableCrawlerExcerpt sets the "crawler_excerpt" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerExcerpt(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerExcerpt(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (iuo *ItemUpdateOne) ClearCrawlerExcerpt() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerExcerpt()
+	return iuo
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (iuo *ItemUpdateOne) SetCrawlerSiteName(s string) *ItemUpdateOne {
 	iuo.mutation.SetCrawlerSiteName(s)
+	return iuo
+}
+
+// SetNillableCrawlerSiteName sets the "crawler_site_name" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerSiteName(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerSiteName(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (iuo *ItemUpdateOne) ClearCrawlerSiteName() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerSiteName()
 	return iuo
 }
 
@@ -816,15 +1148,57 @@ func (iuo *ItemUpdateOne) SetCrawlerImage(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableCrawlerImage sets the "crawler_image" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerImage(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerImage(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (iuo *ItemUpdateOne) ClearCrawlerImage() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerImage()
+	return iuo
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (iuo *ItemUpdateOne) SetCrawlerContentHTML(s string) *ItemUpdateOne {
 	iuo.mutation.SetCrawlerContentHTML(s)
 	return iuo
 }
 
+// SetNillableCrawlerContentHTML sets the "crawler_content_html" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerContentHTML(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerContentHTML(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (iuo *ItemUpdateOne) ClearCrawlerContentHTML() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerContentHTML()
+	return iuo
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (iuo *ItemUpdateOne) SetCrawlerContentText(s string) *ItemUpdateOne {
 	iuo.mutation.SetCrawlerContentText(s)
+	return iuo
+}
+
+// SetNillableCrawlerContentText sets the "crawler_content_text" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableCrawlerContentText(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetCrawlerContentText(*s)
+	}
+	return iuo
+}
+
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (iuo *ItemUpdateOne) ClearCrawlerContentText() *ItemUpdateOne {
+	iuo.mutation.ClearCrawlerContentText()
 	return iuo
 }
 
@@ -1133,10 +1507,22 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldItemAuthorName,
 		})
 	}
+	if iuo.mutation.ItemAuthorNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldItemAuthorName,
+		})
+	}
 	if value, ok := iuo.mutation.ItemAuthorEmail(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldItemAuthorEmail,
+		})
+	}
+	if iuo.mutation.ItemAuthorEmailCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldItemAuthorEmail,
 		})
 	}
@@ -1147,10 +1533,22 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldItemImageTitle,
 		})
 	}
+	if iuo.mutation.ItemImageTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldItemImageTitle,
+		})
+	}
 	if value, ok := iuo.mutation.ItemImageURL(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldItemImageURL,
+		})
+	}
+	if iuo.mutation.ItemImageURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldItemImageURL,
 		})
 	}
@@ -1175,10 +1573,22 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldCrawlerTitle,
 		})
 	}
+	if iuo.mutation.CrawlerTitleCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerTitle,
+		})
+	}
 	if value, ok := iuo.mutation.CrawlerAuthor(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerAuthor,
+		})
+	}
+	if iuo.mutation.CrawlerAuthorCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerAuthor,
 		})
 	}
@@ -1189,10 +1599,22 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldCrawlerExcerpt,
 		})
 	}
+	if iuo.mutation.CrawlerExcerptCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerExcerpt,
+		})
+	}
 	if value, ok := iuo.mutation.CrawlerSiteName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerSiteName,
+		})
+	}
+	if iuo.mutation.CrawlerSiteNameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerSiteName,
 		})
 	}
@@ -1203,6 +1625,12 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldCrawlerImage,
 		})
 	}
+	if iuo.mutation.CrawlerImageCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerImage,
+		})
+	}
 	if value, ok := iuo.mutation.CrawlerContentHTML(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -1210,10 +1638,22 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 			Column: item.FieldCrawlerContentHTML,
 		})
 	}
+	if iuo.mutation.CrawlerContentHTMLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: item.FieldCrawlerContentHTML,
+		})
+	}
 	if value, ok := iuo.mutation.CrawlerContentText(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: item.FieldCrawlerContentText,
+		})
+	}
+	if iuo.mutation.CrawlerContentTextCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: item.FieldCrawlerContentText,
 		})
 	}

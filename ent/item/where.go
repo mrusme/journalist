@@ -1014,6 +1014,20 @@ func ItemAuthorNameHasSuffix(v string) predicate.Item {
 	})
 }
 
+// ItemAuthorNameIsNil applies the IsNil predicate on the "item_author_name" field.
+func ItemAuthorNameIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldItemAuthorName)))
+	})
+}
+
+// ItemAuthorNameNotNil applies the NotNil predicate on the "item_author_name" field.
+func ItemAuthorNameNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldItemAuthorName)))
+	})
+}
+
 // ItemAuthorNameEqualFold applies the EqualFold predicate on the "item_author_name" field.
 func ItemAuthorNameEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -1110,6 +1124,20 @@ func ItemAuthorEmailHasPrefix(v string) predicate.Item {
 func ItemAuthorEmailHasSuffix(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldItemAuthorEmail), v))
+	})
+}
+
+// ItemAuthorEmailIsNil applies the IsNil predicate on the "item_author_email" field.
+func ItemAuthorEmailIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldItemAuthorEmail)))
+	})
+}
+
+// ItemAuthorEmailNotNil applies the NotNil predicate on the "item_author_email" field.
+func ItemAuthorEmailNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldItemAuthorEmail)))
 	})
 }
 
@@ -1212,6 +1240,20 @@ func ItemImageTitleHasSuffix(v string) predicate.Item {
 	})
 }
 
+// ItemImageTitleIsNil applies the IsNil predicate on the "item_image_title" field.
+func ItemImageTitleIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldItemImageTitle)))
+	})
+}
+
+// ItemImageTitleNotNil applies the NotNil predicate on the "item_image_title" field.
+func ItemImageTitleNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldItemImageTitle)))
+	})
+}
+
 // ItemImageTitleEqualFold applies the EqualFold predicate on the "item_image_title" field.
 func ItemImageTitleEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -1308,6 +1350,20 @@ func ItemImageURLHasPrefix(v string) predicate.Item {
 func ItemImageURLHasSuffix(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldItemImageURL), v))
+	})
+}
+
+// ItemImageURLIsNil applies the IsNil predicate on the "item_image_url" field.
+func ItemImageURLIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldItemImageURL)))
+	})
+}
+
+// ItemImageURLNotNil applies the NotNil predicate on the "item_image_url" field.
+func ItemImageURLNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldItemImageURL)))
 	})
 }
 
@@ -1608,6 +1664,20 @@ func CrawlerTitleHasSuffix(v string) predicate.Item {
 	})
 }
 
+// CrawlerTitleIsNil applies the IsNil predicate on the "crawler_title" field.
+func CrawlerTitleIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerTitle)))
+	})
+}
+
+// CrawlerTitleNotNil applies the NotNil predicate on the "crawler_title" field.
+func CrawlerTitleNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerTitle)))
+	})
+}
+
 // CrawlerTitleEqualFold applies the EqualFold predicate on the "crawler_title" field.
 func CrawlerTitleEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -1704,6 +1774,20 @@ func CrawlerAuthorHasPrefix(v string) predicate.Item {
 func CrawlerAuthorHasSuffix(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCrawlerAuthor), v))
+	})
+}
+
+// CrawlerAuthorIsNil applies the IsNil predicate on the "crawler_author" field.
+func CrawlerAuthorIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerAuthor)))
+	})
+}
+
+// CrawlerAuthorNotNil applies the NotNil predicate on the "crawler_author" field.
+func CrawlerAuthorNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerAuthor)))
 	})
 }
 
@@ -1806,6 +1890,20 @@ func CrawlerExcerptHasSuffix(v string) predicate.Item {
 	})
 }
 
+// CrawlerExcerptIsNil applies the IsNil predicate on the "crawler_excerpt" field.
+func CrawlerExcerptIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerExcerpt)))
+	})
+}
+
+// CrawlerExcerptNotNil applies the NotNil predicate on the "crawler_excerpt" field.
+func CrawlerExcerptNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerExcerpt)))
+	})
+}
+
 // CrawlerExcerptEqualFold applies the EqualFold predicate on the "crawler_excerpt" field.
 func CrawlerExcerptEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -1902,6 +2000,20 @@ func CrawlerSiteNameHasPrefix(v string) predicate.Item {
 func CrawlerSiteNameHasSuffix(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCrawlerSiteName), v))
+	})
+}
+
+// CrawlerSiteNameIsNil applies the IsNil predicate on the "crawler_site_name" field.
+func CrawlerSiteNameIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerSiteName)))
+	})
+}
+
+// CrawlerSiteNameNotNil applies the NotNil predicate on the "crawler_site_name" field.
+func CrawlerSiteNameNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerSiteName)))
 	})
 }
 
@@ -2004,6 +2116,20 @@ func CrawlerImageHasSuffix(v string) predicate.Item {
 	})
 }
 
+// CrawlerImageIsNil applies the IsNil predicate on the "crawler_image" field.
+func CrawlerImageIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerImage)))
+	})
+}
+
+// CrawlerImageNotNil applies the NotNil predicate on the "crawler_image" field.
+func CrawlerImageNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerImage)))
+	})
+}
+
 // CrawlerImageEqualFold applies the EqualFold predicate on the "crawler_image" field.
 func CrawlerImageEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -2103,6 +2229,20 @@ func CrawlerContentHTMLHasSuffix(v string) predicate.Item {
 	})
 }
 
+// CrawlerContentHTMLIsNil applies the IsNil predicate on the "crawler_content_html" field.
+func CrawlerContentHTMLIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerContentHTML)))
+	})
+}
+
+// CrawlerContentHTMLNotNil applies the NotNil predicate on the "crawler_content_html" field.
+func CrawlerContentHTMLNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerContentHTML)))
+	})
+}
+
 // CrawlerContentHTMLEqualFold applies the EqualFold predicate on the "crawler_content_html" field.
 func CrawlerContentHTMLEqualFold(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
@@ -2199,6 +2339,20 @@ func CrawlerContentTextHasPrefix(v string) predicate.Item {
 func CrawlerContentTextHasSuffix(v string) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCrawlerContentText), v))
+	})
+}
+
+// CrawlerContentTextIsNil applies the IsNil predicate on the "crawler_content_text" field.
+func CrawlerContentTextIsNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCrawlerContentText)))
+	})
+}
+
+// CrawlerContentTextNotNil applies the NotNil predicate on the "crawler_content_text" field.
+func CrawlerContentTextNotNil() predicate.Item {
+	return predicate.Item(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCrawlerContentText)))
 	})
 }
 

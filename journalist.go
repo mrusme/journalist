@@ -2,22 +2,24 @@ package main
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
-  "net/http"
-  "embed"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 
 	"github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/logger"
-  "github.com/gofiber/template/html"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/template/html"
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
+	"github.com/mrusme/journalist/journalistd"
 
 	"github.com/mrusme/journalist/api"
 	"github.com/mrusme/journalist/web"
@@ -95,6 +97,16 @@ func main() {
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
   if functionName == "" {
+    go func() {
+      jd := journalistd.New(entClient)
+
+      for {
+        errs := jd.RefreshAll()
+        log.Printf("\n%v\n", errs)
+        time.Sleep(time.Second * 30)
+      }
+    }()
+
     if appBindIp == "" {
       appBindIp = "127.0.0.1"
     }

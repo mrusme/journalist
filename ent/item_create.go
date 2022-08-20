@@ -75,9 +75,25 @@ func (ic *ItemCreate) SetItemAuthorName(s string) *ItemCreate {
 	return ic
 }
 
+// SetNillableItemAuthorName sets the "item_author_name" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableItemAuthorName(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetItemAuthorName(*s)
+	}
+	return ic
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (ic *ItemCreate) SetItemAuthorEmail(s string) *ItemCreate {
 	ic.mutation.SetItemAuthorEmail(s)
+	return ic
+}
+
+// SetNillableItemAuthorEmail sets the "item_author_email" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableItemAuthorEmail(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetItemAuthorEmail(*s)
+	}
 	return ic
 }
 
@@ -87,9 +103,25 @@ func (ic *ItemCreate) SetItemImageTitle(s string) *ItemCreate {
 	return ic
 }
 
+// SetNillableItemImageTitle sets the "item_image_title" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableItemImageTitle(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetItemImageTitle(*s)
+	}
+	return ic
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (ic *ItemCreate) SetItemImageURL(s string) *ItemCreate {
 	ic.mutation.SetItemImageURL(s)
+	return ic
+}
+
+// SetNillableItemImageURL sets the "item_image_url" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableItemImageURL(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetItemImageURL(*s)
+	}
 	return ic
 }
 
@@ -111,9 +143,25 @@ func (ic *ItemCreate) SetCrawlerTitle(s string) *ItemCreate {
 	return ic
 }
 
+// SetNillableCrawlerTitle sets the "crawler_title" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerTitle(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerTitle(*s)
+	}
+	return ic
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (ic *ItemCreate) SetCrawlerAuthor(s string) *ItemCreate {
 	ic.mutation.SetCrawlerAuthor(s)
+	return ic
+}
+
+// SetNillableCrawlerAuthor sets the "crawler_author" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerAuthor(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerAuthor(*s)
+	}
 	return ic
 }
 
@@ -123,9 +171,25 @@ func (ic *ItemCreate) SetCrawlerExcerpt(s string) *ItemCreate {
 	return ic
 }
 
+// SetNillableCrawlerExcerpt sets the "crawler_excerpt" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerExcerpt(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerExcerpt(*s)
+	}
+	return ic
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (ic *ItemCreate) SetCrawlerSiteName(s string) *ItemCreate {
 	ic.mutation.SetCrawlerSiteName(s)
+	return ic
+}
+
+// SetNillableCrawlerSiteName sets the "crawler_site_name" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerSiteName(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerSiteName(*s)
+	}
 	return ic
 }
 
@@ -135,15 +199,39 @@ func (ic *ItemCreate) SetCrawlerImage(s string) *ItemCreate {
 	return ic
 }
 
+// SetNillableCrawlerImage sets the "crawler_image" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerImage(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerImage(*s)
+	}
+	return ic
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (ic *ItemCreate) SetCrawlerContentHTML(s string) *ItemCreate {
 	ic.mutation.SetCrawlerContentHTML(s)
 	return ic
 }
 
+// SetNillableCrawlerContentHTML sets the "crawler_content_html" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerContentHTML(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerContentHTML(*s)
+	}
+	return ic
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (ic *ItemCreate) SetCrawlerContentText(s string) *ItemCreate {
 	ic.mutation.SetCrawlerContentText(s)
+	return ic
+}
+
+// SetNillableCrawlerContentText sets the "crawler_content_text" field if the given value is not nil.
+func (ic *ItemCreate) SetNillableCrawlerContentText(s *string) *ItemCreate {
+	if s != nil {
+		ic.SetCrawlerContentText(*s)
+	}
 	return ic
 }
 
@@ -357,44 +445,11 @@ func (ic *ItemCreate) check() error {
 	if _, ok := ic.mutation.ItemPublished(); !ok {
 		return &ValidationError{Name: "item_published", err: errors.New(`ent: missing required field "Item.item_published"`)}
 	}
-	if _, ok := ic.mutation.ItemAuthorName(); !ok {
-		return &ValidationError{Name: "item_author_name", err: errors.New(`ent: missing required field "Item.item_author_name"`)}
-	}
-	if _, ok := ic.mutation.ItemAuthorEmail(); !ok {
-		return &ValidationError{Name: "item_author_email", err: errors.New(`ent: missing required field "Item.item_author_email"`)}
-	}
-	if _, ok := ic.mutation.ItemImageTitle(); !ok {
-		return &ValidationError{Name: "item_image_title", err: errors.New(`ent: missing required field "Item.item_image_title"`)}
-	}
-	if _, ok := ic.mutation.ItemImageURL(); !ok {
-		return &ValidationError{Name: "item_image_url", err: errors.New(`ent: missing required field "Item.item_image_url"`)}
-	}
 	if _, ok := ic.mutation.ItemCategories(); !ok {
 		return &ValidationError{Name: "item_categories", err: errors.New(`ent: missing required field "Item.item_categories"`)}
 	}
 	if _, ok := ic.mutation.ItemEnclosures(); !ok {
 		return &ValidationError{Name: "item_enclosures", err: errors.New(`ent: missing required field "Item.item_enclosures"`)}
-	}
-	if _, ok := ic.mutation.CrawlerTitle(); !ok {
-		return &ValidationError{Name: "crawler_title", err: errors.New(`ent: missing required field "Item.crawler_title"`)}
-	}
-	if _, ok := ic.mutation.CrawlerAuthor(); !ok {
-		return &ValidationError{Name: "crawler_author", err: errors.New(`ent: missing required field "Item.crawler_author"`)}
-	}
-	if _, ok := ic.mutation.CrawlerExcerpt(); !ok {
-		return &ValidationError{Name: "crawler_excerpt", err: errors.New(`ent: missing required field "Item.crawler_excerpt"`)}
-	}
-	if _, ok := ic.mutation.CrawlerSiteName(); !ok {
-		return &ValidationError{Name: "crawler_site_name", err: errors.New(`ent: missing required field "Item.crawler_site_name"`)}
-	}
-	if _, ok := ic.mutation.CrawlerImage(); !ok {
-		return &ValidationError{Name: "crawler_image", err: errors.New(`ent: missing required field "Item.crawler_image"`)}
-	}
-	if _, ok := ic.mutation.CrawlerContentHTML(); !ok {
-		return &ValidationError{Name: "crawler_content_html", err: errors.New(`ent: missing required field "Item.crawler_content_html"`)}
-	}
-	if _, ok := ic.mutation.CrawlerContentText(); !ok {
-		return &ValidationError{Name: "crawler_content_text", err: errors.New(`ent: missing required field "Item.crawler_content_text"`)}
 	}
 	if _, ok := ic.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Item.created_at"`)}
@@ -830,6 +885,12 @@ func (u *ItemUpsert) UpdateItemAuthorName() *ItemUpsert {
 	return u
 }
 
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (u *ItemUpsert) ClearItemAuthorName() *ItemUpsert {
+	u.SetNull(item.FieldItemAuthorName)
+	return u
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (u *ItemUpsert) SetItemAuthorEmail(v string) *ItemUpsert {
 	u.Set(item.FieldItemAuthorEmail, v)
@@ -839,6 +900,12 @@ func (u *ItemUpsert) SetItemAuthorEmail(v string) *ItemUpsert {
 // UpdateItemAuthorEmail sets the "item_author_email" field to the value that was provided on create.
 func (u *ItemUpsert) UpdateItemAuthorEmail() *ItemUpsert {
 	u.SetExcluded(item.FieldItemAuthorEmail)
+	return u
+}
+
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (u *ItemUpsert) ClearItemAuthorEmail() *ItemUpsert {
+	u.SetNull(item.FieldItemAuthorEmail)
 	return u
 }
 
@@ -854,6 +921,12 @@ func (u *ItemUpsert) UpdateItemImageTitle() *ItemUpsert {
 	return u
 }
 
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (u *ItemUpsert) ClearItemImageTitle() *ItemUpsert {
+	u.SetNull(item.FieldItemImageTitle)
+	return u
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (u *ItemUpsert) SetItemImageURL(v string) *ItemUpsert {
 	u.Set(item.FieldItemImageURL, v)
@@ -863,6 +936,12 @@ func (u *ItemUpsert) SetItemImageURL(v string) *ItemUpsert {
 // UpdateItemImageURL sets the "item_image_url" field to the value that was provided on create.
 func (u *ItemUpsert) UpdateItemImageURL() *ItemUpsert {
 	u.SetExcluded(item.FieldItemImageURL)
+	return u
+}
+
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (u *ItemUpsert) ClearItemImageURL() *ItemUpsert {
+	u.SetNull(item.FieldItemImageURL)
 	return u
 }
 
@@ -902,6 +981,12 @@ func (u *ItemUpsert) UpdateCrawlerTitle() *ItemUpsert {
 	return u
 }
 
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (u *ItemUpsert) ClearCrawlerTitle() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerTitle)
+	return u
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (u *ItemUpsert) SetCrawlerAuthor(v string) *ItemUpsert {
 	u.Set(item.FieldCrawlerAuthor, v)
@@ -911,6 +996,12 @@ func (u *ItemUpsert) SetCrawlerAuthor(v string) *ItemUpsert {
 // UpdateCrawlerAuthor sets the "crawler_author" field to the value that was provided on create.
 func (u *ItemUpsert) UpdateCrawlerAuthor() *ItemUpsert {
 	u.SetExcluded(item.FieldCrawlerAuthor)
+	return u
+}
+
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (u *ItemUpsert) ClearCrawlerAuthor() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerAuthor)
 	return u
 }
 
@@ -926,6 +1017,12 @@ func (u *ItemUpsert) UpdateCrawlerExcerpt() *ItemUpsert {
 	return u
 }
 
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (u *ItemUpsert) ClearCrawlerExcerpt() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerExcerpt)
+	return u
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (u *ItemUpsert) SetCrawlerSiteName(v string) *ItemUpsert {
 	u.Set(item.FieldCrawlerSiteName, v)
@@ -935,6 +1032,12 @@ func (u *ItemUpsert) SetCrawlerSiteName(v string) *ItemUpsert {
 // UpdateCrawlerSiteName sets the "crawler_site_name" field to the value that was provided on create.
 func (u *ItemUpsert) UpdateCrawlerSiteName() *ItemUpsert {
 	u.SetExcluded(item.FieldCrawlerSiteName)
+	return u
+}
+
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (u *ItemUpsert) ClearCrawlerSiteName() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerSiteName)
 	return u
 }
 
@@ -950,6 +1053,12 @@ func (u *ItemUpsert) UpdateCrawlerImage() *ItemUpsert {
 	return u
 }
 
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (u *ItemUpsert) ClearCrawlerImage() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerImage)
+	return u
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (u *ItemUpsert) SetCrawlerContentHTML(v string) *ItemUpsert {
 	u.Set(item.FieldCrawlerContentHTML, v)
@@ -962,6 +1071,12 @@ func (u *ItemUpsert) UpdateCrawlerContentHTML() *ItemUpsert {
 	return u
 }
 
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (u *ItemUpsert) ClearCrawlerContentHTML() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerContentHTML)
+	return u
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (u *ItemUpsert) SetCrawlerContentText(v string) *ItemUpsert {
 	u.Set(item.FieldCrawlerContentText, v)
@@ -971,6 +1086,12 @@ func (u *ItemUpsert) SetCrawlerContentText(v string) *ItemUpsert {
 // UpdateCrawlerContentText sets the "crawler_content_text" field to the value that was provided on create.
 func (u *ItemUpsert) UpdateCrawlerContentText() *ItemUpsert {
 	u.SetExcluded(item.FieldCrawlerContentText)
+	return u
+}
+
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (u *ItemUpsert) ClearCrawlerContentText() *ItemUpsert {
+	u.SetNull(item.FieldCrawlerContentText)
 	return u
 }
 
@@ -1160,6 +1281,13 @@ func (u *ItemUpsertOne) UpdateItemAuthorName() *ItemUpsertOne {
 	})
 }
 
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (u *ItemUpsertOne) ClearItemAuthorName() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemAuthorName()
+	})
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (u *ItemUpsertOne) SetItemAuthorEmail(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1171,6 +1299,13 @@ func (u *ItemUpsertOne) SetItemAuthorEmail(v string) *ItemUpsertOne {
 func (u *ItemUpsertOne) UpdateItemAuthorEmail() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateItemAuthorEmail()
+	})
+}
+
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (u *ItemUpsertOne) ClearItemAuthorEmail() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemAuthorEmail()
 	})
 }
 
@@ -1188,6 +1323,13 @@ func (u *ItemUpsertOne) UpdateItemImageTitle() *ItemUpsertOne {
 	})
 }
 
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (u *ItemUpsertOne) ClearItemImageTitle() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemImageTitle()
+	})
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (u *ItemUpsertOne) SetItemImageURL(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1199,6 +1341,13 @@ func (u *ItemUpsertOne) SetItemImageURL(v string) *ItemUpsertOne {
 func (u *ItemUpsertOne) UpdateItemImageURL() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateItemImageURL()
+	})
+}
+
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (u *ItemUpsertOne) ClearItemImageURL() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemImageURL()
 	})
 }
 
@@ -1244,6 +1393,13 @@ func (u *ItemUpsertOne) UpdateCrawlerTitle() *ItemUpsertOne {
 	})
 }
 
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (u *ItemUpsertOne) ClearCrawlerTitle() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerTitle()
+	})
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (u *ItemUpsertOne) SetCrawlerAuthor(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1255,6 +1411,13 @@ func (u *ItemUpsertOne) SetCrawlerAuthor(v string) *ItemUpsertOne {
 func (u *ItemUpsertOne) UpdateCrawlerAuthor() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerAuthor()
+	})
+}
+
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (u *ItemUpsertOne) ClearCrawlerAuthor() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerAuthor()
 	})
 }
 
@@ -1272,6 +1435,13 @@ func (u *ItemUpsertOne) UpdateCrawlerExcerpt() *ItemUpsertOne {
 	})
 }
 
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (u *ItemUpsertOne) ClearCrawlerExcerpt() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerExcerpt()
+	})
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (u *ItemUpsertOne) SetCrawlerSiteName(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1283,6 +1453,13 @@ func (u *ItemUpsertOne) SetCrawlerSiteName(v string) *ItemUpsertOne {
 func (u *ItemUpsertOne) UpdateCrawlerSiteName() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerSiteName()
+	})
+}
+
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (u *ItemUpsertOne) ClearCrawlerSiteName() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerSiteName()
 	})
 }
 
@@ -1300,6 +1477,13 @@ func (u *ItemUpsertOne) UpdateCrawlerImage() *ItemUpsertOne {
 	})
 }
 
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (u *ItemUpsertOne) ClearCrawlerImage() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerImage()
+	})
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (u *ItemUpsertOne) SetCrawlerContentHTML(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1314,6 +1498,13 @@ func (u *ItemUpsertOne) UpdateCrawlerContentHTML() *ItemUpsertOne {
 	})
 }
 
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (u *ItemUpsertOne) ClearCrawlerContentHTML() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerContentHTML()
+	})
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (u *ItemUpsertOne) SetCrawlerContentText(v string) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
@@ -1325,6 +1516,13 @@ func (u *ItemUpsertOne) SetCrawlerContentText(v string) *ItemUpsertOne {
 func (u *ItemUpsertOne) UpdateCrawlerContentText() *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerContentText()
+	})
+}
+
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (u *ItemUpsertOne) ClearCrawlerContentText() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerContentText()
 	})
 }
 
@@ -1684,6 +1882,13 @@ func (u *ItemUpsertBulk) UpdateItemAuthorName() *ItemUpsertBulk {
 	})
 }
 
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (u *ItemUpsertBulk) ClearItemAuthorName() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemAuthorName()
+	})
+}
+
 // SetItemAuthorEmail sets the "item_author_email" field.
 func (u *ItemUpsertBulk) SetItemAuthorEmail(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1695,6 +1900,13 @@ func (u *ItemUpsertBulk) SetItemAuthorEmail(v string) *ItemUpsertBulk {
 func (u *ItemUpsertBulk) UpdateItemAuthorEmail() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateItemAuthorEmail()
+	})
+}
+
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (u *ItemUpsertBulk) ClearItemAuthorEmail() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemAuthorEmail()
 	})
 }
 
@@ -1712,6 +1924,13 @@ func (u *ItemUpsertBulk) UpdateItemImageTitle() *ItemUpsertBulk {
 	})
 }
 
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (u *ItemUpsertBulk) ClearItemImageTitle() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemImageTitle()
+	})
+}
+
 // SetItemImageURL sets the "item_image_url" field.
 func (u *ItemUpsertBulk) SetItemImageURL(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1723,6 +1942,13 @@ func (u *ItemUpsertBulk) SetItemImageURL(v string) *ItemUpsertBulk {
 func (u *ItemUpsertBulk) UpdateItemImageURL() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateItemImageURL()
+	})
+}
+
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (u *ItemUpsertBulk) ClearItemImageURL() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearItemImageURL()
 	})
 }
 
@@ -1768,6 +1994,13 @@ func (u *ItemUpsertBulk) UpdateCrawlerTitle() *ItemUpsertBulk {
 	})
 }
 
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (u *ItemUpsertBulk) ClearCrawlerTitle() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerTitle()
+	})
+}
+
 // SetCrawlerAuthor sets the "crawler_author" field.
 func (u *ItemUpsertBulk) SetCrawlerAuthor(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1779,6 +2012,13 @@ func (u *ItemUpsertBulk) SetCrawlerAuthor(v string) *ItemUpsertBulk {
 func (u *ItemUpsertBulk) UpdateCrawlerAuthor() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerAuthor()
+	})
+}
+
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (u *ItemUpsertBulk) ClearCrawlerAuthor() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerAuthor()
 	})
 }
 
@@ -1796,6 +2036,13 @@ func (u *ItemUpsertBulk) UpdateCrawlerExcerpt() *ItemUpsertBulk {
 	})
 }
 
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (u *ItemUpsertBulk) ClearCrawlerExcerpt() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerExcerpt()
+	})
+}
+
 // SetCrawlerSiteName sets the "crawler_site_name" field.
 func (u *ItemUpsertBulk) SetCrawlerSiteName(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1807,6 +2054,13 @@ func (u *ItemUpsertBulk) SetCrawlerSiteName(v string) *ItemUpsertBulk {
 func (u *ItemUpsertBulk) UpdateCrawlerSiteName() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerSiteName()
+	})
+}
+
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (u *ItemUpsertBulk) ClearCrawlerSiteName() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerSiteName()
 	})
 }
 
@@ -1824,6 +2078,13 @@ func (u *ItemUpsertBulk) UpdateCrawlerImage() *ItemUpsertBulk {
 	})
 }
 
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (u *ItemUpsertBulk) ClearCrawlerImage() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerImage()
+	})
+}
+
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
 func (u *ItemUpsertBulk) SetCrawlerContentHTML(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1838,6 +2099,13 @@ func (u *ItemUpsertBulk) UpdateCrawlerContentHTML() *ItemUpsertBulk {
 	})
 }
 
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (u *ItemUpsertBulk) ClearCrawlerContentHTML() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerContentHTML()
+	})
+}
+
 // SetCrawlerContentText sets the "crawler_content_text" field.
 func (u *ItemUpsertBulk) SetCrawlerContentText(v string) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
@@ -1849,6 +2117,13 @@ func (u *ItemUpsertBulk) SetCrawlerContentText(v string) *ItemUpsertBulk {
 func (u *ItemUpsertBulk) UpdateCrawlerContentText() *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.UpdateCrawlerContentText()
+	})
+}
+
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (u *ItemUpsertBulk) ClearCrawlerContentText() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.ClearCrawlerContentText()
 	})
 }
 

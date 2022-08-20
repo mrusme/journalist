@@ -2165,9 +2165,22 @@ func (m *ItemMutation) OldItemAuthorName(ctx context.Context) (v string, err err
 	return oldValue.ItemAuthorName, nil
 }
 
+// ClearItemAuthorName clears the value of the "item_author_name" field.
+func (m *ItemMutation) ClearItemAuthorName() {
+	m.item_author_name = nil
+	m.clearedFields[item.FieldItemAuthorName] = struct{}{}
+}
+
+// ItemAuthorNameCleared returns if the "item_author_name" field was cleared in this mutation.
+func (m *ItemMutation) ItemAuthorNameCleared() bool {
+	_, ok := m.clearedFields[item.FieldItemAuthorName]
+	return ok
+}
+
 // ResetItemAuthorName resets all changes to the "item_author_name" field.
 func (m *ItemMutation) ResetItemAuthorName() {
 	m.item_author_name = nil
+	delete(m.clearedFields, item.FieldItemAuthorName)
 }
 
 // SetItemAuthorEmail sets the "item_author_email" field.
@@ -2201,9 +2214,22 @@ func (m *ItemMutation) OldItemAuthorEmail(ctx context.Context) (v string, err er
 	return oldValue.ItemAuthorEmail, nil
 }
 
+// ClearItemAuthorEmail clears the value of the "item_author_email" field.
+func (m *ItemMutation) ClearItemAuthorEmail() {
+	m.item_author_email = nil
+	m.clearedFields[item.FieldItemAuthorEmail] = struct{}{}
+}
+
+// ItemAuthorEmailCleared returns if the "item_author_email" field was cleared in this mutation.
+func (m *ItemMutation) ItemAuthorEmailCleared() bool {
+	_, ok := m.clearedFields[item.FieldItemAuthorEmail]
+	return ok
+}
+
 // ResetItemAuthorEmail resets all changes to the "item_author_email" field.
 func (m *ItemMutation) ResetItemAuthorEmail() {
 	m.item_author_email = nil
+	delete(m.clearedFields, item.FieldItemAuthorEmail)
 }
 
 // SetItemImageTitle sets the "item_image_title" field.
@@ -2237,9 +2263,22 @@ func (m *ItemMutation) OldItemImageTitle(ctx context.Context) (v string, err err
 	return oldValue.ItemImageTitle, nil
 }
 
+// ClearItemImageTitle clears the value of the "item_image_title" field.
+func (m *ItemMutation) ClearItemImageTitle() {
+	m.item_image_title = nil
+	m.clearedFields[item.FieldItemImageTitle] = struct{}{}
+}
+
+// ItemImageTitleCleared returns if the "item_image_title" field was cleared in this mutation.
+func (m *ItemMutation) ItemImageTitleCleared() bool {
+	_, ok := m.clearedFields[item.FieldItemImageTitle]
+	return ok
+}
+
 // ResetItemImageTitle resets all changes to the "item_image_title" field.
 func (m *ItemMutation) ResetItemImageTitle() {
 	m.item_image_title = nil
+	delete(m.clearedFields, item.FieldItemImageTitle)
 }
 
 // SetItemImageURL sets the "item_image_url" field.
@@ -2273,9 +2312,22 @@ func (m *ItemMutation) OldItemImageURL(ctx context.Context) (v string, err error
 	return oldValue.ItemImageURL, nil
 }
 
+// ClearItemImageURL clears the value of the "item_image_url" field.
+func (m *ItemMutation) ClearItemImageURL() {
+	m.item_image_url = nil
+	m.clearedFields[item.FieldItemImageURL] = struct{}{}
+}
+
+// ItemImageURLCleared returns if the "item_image_url" field was cleared in this mutation.
+func (m *ItemMutation) ItemImageURLCleared() bool {
+	_, ok := m.clearedFields[item.FieldItemImageURL]
+	return ok
+}
+
 // ResetItemImageURL resets all changes to the "item_image_url" field.
 func (m *ItemMutation) ResetItemImageURL() {
 	m.item_image_url = nil
+	delete(m.clearedFields, item.FieldItemImageURL)
 }
 
 // SetItemCategories sets the "item_categories" field.
@@ -2381,9 +2433,22 @@ func (m *ItemMutation) OldCrawlerTitle(ctx context.Context) (v string, err error
 	return oldValue.CrawlerTitle, nil
 }
 
+// ClearCrawlerTitle clears the value of the "crawler_title" field.
+func (m *ItemMutation) ClearCrawlerTitle() {
+	m.crawler_title = nil
+	m.clearedFields[item.FieldCrawlerTitle] = struct{}{}
+}
+
+// CrawlerTitleCleared returns if the "crawler_title" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerTitleCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerTitle]
+	return ok
+}
+
 // ResetCrawlerTitle resets all changes to the "crawler_title" field.
 func (m *ItemMutation) ResetCrawlerTitle() {
 	m.crawler_title = nil
+	delete(m.clearedFields, item.FieldCrawlerTitle)
 }
 
 // SetCrawlerAuthor sets the "crawler_author" field.
@@ -2417,9 +2482,22 @@ func (m *ItemMutation) OldCrawlerAuthor(ctx context.Context) (v string, err erro
 	return oldValue.CrawlerAuthor, nil
 }
 
+// ClearCrawlerAuthor clears the value of the "crawler_author" field.
+func (m *ItemMutation) ClearCrawlerAuthor() {
+	m.crawler_author = nil
+	m.clearedFields[item.FieldCrawlerAuthor] = struct{}{}
+}
+
+// CrawlerAuthorCleared returns if the "crawler_author" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerAuthorCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerAuthor]
+	return ok
+}
+
 // ResetCrawlerAuthor resets all changes to the "crawler_author" field.
 func (m *ItemMutation) ResetCrawlerAuthor() {
 	m.crawler_author = nil
+	delete(m.clearedFields, item.FieldCrawlerAuthor)
 }
 
 // SetCrawlerExcerpt sets the "crawler_excerpt" field.
@@ -2453,9 +2531,22 @@ func (m *ItemMutation) OldCrawlerExcerpt(ctx context.Context) (v string, err err
 	return oldValue.CrawlerExcerpt, nil
 }
 
+// ClearCrawlerExcerpt clears the value of the "crawler_excerpt" field.
+func (m *ItemMutation) ClearCrawlerExcerpt() {
+	m.crawler_excerpt = nil
+	m.clearedFields[item.FieldCrawlerExcerpt] = struct{}{}
+}
+
+// CrawlerExcerptCleared returns if the "crawler_excerpt" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerExcerptCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerExcerpt]
+	return ok
+}
+
 // ResetCrawlerExcerpt resets all changes to the "crawler_excerpt" field.
 func (m *ItemMutation) ResetCrawlerExcerpt() {
 	m.crawler_excerpt = nil
+	delete(m.clearedFields, item.FieldCrawlerExcerpt)
 }
 
 // SetCrawlerSiteName sets the "crawler_site_name" field.
@@ -2489,9 +2580,22 @@ func (m *ItemMutation) OldCrawlerSiteName(ctx context.Context) (v string, err er
 	return oldValue.CrawlerSiteName, nil
 }
 
+// ClearCrawlerSiteName clears the value of the "crawler_site_name" field.
+func (m *ItemMutation) ClearCrawlerSiteName() {
+	m.crawler_site_name = nil
+	m.clearedFields[item.FieldCrawlerSiteName] = struct{}{}
+}
+
+// CrawlerSiteNameCleared returns if the "crawler_site_name" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerSiteNameCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerSiteName]
+	return ok
+}
+
 // ResetCrawlerSiteName resets all changes to the "crawler_site_name" field.
 func (m *ItemMutation) ResetCrawlerSiteName() {
 	m.crawler_site_name = nil
+	delete(m.clearedFields, item.FieldCrawlerSiteName)
 }
 
 // SetCrawlerImage sets the "crawler_image" field.
@@ -2525,9 +2629,22 @@ func (m *ItemMutation) OldCrawlerImage(ctx context.Context) (v string, err error
 	return oldValue.CrawlerImage, nil
 }
 
+// ClearCrawlerImage clears the value of the "crawler_image" field.
+func (m *ItemMutation) ClearCrawlerImage() {
+	m.crawler_image = nil
+	m.clearedFields[item.FieldCrawlerImage] = struct{}{}
+}
+
+// CrawlerImageCleared returns if the "crawler_image" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerImageCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerImage]
+	return ok
+}
+
 // ResetCrawlerImage resets all changes to the "crawler_image" field.
 func (m *ItemMutation) ResetCrawlerImage() {
 	m.crawler_image = nil
+	delete(m.clearedFields, item.FieldCrawlerImage)
 }
 
 // SetCrawlerContentHTML sets the "crawler_content_html" field.
@@ -2561,9 +2678,22 @@ func (m *ItemMutation) OldCrawlerContentHTML(ctx context.Context) (v string, err
 	return oldValue.CrawlerContentHTML, nil
 }
 
+// ClearCrawlerContentHTML clears the value of the "crawler_content_html" field.
+func (m *ItemMutation) ClearCrawlerContentHTML() {
+	m.crawler_content_html = nil
+	m.clearedFields[item.FieldCrawlerContentHTML] = struct{}{}
+}
+
+// CrawlerContentHTMLCleared returns if the "crawler_content_html" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerContentHTMLCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerContentHTML]
+	return ok
+}
+
 // ResetCrawlerContentHTML resets all changes to the "crawler_content_html" field.
 func (m *ItemMutation) ResetCrawlerContentHTML() {
 	m.crawler_content_html = nil
+	delete(m.clearedFields, item.FieldCrawlerContentHTML)
 }
 
 // SetCrawlerContentText sets the "crawler_content_text" field.
@@ -2597,9 +2727,22 @@ func (m *ItemMutation) OldCrawlerContentText(ctx context.Context) (v string, err
 	return oldValue.CrawlerContentText, nil
 }
 
+// ClearCrawlerContentText clears the value of the "crawler_content_text" field.
+func (m *ItemMutation) ClearCrawlerContentText() {
+	m.crawler_content_text = nil
+	m.clearedFields[item.FieldCrawlerContentText] = struct{}{}
+}
+
+// CrawlerContentTextCleared returns if the "crawler_content_text" field was cleared in this mutation.
+func (m *ItemMutation) CrawlerContentTextCleared() bool {
+	_, ok := m.clearedFields[item.FieldCrawlerContentText]
+	return ok
+}
+
 // ResetCrawlerContentText resets all changes to the "crawler_content_text" field.
 func (m *ItemMutation) ResetCrawlerContentText() {
 	m.crawler_content_text = nil
+	delete(m.clearedFields, item.FieldCrawlerContentText)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -3204,7 +3347,41 @@ func (m *ItemMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ItemMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(item.FieldItemAuthorName) {
+		fields = append(fields, item.FieldItemAuthorName)
+	}
+	if m.FieldCleared(item.FieldItemAuthorEmail) {
+		fields = append(fields, item.FieldItemAuthorEmail)
+	}
+	if m.FieldCleared(item.FieldItemImageTitle) {
+		fields = append(fields, item.FieldItemImageTitle)
+	}
+	if m.FieldCleared(item.FieldItemImageURL) {
+		fields = append(fields, item.FieldItemImageURL)
+	}
+	if m.FieldCleared(item.FieldCrawlerTitle) {
+		fields = append(fields, item.FieldCrawlerTitle)
+	}
+	if m.FieldCleared(item.FieldCrawlerAuthor) {
+		fields = append(fields, item.FieldCrawlerAuthor)
+	}
+	if m.FieldCleared(item.FieldCrawlerExcerpt) {
+		fields = append(fields, item.FieldCrawlerExcerpt)
+	}
+	if m.FieldCleared(item.FieldCrawlerSiteName) {
+		fields = append(fields, item.FieldCrawlerSiteName)
+	}
+	if m.FieldCleared(item.FieldCrawlerImage) {
+		fields = append(fields, item.FieldCrawlerImage)
+	}
+	if m.FieldCleared(item.FieldCrawlerContentHTML) {
+		fields = append(fields, item.FieldCrawlerContentHTML)
+	}
+	if m.FieldCleared(item.FieldCrawlerContentText) {
+		fields = append(fields, item.FieldCrawlerContentText)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3217,6 +3394,41 @@ func (m *ItemMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ItemMutation) ClearField(name string) error {
+	switch name {
+	case item.FieldItemAuthorName:
+		m.ClearItemAuthorName()
+		return nil
+	case item.FieldItemAuthorEmail:
+		m.ClearItemAuthorEmail()
+		return nil
+	case item.FieldItemImageTitle:
+		m.ClearItemImageTitle()
+		return nil
+	case item.FieldItemImageURL:
+		m.ClearItemImageURL()
+		return nil
+	case item.FieldCrawlerTitle:
+		m.ClearCrawlerTitle()
+		return nil
+	case item.FieldCrawlerAuthor:
+		m.ClearCrawlerAuthor()
+		return nil
+	case item.FieldCrawlerExcerpt:
+		m.ClearCrawlerExcerpt()
+		return nil
+	case item.FieldCrawlerSiteName:
+		m.ClearCrawlerSiteName()
+		return nil
+	case item.FieldCrawlerImage:
+		m.ClearCrawlerImage()
+		return nil
+	case item.FieldCrawlerContentHTML:
+		m.ClearCrawlerContentHTML()
+		return nil
+	case item.FieldCrawlerContentText:
+		m.ClearCrawlerContentText()
+		return nil
+	}
 	return fmt.Errorf("unknown Item nullable field %s", name)
 }
 
