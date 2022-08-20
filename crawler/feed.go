@@ -14,6 +14,10 @@ func (c *Crawler) GetFeedLink() (string, string, error) {
     return "", "", errors.New("No source available!")
   }
 
+  if err := c.FromAuto(); err != nil {
+    return "", "", nil
+  }
+
   if c.contentType == "" {
     if err := c.Detect(); err != nil {
       return "", "", err

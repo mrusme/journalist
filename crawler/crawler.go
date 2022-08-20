@@ -15,15 +15,16 @@ import (
 )
 
 type Crawler struct {
-  source         io.ReadCloser
-  sourceLocation string
+  source            io.ReadCloser
+  sourceLocation    string
+  sourceLocationUrl *url.URL
 
-  UserAgent      string
+  UserAgent         string
 
-  username       string
-  password       string
+  username          string
+  password          string
 
-  contentType    string
+  contentType       string
 }
 
 func New() (*Crawler) {
@@ -44,6 +45,7 @@ func (c *Crawler) Close() {
 func (c *Crawler) Reset() {
   c.Close()
   c.sourceLocation = ""
+  c.sourceLocationUrl = nil
 
   c.UserAgent =
     "Mozilla/5.0 AppleWebKit/537.36 " +
@@ -56,8 +58,18 @@ func (c *Crawler) Reset() {
   c.contentType = ""
 }
 
-func (c *Crawler) SetLocation(sourceLocation string) {
+func (c *Crawler) SetLocation(sourceLocation string) (error) {
+  var urlUrl *url.URL
+
+  urlUrl, err := url.Parse(sourceLocation)
+  if err != nil {
+    return err
+  }
+
   c.sourceLocation = sourceLocation
+  c.sourceLocationUrl = urlUrl
+
+  return nil
 }
 
 func (c *Crawler) SetBasicAuth(username string, password string) {
@@ -66,27 +78,29 @@ func (c *Crawler) SetBasicAuth(username string, password string) {
 }
 
 func (c *Crawler) GetReadable() (string, string, error) {
-  var urlUrl *url.URL
-  var err error
+  if err := c.FromAuto(); err != nil {
+    return "", "", err
+  }
 
-  urlUrl, err = url.Parse(c.sourceLocation)
+  article, err := readability.FromReader(c.source, c.sourceLocationUrl)
   if err != nil {
     return "", "", err
   }
 
-  switch(urlUrl.Scheme) {
+  return article.Title, article.Content, nil
+}
+
+func (c *Crawler) FromAuto() (error) {
+  var err error
+
+  switch(c.sourceLocationUrl.Scheme) {
   case "http", "https":
     err = c.FromHTTP()
   default:
     err = c.FromFile()
   }
 
-  article, err := readability.FromReader(c.source, urlUrl)
-  if err != nil {
-    return "", "", err
-  }
-
-  return article.Title, article.Content, nil
+  return err
 }
 
 func (c *Crawler) FromHTTP() (error) {

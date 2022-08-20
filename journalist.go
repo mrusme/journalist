@@ -17,7 +17,6 @@ import (
 	"github.com/mrusme/journalist/ent/user"
 
 	"github.com/mrusme/journalist/api"
-	"github.com/mrusme/journalist/crawler"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -82,15 +81,6 @@ func main() {
   appBindIp := os.Getenv("JOURNALIST_SERVER_BINDIP")
   appPort := os.Getenv("JOURNALIST_SERVER_PORT")
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
-
-  crwlr := crawler.New()
-  crwlr.SetLocation("https://xn--gckvb8fzb.com/index.xml")
-  crwlr.FromHTTP()
-  crwlr.Detect()
-  log.Printf("Content type: %s", crwlr.GetContentType())
-  fT, fH, _ := crwlr.GetFeedLink()
-  crwlr.Close()
-  log.Printf("%s: %s\n", fT, fH)
 
   if functionName == "" {
     if appBindIp == "" {

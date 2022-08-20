@@ -15,8 +15,10 @@ type FeedShowModel struct {
 }
 
 type FeedCreateModel struct {
-  URL               string        `json:"url",validate:"required,url"`
   Name              string        `json:"name",validate:"optional,alphanum,max=32"`
+  URL               string        `json:"url",validate:"required,url"`
+  Username          string        `json:"username",validate:"optional,required_with=password"`
+  Password          string        `json:"password",validate:"optional,required_with=username"`
 }
 
 type FeedUpdateModel struct {
