@@ -8,6 +8,8 @@ user1_id=""
 user1_user="user1"
 user1_pass="p4sS!"
 
+feed1_url="https://xn--gckvb8fzb.com"
+
 perform() {
   action=$(printf "%s" "$1" | tr '[:lower:]' '[:upper:]')
   # "on"=$2
@@ -43,10 +45,10 @@ perform() {
 failfast() {
   if [ "$1" -ne "0" ]
   then
-    printf "  FAILED: %s\n" "$2"
+    printf "   FAILED: %s\n" "$2"
     exit "$1"
   else
-    printf "  SUCCESS\n"
+    printf "   SUCCESS\n"
   fi
 }
 
@@ -130,6 +132,26 @@ out=$(
        as $admin_user $admin_pass \
      with "{
        \"role\": \"user\"
+     }"
+)
+failfast $? "$out"
+#------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Creating feed as %s with URL %s \
+\n" "$user1_user" "$feed1_url"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
+out=$(
+  perform post \
+       on feeds \
+       as $user1_user $user1_pass \
+     with "{
+       \"name\": \"xn--gckvb8fzb.com\",
+       \"url\": \"$feed1_url\",
+       \"group\": \"Journals\"
      }"
 )
 failfast $? "$out"

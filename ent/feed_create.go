@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
@@ -22,6 +24,7 @@ type FeedCreate struct {
 	config
 	mutation *FeedMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetURL sets the "url" field.
@@ -415,6 +418,7 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.OnConflict = fc.conflict
 	if id, ok := fc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -638,10 +642,683 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Feed.Create().
+//		SetURL(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.FeedUpsert) {
+//			SetURL(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (fc *FeedCreate) OnConflict(opts ...sql.ConflictOption) *FeedUpsertOne {
+	fc.conflict = opts
+	return &FeedUpsertOne{
+		create: fc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Feed.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (fc *FeedCreate) OnConflictColumns(columns ...string) *FeedUpsertOne {
+	fc.conflict = append(fc.conflict, sql.ConflictColumns(columns...))
+	return &FeedUpsertOne{
+		create: fc,
+	}
+}
+
+type (
+	// FeedUpsertOne is the builder for "upsert"-ing
+	//  one Feed node.
+	FeedUpsertOne struct {
+		create *FeedCreate
+	}
+
+	// FeedUpsert is the "OnConflict" setter.
+	FeedUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetURL sets the "url" field.
+func (u *FeedUpsert) SetURL(v string) *FeedUpsert {
+	u.Set(feed.FieldURL, v)
+	return u
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateURL() *FeedUpsert {
+	u.SetExcluded(feed.FieldURL)
+	return u
+}
+
+// SetUsername sets the "username" field.
+func (u *FeedUpsert) SetUsername(v string) *FeedUpsert {
+	u.Set(feed.FieldUsername, v)
+	return u
+}
+
+// UpdateUsername sets the "username" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateUsername() *FeedUpsert {
+	u.SetExcluded(feed.FieldUsername)
+	return u
+}
+
+// ClearUsername clears the value of the "username" field.
+func (u *FeedUpsert) ClearUsername() *FeedUpsert {
+	u.SetNull(feed.FieldUsername)
+	return u
+}
+
+// SetPassword sets the "password" field.
+func (u *FeedUpsert) SetPassword(v string) *FeedUpsert {
+	u.Set(feed.FieldPassword, v)
+	return u
+}
+
+// UpdatePassword sets the "password" field to the value that was provided on create.
+func (u *FeedUpsert) UpdatePassword() *FeedUpsert {
+	u.SetExcluded(feed.FieldPassword)
+	return u
+}
+
+// ClearPassword clears the value of the "password" field.
+func (u *FeedUpsert) ClearPassword() *FeedUpsert {
+	u.SetNull(feed.FieldPassword)
+	return u
+}
+
+// SetFeedTitle sets the "feed_title" field.
+func (u *FeedUpsert) SetFeedTitle(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedTitle, v)
+	return u
+}
+
+// UpdateFeedTitle sets the "feed_title" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedTitle() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedTitle)
+	return u
+}
+
+// SetFeedDescription sets the "feed_description" field.
+func (u *FeedUpsert) SetFeedDescription(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedDescription, v)
+	return u
+}
+
+// UpdateFeedDescription sets the "feed_description" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedDescription() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedDescription)
+	return u
+}
+
+// SetFeedLink sets the "feed_link" field.
+func (u *FeedUpsert) SetFeedLink(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedLink, v)
+	return u
+}
+
+// UpdateFeedLink sets the "feed_link" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedLink() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedLink)
+	return u
+}
+
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (u *FeedUpsert) SetFeedFeedLink(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedFeedLink, v)
+	return u
+}
+
+// UpdateFeedFeedLink sets the "feed_feed_link" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedFeedLink() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedFeedLink)
+	return u
+}
+
+// SetFeedUpdated sets the "feed_updated" field.
+func (u *FeedUpsert) SetFeedUpdated(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedUpdated, v)
+	return u
+}
+
+// UpdateFeedUpdated sets the "feed_updated" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedUpdated() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedUpdated)
+	return u
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (u *FeedUpsert) SetFeedPublished(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedPublished, v)
+	return u
+}
+
+// UpdateFeedPublished sets the "feed_published" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedPublished() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedPublished)
+	return u
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (u *FeedUpsert) SetFeedAuthor(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedAuthor, v)
+	return u
+}
+
+// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedAuthor() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedAuthor)
+	return u
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (u *FeedUpsert) SetFeedAuthors(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedAuthors, v)
+	return u
+}
+
+// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedAuthors() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedAuthors)
+	return u
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (u *FeedUpsert) SetFeedLanguage(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedLanguage, v)
+	return u
+}
+
+// UpdateFeedLanguage sets the "feed_language" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedLanguage() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedLanguage)
+	return u
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (u *FeedUpsert) SetFeedImage(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedImage, v)
+	return u
+}
+
+// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedImage() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedImage)
+	return u
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (u *FeedUpsert) SetFeedCopyright(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedCopyright, v)
+	return u
+}
+
+// UpdateFeedCopyright sets the "feed_copyright" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedCopyright() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedCopyright)
+	return u
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (u *FeedUpsert) SetFeedGenerator(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedGenerator, v)
+	return u
+}
+
+// UpdateFeedGenerator sets the "feed_generator" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedGenerator() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedGenerator)
+	return u
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (u *FeedUpsert) SetFeedCategories(v string) *FeedUpsert {
+	u.Set(feed.FieldFeedCategories, v)
+	return u
+}
+
+// UpdateFeedCategories sets the "feed_categories" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateFeedCategories() *FeedUpsert {
+	u.SetExcluded(feed.FieldFeedCategories)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *FeedUpsert) SetCreatedAt(v time.Time) *FeedUpsert {
+	u.Set(feed.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateCreatedAt() *FeedUpsert {
+	u.SetExcluded(feed.FieldCreatedAt)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *FeedUpsert) SetUpdatedAt(v time.Time) *FeedUpsert {
+	u.Set(feed.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateUpdatedAt() *FeedUpsert {
+	u.SetExcluded(feed.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *FeedUpsert) SetDeletedAt(v time.Time) *FeedUpsert {
+	u.Set(feed.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *FeedUpsert) UpdateDeletedAt() *FeedUpsert {
+	u.SetExcluded(feed.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *FeedUpsert) ClearDeletedAt() *FeedUpsert {
+	u.SetNull(feed.FieldDeletedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Feed.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(feed.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *FeedUpsertOne) UpdateNewValues() *FeedUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(feed.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//  client.Feed.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
+func (u *FeedUpsertOne) Ignore() *FeedUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *FeedUpsertOne) DoNothing() *FeedUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the FeedCreate.OnConflict
+// documentation for more info.
+func (u *FeedUpsertOne) Update(set func(*FeedUpsert)) *FeedUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&FeedUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetURL sets the "url" field.
+func (u *FeedUpsertOne) SetURL(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetURL(v)
+	})
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateURL() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateURL()
+	})
+}
+
+// SetUsername sets the "username" field.
+func (u *FeedUpsertOne) SetUsername(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetUsername(v)
+	})
+}
+
+// UpdateUsername sets the "username" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateUsername() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateUsername()
+	})
+}
+
+// ClearUsername clears the value of the "username" field.
+func (u *FeedUpsertOne) ClearUsername() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearUsername()
+	})
+}
+
+// SetPassword sets the "password" field.
+func (u *FeedUpsertOne) SetPassword(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetPassword(v)
+	})
+}
+
+// UpdatePassword sets the "password" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdatePassword() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdatePassword()
+	})
+}
+
+// ClearPassword clears the value of the "password" field.
+func (u *FeedUpsertOne) ClearPassword() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearPassword()
+	})
+}
+
+// SetFeedTitle sets the "feed_title" field.
+func (u *FeedUpsertOne) SetFeedTitle(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedTitle(v)
+	})
+}
+
+// UpdateFeedTitle sets the "feed_title" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedTitle() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedTitle()
+	})
+}
+
+// SetFeedDescription sets the "feed_description" field.
+func (u *FeedUpsertOne) SetFeedDescription(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedDescription(v)
+	})
+}
+
+// UpdateFeedDescription sets the "feed_description" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedDescription() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedDescription()
+	})
+}
+
+// SetFeedLink sets the "feed_link" field.
+func (u *FeedUpsertOne) SetFeedLink(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedLink(v)
+	})
+}
+
+// UpdateFeedLink sets the "feed_link" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedLink() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedLink()
+	})
+}
+
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (u *FeedUpsertOne) SetFeedFeedLink(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedFeedLink(v)
+	})
+}
+
+// UpdateFeedFeedLink sets the "feed_feed_link" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedFeedLink() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedFeedLink()
+	})
+}
+
+// SetFeedUpdated sets the "feed_updated" field.
+func (u *FeedUpsertOne) SetFeedUpdated(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedUpdated(v)
+	})
+}
+
+// UpdateFeedUpdated sets the "feed_updated" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedUpdated() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedUpdated()
+	})
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (u *FeedUpsertOne) SetFeedPublished(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedPublished(v)
+	})
+}
+
+// UpdateFeedPublished sets the "feed_published" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedPublished() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedPublished()
+	})
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (u *FeedUpsertOne) SetFeedAuthor(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedAuthor(v)
+	})
+}
+
+// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedAuthor() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthor()
+	})
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (u *FeedUpsertOne) SetFeedAuthors(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedAuthors(v)
+	})
+}
+
+// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedAuthors() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthors()
+	})
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (u *FeedUpsertOne) SetFeedLanguage(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedLanguage(v)
+	})
+}
+
+// UpdateFeedLanguage sets the "feed_language" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedLanguage() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedLanguage()
+	})
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (u *FeedUpsertOne) SetFeedImage(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedImage(v)
+	})
+}
+
+// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedImage() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedImage()
+	})
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (u *FeedUpsertOne) SetFeedCopyright(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedCopyright(v)
+	})
+}
+
+// UpdateFeedCopyright sets the "feed_copyright" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedCopyright() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedCopyright()
+	})
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (u *FeedUpsertOne) SetFeedGenerator(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedGenerator(v)
+	})
+}
+
+// UpdateFeedGenerator sets the "feed_generator" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedGenerator() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedGenerator()
+	})
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (u *FeedUpsertOne) SetFeedCategories(v string) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedCategories(v)
+	})
+}
+
+// UpdateFeedCategories sets the "feed_categories" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateFeedCategories() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedCategories()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *FeedUpsertOne) SetCreatedAt(v time.Time) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateCreatedAt() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *FeedUpsertOne) SetUpdatedAt(v time.Time) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateUpdatedAt() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *FeedUpsertOne) SetDeletedAt(v time.Time) *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *FeedUpsertOne) UpdateDeletedAt() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *FeedUpsertOne) ClearDeletedAt() *FeedUpsertOne {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *FeedUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for FeedCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *FeedUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *FeedUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: FeedUpsertOne.ID is not supported by MySQL driver. Use FeedUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *FeedUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // FeedCreateBulk is the builder for creating many Feed entities in bulk.
 type FeedCreateBulk struct {
 	config
 	builders []*FeedCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Feed entities in the database.
@@ -668,6 +1345,7 @@ func (fcb *FeedCreateBulk) Save(ctx context.Context) ([]*Feed, error) {
 					_, err = mutators[i+1].Mutate(root, fcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = fcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, fcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -714,6 +1392,409 @@ func (fcb *FeedCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (fcb *FeedCreateBulk) ExecX(ctx context.Context) {
 	if err := fcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Feed.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.FeedUpsert) {
+//			SetURL(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (fcb *FeedCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeedUpsertBulk {
+	fcb.conflict = opts
+	return &FeedUpsertBulk{
+		create: fcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Feed.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (fcb *FeedCreateBulk) OnConflictColumns(columns ...string) *FeedUpsertBulk {
+	fcb.conflict = append(fcb.conflict, sql.ConflictColumns(columns...))
+	return &FeedUpsertBulk{
+		create: fcb,
+	}
+}
+
+// FeedUpsertBulk is the builder for "upsert"-ing
+// a bulk of Feed nodes.
+type FeedUpsertBulk struct {
+	create *FeedCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Feed.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(feed.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *FeedUpsertBulk) UpdateNewValues() *FeedUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(feed.FieldID)
+				return
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Feed.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+//
+func (u *FeedUpsertBulk) Ignore() *FeedUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *FeedUpsertBulk) DoNothing() *FeedUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the FeedCreateBulk.OnConflict
+// documentation for more info.
+func (u *FeedUpsertBulk) Update(set func(*FeedUpsert)) *FeedUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&FeedUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetURL sets the "url" field.
+func (u *FeedUpsertBulk) SetURL(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetURL(v)
+	})
+}
+
+// UpdateURL sets the "url" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateURL() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateURL()
+	})
+}
+
+// SetUsername sets the "username" field.
+func (u *FeedUpsertBulk) SetUsername(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetUsername(v)
+	})
+}
+
+// UpdateUsername sets the "username" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateUsername() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateUsername()
+	})
+}
+
+// ClearUsername clears the value of the "username" field.
+func (u *FeedUpsertBulk) ClearUsername() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearUsername()
+	})
+}
+
+// SetPassword sets the "password" field.
+func (u *FeedUpsertBulk) SetPassword(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetPassword(v)
+	})
+}
+
+// UpdatePassword sets the "password" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdatePassword() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdatePassword()
+	})
+}
+
+// ClearPassword clears the value of the "password" field.
+func (u *FeedUpsertBulk) ClearPassword() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearPassword()
+	})
+}
+
+// SetFeedTitle sets the "feed_title" field.
+func (u *FeedUpsertBulk) SetFeedTitle(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedTitle(v)
+	})
+}
+
+// UpdateFeedTitle sets the "feed_title" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedTitle() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedTitle()
+	})
+}
+
+// SetFeedDescription sets the "feed_description" field.
+func (u *FeedUpsertBulk) SetFeedDescription(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedDescription(v)
+	})
+}
+
+// UpdateFeedDescription sets the "feed_description" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedDescription() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedDescription()
+	})
+}
+
+// SetFeedLink sets the "feed_link" field.
+func (u *FeedUpsertBulk) SetFeedLink(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedLink(v)
+	})
+}
+
+// UpdateFeedLink sets the "feed_link" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedLink() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedLink()
+	})
+}
+
+// SetFeedFeedLink sets the "feed_feed_link" field.
+func (u *FeedUpsertBulk) SetFeedFeedLink(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedFeedLink(v)
+	})
+}
+
+// UpdateFeedFeedLink sets the "feed_feed_link" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedFeedLink() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedFeedLink()
+	})
+}
+
+// SetFeedUpdated sets the "feed_updated" field.
+func (u *FeedUpsertBulk) SetFeedUpdated(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedUpdated(v)
+	})
+}
+
+// UpdateFeedUpdated sets the "feed_updated" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedUpdated() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedUpdated()
+	})
+}
+
+// SetFeedPublished sets the "feed_published" field.
+func (u *FeedUpsertBulk) SetFeedPublished(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedPublished(v)
+	})
+}
+
+// UpdateFeedPublished sets the "feed_published" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedPublished() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedPublished()
+	})
+}
+
+// SetFeedAuthor sets the "feed_author" field.
+func (u *FeedUpsertBulk) SetFeedAuthor(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedAuthor(v)
+	})
+}
+
+// UpdateFeedAuthor sets the "feed_author" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedAuthor() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthor()
+	})
+}
+
+// SetFeedAuthors sets the "feed_authors" field.
+func (u *FeedUpsertBulk) SetFeedAuthors(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedAuthors(v)
+	})
+}
+
+// UpdateFeedAuthors sets the "feed_authors" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedAuthors() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedAuthors()
+	})
+}
+
+// SetFeedLanguage sets the "feed_language" field.
+func (u *FeedUpsertBulk) SetFeedLanguage(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedLanguage(v)
+	})
+}
+
+// UpdateFeedLanguage sets the "feed_language" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedLanguage() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedLanguage()
+	})
+}
+
+// SetFeedImage sets the "feed_image" field.
+func (u *FeedUpsertBulk) SetFeedImage(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedImage(v)
+	})
+}
+
+// UpdateFeedImage sets the "feed_image" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedImage() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedImage()
+	})
+}
+
+// SetFeedCopyright sets the "feed_copyright" field.
+func (u *FeedUpsertBulk) SetFeedCopyright(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedCopyright(v)
+	})
+}
+
+// UpdateFeedCopyright sets the "feed_copyright" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedCopyright() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedCopyright()
+	})
+}
+
+// SetFeedGenerator sets the "feed_generator" field.
+func (u *FeedUpsertBulk) SetFeedGenerator(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedGenerator(v)
+	})
+}
+
+// UpdateFeedGenerator sets the "feed_generator" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedGenerator() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedGenerator()
+	})
+}
+
+// SetFeedCategories sets the "feed_categories" field.
+func (u *FeedUpsertBulk) SetFeedCategories(v string) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetFeedCategories(v)
+	})
+}
+
+// UpdateFeedCategories sets the "feed_categories" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateFeedCategories() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateFeedCategories()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *FeedUpsertBulk) SetCreatedAt(v time.Time) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateCreatedAt() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *FeedUpsertBulk) SetUpdatedAt(v time.Time) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateUpdatedAt() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *FeedUpsertBulk) SetDeletedAt(v time.Time) *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *FeedUpsertBulk) UpdateDeletedAt() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *FeedUpsertBulk) ClearDeletedAt() *FeedUpsertBulk {
+	return u.Update(func(s *FeedUpsert) {
+		s.ClearDeletedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *FeedUpsertBulk) Exec(ctx context.Context) error {
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the FeedCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for FeedCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *FeedUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

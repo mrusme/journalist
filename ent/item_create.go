@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
@@ -22,6 +24,7 @@ type ItemCreate struct {
 	config
 	mutation *ItemMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetItemTitle sets the "item_title" field.
@@ -422,6 +425,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.OnConflict = ic.conflict
 	if id, ok := ic.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -662,10 +666,696 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Item.Create().
+//		SetItemTitle(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ItemUpsert) {
+//			SetItemTitle(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (ic *ItemCreate) OnConflict(opts ...sql.ConflictOption) *ItemUpsertOne {
+	ic.conflict = opts
+	return &ItemUpsertOne{
+		create: ic,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Item.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (ic *ItemCreate) OnConflictColumns(columns ...string) *ItemUpsertOne {
+	ic.conflict = append(ic.conflict, sql.ConflictColumns(columns...))
+	return &ItemUpsertOne{
+		create: ic,
+	}
+}
+
+type (
+	// ItemUpsertOne is the builder for "upsert"-ing
+	//  one Item node.
+	ItemUpsertOne struct {
+		create *ItemCreate
+	}
+
+	// ItemUpsert is the "OnConflict" setter.
+	ItemUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetItemTitle sets the "item_title" field.
+func (u *ItemUpsert) SetItemTitle(v string) *ItemUpsert {
+	u.Set(item.FieldItemTitle, v)
+	return u
+}
+
+// UpdateItemTitle sets the "item_title" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemTitle() *ItemUpsert {
+	u.SetExcluded(item.FieldItemTitle)
+	return u
+}
+
+// SetItemDescription sets the "item_description" field.
+func (u *ItemUpsert) SetItemDescription(v string) *ItemUpsert {
+	u.Set(item.FieldItemDescription, v)
+	return u
+}
+
+// UpdateItemDescription sets the "item_description" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemDescription() *ItemUpsert {
+	u.SetExcluded(item.FieldItemDescription)
+	return u
+}
+
+// SetItemContent sets the "item_content" field.
+func (u *ItemUpsert) SetItemContent(v string) *ItemUpsert {
+	u.Set(item.FieldItemContent, v)
+	return u
+}
+
+// UpdateItemContent sets the "item_content" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemContent() *ItemUpsert {
+	u.SetExcluded(item.FieldItemContent)
+	return u
+}
+
+// SetItemLink sets the "item_link" field.
+func (u *ItemUpsert) SetItemLink(v string) *ItemUpsert {
+	u.Set(item.FieldItemLink, v)
+	return u
+}
+
+// UpdateItemLink sets the "item_link" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemLink() *ItemUpsert {
+	u.SetExcluded(item.FieldItemLink)
+	return u
+}
+
+// SetItemUpdated sets the "item_updated" field.
+func (u *ItemUpsert) SetItemUpdated(v string) *ItemUpsert {
+	u.Set(item.FieldItemUpdated, v)
+	return u
+}
+
+// UpdateItemUpdated sets the "item_updated" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemUpdated() *ItemUpsert {
+	u.SetExcluded(item.FieldItemUpdated)
+	return u
+}
+
+// SetItemPublished sets the "item_published" field.
+func (u *ItemUpsert) SetItemPublished(v string) *ItemUpsert {
+	u.Set(item.FieldItemPublished, v)
+	return u
+}
+
+// UpdateItemPublished sets the "item_published" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemPublished() *ItemUpsert {
+	u.SetExcluded(item.FieldItemPublished)
+	return u
+}
+
+// SetItemAuthor sets the "item_author" field.
+func (u *ItemUpsert) SetItemAuthor(v string) *ItemUpsert {
+	u.Set(item.FieldItemAuthor, v)
+	return u
+}
+
+// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemAuthor() *ItemUpsert {
+	u.SetExcluded(item.FieldItemAuthor)
+	return u
+}
+
+// SetItemAuthors sets the "item_authors" field.
+func (u *ItemUpsert) SetItemAuthors(v string) *ItemUpsert {
+	u.Set(item.FieldItemAuthors, v)
+	return u
+}
+
+// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemAuthors() *ItemUpsert {
+	u.SetExcluded(item.FieldItemAuthors)
+	return u
+}
+
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsert) SetItemGUID(v string) *ItemUpsert {
+	u.Set(item.FieldItemGUID, v)
+	return u
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemGUID() *ItemUpsert {
+	u.SetExcluded(item.FieldItemGUID)
+	return u
+}
+
+// SetItemImage sets the "item_image" field.
+func (u *ItemUpsert) SetItemImage(v string) *ItemUpsert {
+	u.Set(item.FieldItemImage, v)
+	return u
+}
+
+// UpdateItemImage sets the "item_image" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemImage() *ItemUpsert {
+	u.SetExcluded(item.FieldItemImage)
+	return u
+}
+
+// SetItemCategories sets the "item_categories" field.
+func (u *ItemUpsert) SetItemCategories(v string) *ItemUpsert {
+	u.Set(item.FieldItemCategories, v)
+	return u
+}
+
+// UpdateItemCategories sets the "item_categories" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemCategories() *ItemUpsert {
+	u.SetExcluded(item.FieldItemCategories)
+	return u
+}
+
+// SetItemEnclosures sets the "item_enclosures" field.
+func (u *ItemUpsert) SetItemEnclosures(v string) *ItemUpsert {
+	u.Set(item.FieldItemEnclosures, v)
+	return u
+}
+
+// UpdateItemEnclosures sets the "item_enclosures" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateItemEnclosures() *ItemUpsert {
+	u.SetExcluded(item.FieldItemEnclosures)
+	return u
+}
+
+// SetCrawlerTitle sets the "crawler_title" field.
+func (u *ItemUpsert) SetCrawlerTitle(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerTitle, v)
+	return u
+}
+
+// UpdateCrawlerTitle sets the "crawler_title" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerTitle() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerTitle)
+	return u
+}
+
+// SetCrawlerAuthor sets the "crawler_author" field.
+func (u *ItemUpsert) SetCrawlerAuthor(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerAuthor, v)
+	return u
+}
+
+// UpdateCrawlerAuthor sets the "crawler_author" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerAuthor() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerAuthor)
+	return u
+}
+
+// SetCrawlerExcerpt sets the "crawler_excerpt" field.
+func (u *ItemUpsert) SetCrawlerExcerpt(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerExcerpt, v)
+	return u
+}
+
+// UpdateCrawlerExcerpt sets the "crawler_excerpt" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerExcerpt() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerExcerpt)
+	return u
+}
+
+// SetCrawlerSiteName sets the "crawler_site_name" field.
+func (u *ItemUpsert) SetCrawlerSiteName(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerSiteName, v)
+	return u
+}
+
+// UpdateCrawlerSiteName sets the "crawler_site_name" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerSiteName() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerSiteName)
+	return u
+}
+
+// SetCrawlerImage sets the "crawler_image" field.
+func (u *ItemUpsert) SetCrawlerImage(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerImage, v)
+	return u
+}
+
+// UpdateCrawlerImage sets the "crawler_image" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerImage() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerImage)
+	return u
+}
+
+// SetCrawlerContentHTML sets the "crawler_content_html" field.
+func (u *ItemUpsert) SetCrawlerContentHTML(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerContentHTML, v)
+	return u
+}
+
+// UpdateCrawlerContentHTML sets the "crawler_content_html" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerContentHTML() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerContentHTML)
+	return u
+}
+
+// SetCrawlerContentText sets the "crawler_content_text" field.
+func (u *ItemUpsert) SetCrawlerContentText(v string) *ItemUpsert {
+	u.Set(item.FieldCrawlerContentText, v)
+	return u
+}
+
+// UpdateCrawlerContentText sets the "crawler_content_text" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCrawlerContentText() *ItemUpsert {
+	u.SetExcluded(item.FieldCrawlerContentText)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ItemUpsert) SetCreatedAt(v time.Time) *ItemUpsert {
+	u.Set(item.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateCreatedAt() *ItemUpsert {
+	u.SetExcluded(item.FieldCreatedAt)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ItemUpsert) SetUpdatedAt(v time.Time) *ItemUpsert {
+	u.Set(item.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ItemUpsert) UpdateUpdatedAt() *ItemUpsert {
+	u.SetExcluded(item.FieldUpdatedAt)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Item.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(item.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *ItemUpsertOne) UpdateNewValues() *ItemUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(item.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//  client.Item.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
+func (u *ItemUpsertOne) Ignore() *ItemUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ItemUpsertOne) DoNothing() *ItemUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ItemCreate.OnConflict
+// documentation for more info.
+func (u *ItemUpsertOne) Update(set func(*ItemUpsert)) *ItemUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ItemUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetItemTitle sets the "item_title" field.
+func (u *ItemUpsertOne) SetItemTitle(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemTitle(v)
+	})
+}
+
+// UpdateItemTitle sets the "item_title" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemTitle() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemTitle()
+	})
+}
+
+// SetItemDescription sets the "item_description" field.
+func (u *ItemUpsertOne) SetItemDescription(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemDescription(v)
+	})
+}
+
+// UpdateItemDescription sets the "item_description" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemDescription() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemDescription()
+	})
+}
+
+// SetItemContent sets the "item_content" field.
+func (u *ItemUpsertOne) SetItemContent(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemContent(v)
+	})
+}
+
+// UpdateItemContent sets the "item_content" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemContent() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemContent()
+	})
+}
+
+// SetItemLink sets the "item_link" field.
+func (u *ItemUpsertOne) SetItemLink(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemLink(v)
+	})
+}
+
+// UpdateItemLink sets the "item_link" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemLink() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemLink()
+	})
+}
+
+// SetItemUpdated sets the "item_updated" field.
+func (u *ItemUpsertOne) SetItemUpdated(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemUpdated(v)
+	})
+}
+
+// UpdateItemUpdated sets the "item_updated" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemUpdated() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemUpdated()
+	})
+}
+
+// SetItemPublished sets the "item_published" field.
+func (u *ItemUpsertOne) SetItemPublished(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemPublished(v)
+	})
+}
+
+// UpdateItemPublished sets the "item_published" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemPublished() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemPublished()
+	})
+}
+
+// SetItemAuthor sets the "item_author" field.
+func (u *ItemUpsertOne) SetItemAuthor(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemAuthor(v)
+	})
+}
+
+// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemAuthor() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemAuthor()
+	})
+}
+
+// SetItemAuthors sets the "item_authors" field.
+func (u *ItemUpsertOne) SetItemAuthors(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemAuthors(v)
+	})
+}
+
+// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemAuthors() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemAuthors()
+	})
+}
+
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsertOne) SetItemGUID(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemGUID(v)
+	})
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemGUID() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemGUID()
+	})
+}
+
+// SetItemImage sets the "item_image" field.
+func (u *ItemUpsertOne) SetItemImage(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemImage(v)
+	})
+}
+
+// UpdateItemImage sets the "item_image" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemImage() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemImage()
+	})
+}
+
+// SetItemCategories sets the "item_categories" field.
+func (u *ItemUpsertOne) SetItemCategories(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemCategories(v)
+	})
+}
+
+// UpdateItemCategories sets the "item_categories" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemCategories() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemCategories()
+	})
+}
+
+// SetItemEnclosures sets the "item_enclosures" field.
+func (u *ItemUpsertOne) SetItemEnclosures(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemEnclosures(v)
+	})
+}
+
+// UpdateItemEnclosures sets the "item_enclosures" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateItemEnclosures() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemEnclosures()
+	})
+}
+
+// SetCrawlerTitle sets the "crawler_title" field.
+func (u *ItemUpsertOne) SetCrawlerTitle(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerTitle(v)
+	})
+}
+
+// UpdateCrawlerTitle sets the "crawler_title" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerTitle() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerTitle()
+	})
+}
+
+// SetCrawlerAuthor sets the "crawler_author" field.
+func (u *ItemUpsertOne) SetCrawlerAuthor(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerAuthor(v)
+	})
+}
+
+// UpdateCrawlerAuthor sets the "crawler_author" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerAuthor() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerAuthor()
+	})
+}
+
+// SetCrawlerExcerpt sets the "crawler_excerpt" field.
+func (u *ItemUpsertOne) SetCrawlerExcerpt(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerExcerpt(v)
+	})
+}
+
+// UpdateCrawlerExcerpt sets the "crawler_excerpt" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerExcerpt() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerExcerpt()
+	})
+}
+
+// SetCrawlerSiteName sets the "crawler_site_name" field.
+func (u *ItemUpsertOne) SetCrawlerSiteName(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerSiteName(v)
+	})
+}
+
+// UpdateCrawlerSiteName sets the "crawler_site_name" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerSiteName() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerSiteName()
+	})
+}
+
+// SetCrawlerImage sets the "crawler_image" field.
+func (u *ItemUpsertOne) SetCrawlerImage(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerImage(v)
+	})
+}
+
+// UpdateCrawlerImage sets the "crawler_image" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerImage() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerImage()
+	})
+}
+
+// SetCrawlerContentHTML sets the "crawler_content_html" field.
+func (u *ItemUpsertOne) SetCrawlerContentHTML(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerContentHTML(v)
+	})
+}
+
+// UpdateCrawlerContentHTML sets the "crawler_content_html" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerContentHTML() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerContentHTML()
+	})
+}
+
+// SetCrawlerContentText sets the "crawler_content_text" field.
+func (u *ItemUpsertOne) SetCrawlerContentText(v string) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerContentText(v)
+	})
+}
+
+// UpdateCrawlerContentText sets the "crawler_content_text" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCrawlerContentText() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerContentText()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ItemUpsertOne) SetCreatedAt(v time.Time) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateCreatedAt() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ItemUpsertOne) SetUpdatedAt(v time.Time) *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ItemUpsertOne) UpdateUpdatedAt() *ItemUpsertOne {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *ItemUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ItemCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ItemUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *ItemUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: ItemUpsertOne.ID is not supported by MySQL driver. Use ItemUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *ItemUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // ItemCreateBulk is the builder for creating many Item entities in bulk.
 type ItemCreateBulk struct {
 	config
 	builders []*ItemCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Item entities in the database.
@@ -692,6 +1382,7 @@ func (icb *ItemCreateBulk) Save(ctx context.Context) ([]*Item, error) {
 					_, err = mutators[i+1].Mutate(root, icb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = icb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, icb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -738,6 +1429,416 @@ func (icb *ItemCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (icb *ItemCreateBulk) ExecX(ctx context.Context) {
 	if err := icb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Item.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ItemUpsert) {
+//			SetItemTitle(v+v).
+//		}).
+//		Exec(ctx)
+//
+func (icb *ItemCreateBulk) OnConflict(opts ...sql.ConflictOption) *ItemUpsertBulk {
+	icb.conflict = opts
+	return &ItemUpsertBulk{
+		create: icb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Item.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (icb *ItemCreateBulk) OnConflictColumns(columns ...string) *ItemUpsertBulk {
+	icb.conflict = append(icb.conflict, sql.ConflictColumns(columns...))
+	return &ItemUpsertBulk{
+		create: icb,
+	}
+}
+
+// ItemUpsertBulk is the builder for "upsert"-ing
+// a bulk of Item nodes.
+type ItemUpsertBulk struct {
+	create *ItemCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Item.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(item.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+//
+func (u *ItemUpsertBulk) UpdateNewValues() *ItemUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(item.FieldID)
+				return
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Item.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+//
+func (u *ItemUpsertBulk) Ignore() *ItemUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ItemUpsertBulk) DoNothing() *ItemUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ItemCreateBulk.OnConflict
+// documentation for more info.
+func (u *ItemUpsertBulk) Update(set func(*ItemUpsert)) *ItemUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ItemUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetItemTitle sets the "item_title" field.
+func (u *ItemUpsertBulk) SetItemTitle(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemTitle(v)
+	})
+}
+
+// UpdateItemTitle sets the "item_title" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemTitle() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemTitle()
+	})
+}
+
+// SetItemDescription sets the "item_description" field.
+func (u *ItemUpsertBulk) SetItemDescription(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemDescription(v)
+	})
+}
+
+// UpdateItemDescription sets the "item_description" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemDescription() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemDescription()
+	})
+}
+
+// SetItemContent sets the "item_content" field.
+func (u *ItemUpsertBulk) SetItemContent(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemContent(v)
+	})
+}
+
+// UpdateItemContent sets the "item_content" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemContent() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemContent()
+	})
+}
+
+// SetItemLink sets the "item_link" field.
+func (u *ItemUpsertBulk) SetItemLink(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemLink(v)
+	})
+}
+
+// UpdateItemLink sets the "item_link" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemLink() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemLink()
+	})
+}
+
+// SetItemUpdated sets the "item_updated" field.
+func (u *ItemUpsertBulk) SetItemUpdated(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemUpdated(v)
+	})
+}
+
+// UpdateItemUpdated sets the "item_updated" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemUpdated() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemUpdated()
+	})
+}
+
+// SetItemPublished sets the "item_published" field.
+func (u *ItemUpsertBulk) SetItemPublished(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemPublished(v)
+	})
+}
+
+// UpdateItemPublished sets the "item_published" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemPublished() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemPublished()
+	})
+}
+
+// SetItemAuthor sets the "item_author" field.
+func (u *ItemUpsertBulk) SetItemAuthor(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemAuthor(v)
+	})
+}
+
+// UpdateItemAuthor sets the "item_author" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemAuthor() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemAuthor()
+	})
+}
+
+// SetItemAuthors sets the "item_authors" field.
+func (u *ItemUpsertBulk) SetItemAuthors(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemAuthors(v)
+	})
+}
+
+// UpdateItemAuthors sets the "item_authors" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemAuthors() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemAuthors()
+	})
+}
+
+// SetItemGUID sets the "item_guid" field.
+func (u *ItemUpsertBulk) SetItemGUID(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemGUID(v)
+	})
+}
+
+// UpdateItemGUID sets the "item_guid" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemGUID() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemGUID()
+	})
+}
+
+// SetItemImage sets the "item_image" field.
+func (u *ItemUpsertBulk) SetItemImage(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemImage(v)
+	})
+}
+
+// UpdateItemImage sets the "item_image" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemImage() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemImage()
+	})
+}
+
+// SetItemCategories sets the "item_categories" field.
+func (u *ItemUpsertBulk) SetItemCategories(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemCategories(v)
+	})
+}
+
+// UpdateItemCategories sets the "item_categories" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemCategories() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemCategories()
+	})
+}
+
+// SetItemEnclosures sets the "item_enclosures" field.
+func (u *ItemUpsertBulk) SetItemEnclosures(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetItemEnclosures(v)
+	})
+}
+
+// UpdateItemEnclosures sets the "item_enclosures" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateItemEnclosures() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateItemEnclosures()
+	})
+}
+
+// SetCrawlerTitle sets the "crawler_title" field.
+func (u *ItemUpsertBulk) SetCrawlerTitle(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerTitle(v)
+	})
+}
+
+// UpdateCrawlerTitle sets the "crawler_title" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerTitle() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerTitle()
+	})
+}
+
+// SetCrawlerAuthor sets the "crawler_author" field.
+func (u *ItemUpsertBulk) SetCrawlerAuthor(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerAuthor(v)
+	})
+}
+
+// UpdateCrawlerAuthor sets the "crawler_author" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerAuthor() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerAuthor()
+	})
+}
+
+// SetCrawlerExcerpt sets the "crawler_excerpt" field.
+func (u *ItemUpsertBulk) SetCrawlerExcerpt(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerExcerpt(v)
+	})
+}
+
+// UpdateCrawlerExcerpt sets the "crawler_excerpt" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerExcerpt() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerExcerpt()
+	})
+}
+
+// SetCrawlerSiteName sets the "crawler_site_name" field.
+func (u *ItemUpsertBulk) SetCrawlerSiteName(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerSiteName(v)
+	})
+}
+
+// UpdateCrawlerSiteName sets the "crawler_site_name" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerSiteName() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerSiteName()
+	})
+}
+
+// SetCrawlerImage sets the "crawler_image" field.
+func (u *ItemUpsertBulk) SetCrawlerImage(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerImage(v)
+	})
+}
+
+// UpdateCrawlerImage sets the "crawler_image" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerImage() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerImage()
+	})
+}
+
+// SetCrawlerContentHTML sets the "crawler_content_html" field.
+func (u *ItemUpsertBulk) SetCrawlerContentHTML(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerContentHTML(v)
+	})
+}
+
+// UpdateCrawlerContentHTML sets the "crawler_content_html" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerContentHTML() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerContentHTML()
+	})
+}
+
+// SetCrawlerContentText sets the "crawler_content_text" field.
+func (u *ItemUpsertBulk) SetCrawlerContentText(v string) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCrawlerContentText(v)
+	})
+}
+
+// UpdateCrawlerContentText sets the "crawler_content_text" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCrawlerContentText() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCrawlerContentText()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ItemUpsertBulk) SetCreatedAt(v time.Time) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateCreatedAt() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ItemUpsertBulk) SetUpdatedAt(v time.Time) *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ItemUpsertBulk) UpdateUpdatedAt() *ItemUpsertBulk {
+	return u.Update(func(s *ItemUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// Exec executes the query.
+func (u *ItemUpsertBulk) Exec(ctx context.Context) error {
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ItemCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ItemCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ItemUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

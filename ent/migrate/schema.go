@@ -36,6 +36,13 @@ var (
 		Name:       "feeds",
 		Columns:    FeedsColumns,
 		PrimaryKey: []*schema.Column{FeedsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "feed_url_username_password",
+				Unique:  true,
+				Columns: []*schema.Column{FeedsColumns[1], FeedsColumns[2], FeedsColumns[3]},
+			},
+		},
 	}
 	// ItemsColumns holds the columns for the "items" table.
 	ItemsColumns = []*schema.Column{

@@ -2,11 +2,11 @@ package feeds
 
 import (
 	"context"
-	// "github.com/google/uuid"
+	"github.com/google/uuid"
   "github.com/go-playground/validator/v10"
 
 	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent/feed"
+	// "github.com/mrusme/journalist/ent/user"
 	// "github.com/mrusme/journalist/ent"
 
 	"github.com/mrusme/journalist/crawler"
@@ -56,7 +56,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       SetPassword(createFeed.Password)
   }
 
-  feedType, feedLink, err := crwlr.GetFeedLink()
+  _, feedLink, err := crwlr.GetFeedLink()
   if err != nil {
     return ctx.
       Status(fiber.StatusBadRequest).
@@ -67,11 +67,11 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  dbFeed, err := dbFeedTmp.
-    SetURL(createFeed.URL).
+  feedId, err := dbFeedTmp.
+    SetURL(feedLink).
     OnConflict().
     Ignore().
-    Save(context.Background())
+    ID(context.Background())
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
@@ -94,11 +94,38 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  h.EntClient.User.UpdateOneID(myId).AddSubscription()
+  dbSubscriptionTmp := h.EntClient.Subscription.
+    Create().
+    SetUserID(myId).
+    SetFeedID(feedId)
+
+  if createFeed.Name != "" {
+    dbSubscriptionTmp = dbSubscriptionTmp.
+      SetName(createFeed.Name)
+  }
+
+  if createFeed.Group != "" {
+    dbSubscriptionTmp = dbSubscriptionTmp.
+      SetGroup(createFeed.Group)
+  }
+
+  dbSubscription, err := dbSubscriptionTmp.
+    Save(context.Background())
+  if err != nil {
+    return ctx.
+      Status(fiber.StatusInternalServerError).
+      JSON(&fiber.Map{
+        "success": false,
+        "feed": nil,
+        "message": err.Error(),
+      })
+  }
 
   showFeed := FeedShowModel{
-    ID: dbFeed.ID.String(),
-    URL: dbFeed.URL,
+    ID: feedId.String(),
+    Name: dbSubscription.Name,
+    URL: createFeed.URL,
+    Group: dbSubscription.Group,
   }
 
   return ctx.

@@ -10,12 +10,12 @@ import (
 )
 
 func (c *Crawler) GetFeedLink() (string, string, error) {
-  if c.source == nil {
-    return "", "", errors.New("No source available!")
-  }
-
   if err := c.FromAuto(); err != nil {
     return "", "", nil
+  }
+
+  if c.source == nil {
+    return "", "", errors.New("No source available!")
   }
 
   if c.contentType == "" {
