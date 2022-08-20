@@ -2,7 +2,6 @@ package rss
 
 import (
 	// log "github.com/sirupsen/logrus"
-	"context"
 	"encoding/json"
 	"time"
 
@@ -46,10 +45,12 @@ func NewClient(
 
 func (c *Client) Sync(crawl bool) (error) {
   var errs []error
-  ctx, cancel := context.WithTimeout(context.Background(), 60 * time.Second)
-  defer cancel()
 
-  feed, err := c.parser.ParseURLWithContext(c.url, ctx)
+  feedCrwl := crawler.New()
+  defer feedCrwl.Close()
+  feedCrwl.SetLocation(c.url)
+  feedCrwl.SetBasicAuth(c.username, c.password)
+  feed, err := feedCrwl.ParseFeed()
   if err != nil {
     return err
   }
@@ -60,6 +61,7 @@ func (c *Client) Sync(crawl bool) (error) {
 
   if crawl == true {
     crwl := crawler.New()
+    defer crwl.Close()
 
     for i := 0; i < len(c.Feed.Items); i++ {
       crwl.Reset()

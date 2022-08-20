@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mmcdole/gofeed"
 	"golang.org/x/net/html"
 
 	"errors"
@@ -11,7 +12,7 @@ import (
 
 func (c *Crawler) GetFeedLink() (string, string, error) {
   if err := c.FromAuto(); err != nil {
-    return "", "", nil
+    return "", "", err
   }
 
   if c.source == nil {
@@ -94,5 +95,23 @@ func (c *Crawler) GetFeedLinkFromHTML() (string, string, error) {
   }
 
   return "", "", errors.New("No feed URL found!")
+}
+
+func (c* Crawler) ParseFeed() (*gofeed.Feed, error) {
+  if err := c.FromAuto(); err != nil {
+    return nil, err
+  }
+
+  if c.source == nil {
+    return nil, errors.New("No source available!")
+  }
+
+  gfp := gofeed.NewParser()
+  feed, err := gfp.Parse(c.source)
+  if err != nil {
+    return nil, err
+  }
+
+  return feed, nil
 }
 
