@@ -1,21 +1,17 @@
 package crawler
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"os"
-	"strings"
-
-	"golang.org/x/net/html"
-
-	// "golang.org/x/net/html/charset"
-	"errors"
 
 	"golang.org/x/net/publicsuffix"
 
 	scraper "github.com/tinoquang/go-cloudflare-scraper"
+
+	"github.com/go-shiori/go-readability"
 )
 
 type Crawler struct {
@@ -38,11 +34,15 @@ func New() (*Crawler) {
   return crawler
 }
 
-func (c *Crawler) Reset() {
+func (c *Crawler) Close() {
   if c.source != nil {
     c.source.Close()
     c.source = nil
   }
+}
+
+func (c *Crawler) Reset() {
+  c.Close()
   c.sourceLocation = ""
 
   c.UserAgent =
@@ -56,14 +56,40 @@ func (c *Crawler) Reset() {
   c.contentType = ""
 }
 
+func (c *Crawler) SetLocation(sourceLocation string) {
+  c.sourceLocation = sourceLocation
+}
+
 func (c *Crawler) SetBasicAuth(username string, password string) {
   c.username = username
   c.password = password
 }
 
-func (c *Crawler) FromHTTP(
-  rawUrl *string,
-) (error) {
+func (c *Crawler) GetReadable() (string, string, error) {
+  var urlUrl *url.URL
+  var err error
+
+  urlUrl, err = url.Parse(c.sourceLocation)
+  if err != nil {
+    return "", "", err
+  }
+
+  switch(urlUrl.Scheme) {
+  case "http", "https":
+    err = c.FromHTTP()
+  default:
+    err = c.FromFile()
+  }
+
+  article, err := readability.FromReader(c.source, urlUrl)
+  if err != nil {
+    return "", "", err
+  }
+
+  return article.Title, article.Content, nil
+}
+
+func (c *Crawler) FromHTTP() (error) {
   jar, err := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
   if err != nil {
     return err
@@ -75,7 +101,7 @@ func (c *Crawler) FromHTTP(
     Transport: scraper,
   }
 
-  req, err := http.NewRequest("GET", *rawUrl, nil)
+  req, err := http.NewRequest("GET", c.sourceLocation, nil)
   if err != nil {
     return err
   }
@@ -98,21 +124,19 @@ func (c *Crawler) FromHTTP(
   if err != nil {
     return err
   }
-  // defer resp.Body.Close()
 
-  c.Reset()
+  c.Close()
   c.source = resp.Body
-  c.sourceLocation = *rawUrl
   return nil
 }
 
-func (c *Crawler) FromFile(rawUrl *string) (error) {
-  file, err := os.Open(*rawUrl)
+func (c *Crawler) FromFile() (error) {
+  file, err := os.Open(c.sourceLocation)
   if err != nil {
     return err
   }
 
-  c.Reset()
+  c.Close()
   c.source = file
   return nil
 }
@@ -128,90 +152,7 @@ func (c *Crawler) Detect() (error) {
   return nil
 }
 
-func (c *Crawler) GetFeedLink() (string, string, error) {
-  if c.source == nil {
-    return "", "", errors.New("No source available!")
-  }
-
-  if c.contentType == "" {
-    if err := c.Detect(); err != nil {
-      return "", "", err
-    }
-
-    if c.contentType == "" {
-      return "", "", errors.New("Could not detect content type!")
-    }
-  }
-
-  if strings.Contains(c.contentType, "text/xml") {
-    return "", c.sourceLocation, nil
-  } else if strings.Contains(c.contentType, "text/html") {
-    return c.GetFeedLinkFromHTML()
-  }
-
-  return "", "", nil
-}
-
 func (c *Crawler) GetContentType() string {
   return c.contentType
-}
-
-func (c *Crawler) GetFeedLinkFromHTML() (string, string, error) {
-  doc, err := html.Parse(c.source)
-  if err != nil {
-    return "", "", err
-  }
-
-  var f func(*html.Node) (bool, string, string)
-  f = func(n *html.Node) (bool, string, string) {
-    if n.Type == html.ElementNode && n.Data == "link" {
-      var feedType *string = nil
-      var feedHref *string = nil
-
-      for i := 0; i < len(n.Attr); i++ {
-        attr := n.Attr[i]
-        if attr.Key == "type" {
-          if strings.Contains(attr.Val, "rss") || strings.Contains(attr.Val, "atom") {
-            feedType = &attr.Val
-          }
-        } else if attr.Key == "href" {
-          feedHref = &attr.Val
-        }
-      }
-
-      if feedType != nil && feedHref != nil {
-        return true, *feedType, *feedHref
-      }
-
-      return false, "", ""
-    }
-    for c := n.FirstChild; c != nil; c = c.NextSibling {
-      fF, fT, fH := f(c)
-      if fF == true {
-        return fF, fT, fH
-      }
-    }
-    return false, "", ""
-  }
-
-  found, feedType, feedHref := f(doc)
-  if found == true {
-    if strings.HasPrefix(feedHref, "./") {
-      feedHref = fmt.Sprintf(
-        "%s/%s",
-        strings.TrimRight(c.sourceLocation, "/"),
-        strings.TrimLeft(feedHref, "./"),
-      )
-    } else if strings.HasPrefix(feedHref, "/") {
-      feedHref = fmt.Sprintf(
-        "%s/%s",
-        strings.TrimRight(c.sourceLocation, "/"),
-        strings.TrimLeft(feedHref, "/"),
-      )
-    }
-    return feedType, feedHref, nil
-  }
-
-  return "", "", errors.New("No feed URL found!")
 }
 
