@@ -32,9 +32,9 @@ type Feed struct {
 	// FeedFeedLink holds the value of the "feed_feed_link" field.
 	FeedFeedLink string `json:"feed_feed_link,omitempty"`
 	// FeedUpdated holds the value of the "feed_updated" field.
-	FeedUpdated string `json:"feed_updated,omitempty"`
+	FeedUpdated time.Time `json:"feed_updated,omitempty"`
 	// FeedPublished holds the value of the "feed_published" field.
-	FeedPublished string `json:"feed_published,omitempty"`
+	FeedPublished time.Time `json:"feed_published,omitempty"`
 	// FeedAuthorName holds the value of the "feed_author_name" field.
 	FeedAuthorName string `json:"feed_author_name,omitempty"`
 	// FeedAuthorEmail holds the value of the "feed_author_email" field.
@@ -107,9 +107,9 @@ func (*Feed) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case feed.FieldURL, feed.FieldUsername, feed.FieldPassword, feed.FieldFeedTitle, feed.FieldFeedDescription, feed.FieldFeedLink, feed.FieldFeedFeedLink, feed.FieldFeedUpdated, feed.FieldFeedPublished, feed.FieldFeedAuthorName, feed.FieldFeedAuthorEmail, feed.FieldFeedLanguage, feed.FieldFeedImageTitle, feed.FieldFeedImageURL, feed.FieldFeedCopyright, feed.FieldFeedGenerator, feed.FieldFeedCategories:
+		case feed.FieldURL, feed.FieldUsername, feed.FieldPassword, feed.FieldFeedTitle, feed.FieldFeedDescription, feed.FieldFeedLink, feed.FieldFeedFeedLink, feed.FieldFeedAuthorName, feed.FieldFeedAuthorEmail, feed.FieldFeedLanguage, feed.FieldFeedImageTitle, feed.FieldFeedImageURL, feed.FieldFeedCopyright, feed.FieldFeedGenerator, feed.FieldFeedCategories:
 			values[i] = new(sql.NullString)
-		case feed.FieldCreatedAt, feed.FieldUpdatedAt, feed.FieldDeletedAt:
+		case feed.FieldFeedUpdated, feed.FieldFeedPublished, feed.FieldCreatedAt, feed.FieldUpdatedAt, feed.FieldDeletedAt:
 			values[i] = new(sql.NullTime)
 		case feed.FieldID:
 			values[i] = new(uuid.UUID)
@@ -177,16 +177,16 @@ func (f *Feed) assignValues(columns []string, values []interface{}) error {
 				f.FeedFeedLink = value.String
 			}
 		case feed.FieldFeedUpdated:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field feed_updated", values[i])
 			} else if value.Valid {
-				f.FeedUpdated = value.String
+				f.FeedUpdated = value.Time
 			}
 		case feed.FieldFeedPublished:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field feed_published", values[i])
 			} else if value.Valid {
-				f.FeedPublished = value.String
+				f.FeedPublished = value.Time
 			}
 		case feed.FieldFeedAuthorName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -318,10 +318,10 @@ func (f *Feed) String() string {
 	builder.WriteString(f.FeedFeedLink)
 	builder.WriteString(", ")
 	builder.WriteString("feed_updated=")
-	builder.WriteString(f.FeedUpdated)
+	builder.WriteString(f.FeedUpdated.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("feed_published=")
-	builder.WriteString(f.FeedPublished)
+	builder.WriteString(f.FeedPublished.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("feed_author_name=")
 	builder.WriteString(f.FeedAuthorName)

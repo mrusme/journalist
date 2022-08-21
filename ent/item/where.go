@@ -118,14 +118,14 @@ func ItemLink(v string) predicate.Item {
 }
 
 // ItemUpdated applies equality check predicate on the "item_updated" field. It's identical to ItemUpdatedEQ.
-func ItemUpdated(v string) predicate.Item {
+func ItemUpdated(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemPublished applies equality check predicate on the "item_published" field. It's identical to ItemPublishedEQ.
-func ItemPublished(v string) predicate.Item {
+func ItemPublished(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldItemPublished), v))
 	})
@@ -732,21 +732,21 @@ func ItemLinkContainsFold(v string) predicate.Item {
 }
 
 // ItemUpdatedEQ applies the EQ predicate on the "item_updated" field.
-func ItemUpdatedEQ(v string) predicate.Item {
+func ItemUpdatedEQ(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemUpdatedNEQ applies the NEQ predicate on the "item_updated" field.
-func ItemUpdatedNEQ(v string) predicate.Item {
+func ItemUpdatedNEQ(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemUpdatedIn applies the In predicate on the "item_updated" field.
-func ItemUpdatedIn(vs ...string) predicate.Item {
+func ItemUpdatedIn(vs ...time.Time) predicate.Item {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -757,7 +757,7 @@ func ItemUpdatedIn(vs ...string) predicate.Item {
 }
 
 // ItemUpdatedNotIn applies the NotIn predicate on the "item_updated" field.
-func ItemUpdatedNotIn(vs ...string) predicate.Item {
+func ItemUpdatedNotIn(vs ...time.Time) predicate.Item {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -768,84 +768,49 @@ func ItemUpdatedNotIn(vs ...string) predicate.Item {
 }
 
 // ItemUpdatedGT applies the GT predicate on the "item_updated" field.
-func ItemUpdatedGT(v string) predicate.Item {
+func ItemUpdatedGT(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemUpdatedGTE applies the GTE predicate on the "item_updated" field.
-func ItemUpdatedGTE(v string) predicate.Item {
+func ItemUpdatedGTE(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemUpdatedLT applies the LT predicate on the "item_updated" field.
-func ItemUpdatedLT(v string) predicate.Item {
+func ItemUpdatedLT(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldItemUpdated), v))
 	})
 }
 
 // ItemUpdatedLTE applies the LTE predicate on the "item_updated" field.
-func ItemUpdatedLTE(v string) predicate.Item {
+func ItemUpdatedLTE(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldItemUpdated), v))
 	})
 }
 
-// ItemUpdatedContains applies the Contains predicate on the "item_updated" field.
-func ItemUpdatedContains(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldItemUpdated), v))
-	})
-}
-
-// ItemUpdatedHasPrefix applies the HasPrefix predicate on the "item_updated" field.
-func ItemUpdatedHasPrefix(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldItemUpdated), v))
-	})
-}
-
-// ItemUpdatedHasSuffix applies the HasSuffix predicate on the "item_updated" field.
-func ItemUpdatedHasSuffix(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldItemUpdated), v))
-	})
-}
-
-// ItemUpdatedEqualFold applies the EqualFold predicate on the "item_updated" field.
-func ItemUpdatedEqualFold(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldItemUpdated), v))
-	})
-}
-
-// ItemUpdatedContainsFold applies the ContainsFold predicate on the "item_updated" field.
-func ItemUpdatedContainsFold(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldItemUpdated), v))
-	})
-}
-
 // ItemPublishedEQ applies the EQ predicate on the "item_published" field.
-func ItemPublishedEQ(v string) predicate.Item {
+func ItemPublishedEQ(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldItemPublished), v))
 	})
 }
 
 // ItemPublishedNEQ applies the NEQ predicate on the "item_published" field.
-func ItemPublishedNEQ(v string) predicate.Item {
+func ItemPublishedNEQ(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldItemPublished), v))
 	})
 }
 
 // ItemPublishedIn applies the In predicate on the "item_published" field.
-func ItemPublishedIn(vs ...string) predicate.Item {
+func ItemPublishedIn(vs ...time.Time) predicate.Item {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -856,7 +821,7 @@ func ItemPublishedIn(vs ...string) predicate.Item {
 }
 
 // ItemPublishedNotIn applies the NotIn predicate on the "item_published" field.
-func ItemPublishedNotIn(vs ...string) predicate.Item {
+func ItemPublishedNotIn(vs ...time.Time) predicate.Item {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -867,65 +832,30 @@ func ItemPublishedNotIn(vs ...string) predicate.Item {
 }
 
 // ItemPublishedGT applies the GT predicate on the "item_published" field.
-func ItemPublishedGT(v string) predicate.Item {
+func ItemPublishedGT(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldItemPublished), v))
 	})
 }
 
 // ItemPublishedGTE applies the GTE predicate on the "item_published" field.
-func ItemPublishedGTE(v string) predicate.Item {
+func ItemPublishedGTE(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldItemPublished), v))
 	})
 }
 
 // ItemPublishedLT applies the LT predicate on the "item_published" field.
-func ItemPublishedLT(v string) predicate.Item {
+func ItemPublishedLT(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldItemPublished), v))
 	})
 }
 
 // ItemPublishedLTE applies the LTE predicate on the "item_published" field.
-func ItemPublishedLTE(v string) predicate.Item {
+func ItemPublishedLTE(v time.Time) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldItemPublished), v))
-	})
-}
-
-// ItemPublishedContains applies the Contains predicate on the "item_published" field.
-func ItemPublishedContains(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldItemPublished), v))
-	})
-}
-
-// ItemPublishedHasPrefix applies the HasPrefix predicate on the "item_published" field.
-func ItemPublishedHasPrefix(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldItemPublished), v))
-	})
-}
-
-// ItemPublishedHasSuffix applies the HasSuffix predicate on the "item_published" field.
-func ItemPublishedHasSuffix(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldItemPublished), v))
-	})
-}
-
-// ItemPublishedEqualFold applies the EqualFold predicate on the "item_published" field.
-func ItemPublishedEqualFold(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldItemPublished), v))
-	})
-}
-
-// ItemPublishedContainsFold applies the ContainsFold predicate on the "item_published" field.
-func ItemPublishedContainsFold(v string) predicate.Item {
-	return predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldItemPublished), v))
 	})
 }
 

@@ -34,8 +34,8 @@ func (Item) Fields() []ent.Field {
       Validate(func(s string) error {
         return validate.Var(s, "required,url")
       }),
-    field.String("item_updated"),
-    field.String("item_published"),
+    field.Time("item_updated"),
+    field.Time("item_published"),
     field.String("item_author_name").
       Optional(),
     field.String("item_author_email").

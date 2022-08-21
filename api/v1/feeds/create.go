@@ -63,7 +63,6 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-
   rssClient, err := rss.NewClient(
     feedLink,
     createFeed.Username,

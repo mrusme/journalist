@@ -63,14 +63,14 @@ func (iu *ItemUpdate) SetItemLink(s string) *ItemUpdate {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (iu *ItemUpdate) SetItemUpdated(s string) *ItemUpdate {
-	iu.mutation.SetItemUpdated(s)
+func (iu *ItemUpdate) SetItemUpdated(t time.Time) *ItemUpdate {
+	iu.mutation.SetItemUpdated(t)
 	return iu
 }
 
 // SetItemPublished sets the "item_published" field.
-func (iu *ItemUpdate) SetItemPublished(s string) *ItemUpdate {
-	iu.mutation.SetItemPublished(s)
+func (iu *ItemUpdate) SetItemPublished(t time.Time) *ItemUpdate {
+	iu.mutation.SetItemPublished(t)
 	return iu
 }
 
@@ -562,14 +562,14 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := iu.mutation.ItemUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemUpdated,
 		})
 	}
 	if value, ok := iu.mutation.ItemPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemPublished,
 		})
@@ -959,14 +959,14 @@ func (iuo *ItemUpdateOne) SetItemLink(s string) *ItemUpdateOne {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (iuo *ItemUpdateOne) SetItemUpdated(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemUpdated(s)
+func (iuo *ItemUpdateOne) SetItemUpdated(t time.Time) *ItemUpdateOne {
+	iuo.mutation.SetItemUpdated(t)
 	return iuo
 }
 
 // SetItemPublished sets the "item_published" field.
-func (iuo *ItemUpdateOne) SetItemPublished(s string) *ItemUpdateOne {
-	iuo.mutation.SetItemPublished(s)
+func (iuo *ItemUpdateOne) SetItemPublished(t time.Time) *ItemUpdateOne {
+	iuo.mutation.SetItemPublished(t)
 	return iuo
 }
 
@@ -1488,14 +1488,14 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 	}
 	if value, ok := iuo.mutation.ItemUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemUpdated,
 		})
 	}
 	if value, ok := iuo.mutation.ItemPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemPublished,
 		})

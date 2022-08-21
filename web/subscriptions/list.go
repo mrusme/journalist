@@ -57,7 +57,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
     ),
     "Generator": "Journalist",
     "Language": "en-us",
-    "LastBuildDate": time.Now().String(),
+    "LastBuildDate": time.Now(),
 
     "Items": dbItems,
   })

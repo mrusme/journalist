@@ -39,8 +39,8 @@ func (Feed) Fields() []ent.Field {
     field.String("feed_description"),
     field.String("feed_link"),
     field.String("feed_feed_link"),
-    field.String("feed_updated"),
-    field.String("feed_published"),
+    field.Time("feed_updated"),
+    field.Time("feed_published"),
     field.String("feed_author_name").
       Optional(),
     field.String("feed_author_email").

@@ -132,14 +132,14 @@ func FeedFeedLink(v string) predicate.Feed {
 }
 
 // FeedUpdated applies equality check predicate on the "feed_updated" field. It's identical to FeedUpdatedEQ.
-func FeedUpdated(v string) predicate.Feed {
+func FeedUpdated(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedPublished applies equality check predicate on the "feed_published" field. It's identical to FeedPublishedEQ.
-func FeedPublished(v string) predicate.Feed {
+func FeedPublished(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldFeedPublished), v))
 	})
@@ -916,21 +916,21 @@ func FeedFeedLinkContainsFold(v string) predicate.Feed {
 }
 
 // FeedUpdatedEQ applies the EQ predicate on the "feed_updated" field.
-func FeedUpdatedEQ(v string) predicate.Feed {
+func FeedUpdatedEQ(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedUpdatedNEQ applies the NEQ predicate on the "feed_updated" field.
-func FeedUpdatedNEQ(v string) predicate.Feed {
+func FeedUpdatedNEQ(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedUpdatedIn applies the In predicate on the "feed_updated" field.
-func FeedUpdatedIn(vs ...string) predicate.Feed {
+func FeedUpdatedIn(vs ...time.Time) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -941,7 +941,7 @@ func FeedUpdatedIn(vs ...string) predicate.Feed {
 }
 
 // FeedUpdatedNotIn applies the NotIn predicate on the "feed_updated" field.
-func FeedUpdatedNotIn(vs ...string) predicate.Feed {
+func FeedUpdatedNotIn(vs ...time.Time) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -952,84 +952,49 @@ func FeedUpdatedNotIn(vs ...string) predicate.Feed {
 }
 
 // FeedUpdatedGT applies the GT predicate on the "feed_updated" field.
-func FeedUpdatedGT(v string) predicate.Feed {
+func FeedUpdatedGT(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedUpdatedGTE applies the GTE predicate on the "feed_updated" field.
-func FeedUpdatedGTE(v string) predicate.Feed {
+func FeedUpdatedGTE(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedUpdatedLT applies the LT predicate on the "feed_updated" field.
-func FeedUpdatedLT(v string) predicate.Feed {
+func FeedUpdatedLT(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldFeedUpdated), v))
 	})
 }
 
 // FeedUpdatedLTE applies the LTE predicate on the "feed_updated" field.
-func FeedUpdatedLTE(v string) predicate.Feed {
+func FeedUpdatedLTE(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldFeedUpdated), v))
 	})
 }
 
-// FeedUpdatedContains applies the Contains predicate on the "feed_updated" field.
-func FeedUpdatedContains(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFeedUpdated), v))
-	})
-}
-
-// FeedUpdatedHasPrefix applies the HasPrefix predicate on the "feed_updated" field.
-func FeedUpdatedHasPrefix(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFeedUpdated), v))
-	})
-}
-
-// FeedUpdatedHasSuffix applies the HasSuffix predicate on the "feed_updated" field.
-func FeedUpdatedHasSuffix(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFeedUpdated), v))
-	})
-}
-
-// FeedUpdatedEqualFold applies the EqualFold predicate on the "feed_updated" field.
-func FeedUpdatedEqualFold(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFeedUpdated), v))
-	})
-}
-
-// FeedUpdatedContainsFold applies the ContainsFold predicate on the "feed_updated" field.
-func FeedUpdatedContainsFold(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFeedUpdated), v))
-	})
-}
-
 // FeedPublishedEQ applies the EQ predicate on the "feed_published" field.
-func FeedPublishedEQ(v string) predicate.Feed {
+func FeedPublishedEQ(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldFeedPublished), v))
 	})
 }
 
 // FeedPublishedNEQ applies the NEQ predicate on the "feed_published" field.
-func FeedPublishedNEQ(v string) predicate.Feed {
+func FeedPublishedNEQ(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldFeedPublished), v))
 	})
 }
 
 // FeedPublishedIn applies the In predicate on the "feed_published" field.
-func FeedPublishedIn(vs ...string) predicate.Feed {
+func FeedPublishedIn(vs ...time.Time) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1040,7 +1005,7 @@ func FeedPublishedIn(vs ...string) predicate.Feed {
 }
 
 // FeedPublishedNotIn applies the NotIn predicate on the "feed_published" field.
-func FeedPublishedNotIn(vs ...string) predicate.Feed {
+func FeedPublishedNotIn(vs ...time.Time) predicate.Feed {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1051,65 +1016,30 @@ func FeedPublishedNotIn(vs ...string) predicate.Feed {
 }
 
 // FeedPublishedGT applies the GT predicate on the "feed_published" field.
-func FeedPublishedGT(v string) predicate.Feed {
+func FeedPublishedGT(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldFeedPublished), v))
 	})
 }
 
 // FeedPublishedGTE applies the GTE predicate on the "feed_published" field.
-func FeedPublishedGTE(v string) predicate.Feed {
+func FeedPublishedGTE(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldFeedPublished), v))
 	})
 }
 
 // FeedPublishedLT applies the LT predicate on the "feed_published" field.
-func FeedPublishedLT(v string) predicate.Feed {
+func FeedPublishedLT(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldFeedPublished), v))
 	})
 }
 
 // FeedPublishedLTE applies the LTE predicate on the "feed_published" field.
-func FeedPublishedLTE(v string) predicate.Feed {
+func FeedPublishedLTE(v time.Time) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldFeedPublished), v))
-	})
-}
-
-// FeedPublishedContains applies the Contains predicate on the "feed_published" field.
-func FeedPublishedContains(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFeedPublished), v))
-	})
-}
-
-// FeedPublishedHasPrefix applies the HasPrefix predicate on the "feed_published" field.
-func FeedPublishedHasPrefix(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFeedPublished), v))
-	})
-}
-
-// FeedPublishedHasSuffix applies the HasSuffix predicate on the "feed_published" field.
-func FeedPublishedHasSuffix(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFeedPublished), v))
-	})
-}
-
-// FeedPublishedEqualFold applies the EqualFold predicate on the "feed_published" field.
-func FeedPublishedEqualFold(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFeedPublished), v))
-	})
-}
-
-// FeedPublishedContainsFold applies the ContainsFold predicate on the "feed_published" field.
-func FeedPublishedContainsFold(v string) predicate.Feed {
-	return predicate.Feed(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFeedPublished), v))
 	})
 }
 

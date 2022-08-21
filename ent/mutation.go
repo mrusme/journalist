@@ -51,8 +51,8 @@ type FeedMutation struct {
 	feed_description        *string
 	feed_link               *string
 	feed_feed_link          *string
-	feed_updated            *string
-	feed_published          *string
+	feed_updated            *time.Time
+	feed_published          *time.Time
 	feed_author_name        *string
 	feed_author_email       *string
 	feed_language           *string
@@ -436,12 +436,12 @@ func (m *FeedMutation) ResetFeedFeedLink() {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (m *FeedMutation) SetFeedUpdated(s string) {
-	m.feed_updated = &s
+func (m *FeedMutation) SetFeedUpdated(t time.Time) {
+	m.feed_updated = &t
 }
 
 // FeedUpdated returns the value of the "feed_updated" field in the mutation.
-func (m *FeedMutation) FeedUpdated() (r string, exists bool) {
+func (m *FeedMutation) FeedUpdated() (r time.Time, exists bool) {
 	v := m.feed_updated
 	if v == nil {
 		return
@@ -452,7 +452,7 @@ func (m *FeedMutation) FeedUpdated() (r string, exists bool) {
 // OldFeedUpdated returns the old "feed_updated" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldFeedUpdated(ctx context.Context) (v string, err error) {
+func (m *FeedMutation) OldFeedUpdated(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldFeedUpdated is only allowed on UpdateOne operations")
 	}
@@ -472,12 +472,12 @@ func (m *FeedMutation) ResetFeedUpdated() {
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (m *FeedMutation) SetFeedPublished(s string) {
-	m.feed_published = &s
+func (m *FeedMutation) SetFeedPublished(t time.Time) {
+	m.feed_published = &t
 }
 
 // FeedPublished returns the value of the "feed_published" field in the mutation.
-func (m *FeedMutation) FeedPublished() (r string, exists bool) {
+func (m *FeedMutation) FeedPublished() (r time.Time, exists bool) {
 	v := m.feed_published
 	if v == nil {
 		return
@@ -488,7 +488,7 @@ func (m *FeedMutation) FeedPublished() (r string, exists bool) {
 // OldFeedPublished returns the old "feed_published" field's value of the Feed entity.
 // If the Feed object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FeedMutation) OldFeedPublished(ctx context.Context) (v string, err error) {
+func (m *FeedMutation) OldFeedPublished(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldFeedPublished is only allowed on UpdateOne operations")
 	}
@@ -1366,14 +1366,14 @@ func (m *FeedMutation) SetField(name string, value ent.Value) error {
 		m.SetFeedFeedLink(v)
 		return nil
 	case feed.FieldFeedUpdated:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetFeedUpdated(v)
 		return nil
 	case feed.FieldFeedPublished:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1749,8 +1749,8 @@ type ItemMutation struct {
 	item_description     *string
 	item_content         *string
 	item_link            *string
-	item_updated         *string
-	item_published       *string
+	item_updated         *time.Time
+	item_published       *time.Time
 	item_author_name     *string
 	item_author_email    *string
 	item_image_title     *string
@@ -2065,12 +2065,12 @@ func (m *ItemMutation) ResetItemLink() {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (m *ItemMutation) SetItemUpdated(s string) {
-	m.item_updated = &s
+func (m *ItemMutation) SetItemUpdated(t time.Time) {
+	m.item_updated = &t
 }
 
 // ItemUpdated returns the value of the "item_updated" field in the mutation.
-func (m *ItemMutation) ItemUpdated() (r string, exists bool) {
+func (m *ItemMutation) ItemUpdated() (r time.Time, exists bool) {
 	v := m.item_updated
 	if v == nil {
 		return
@@ -2081,7 +2081,7 @@ func (m *ItemMutation) ItemUpdated() (r string, exists bool) {
 // OldItemUpdated returns the old "item_updated" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemUpdated(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemUpdated(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldItemUpdated is only allowed on UpdateOne operations")
 	}
@@ -2101,12 +2101,12 @@ func (m *ItemMutation) ResetItemUpdated() {
 }
 
 // SetItemPublished sets the "item_published" field.
-func (m *ItemMutation) SetItemPublished(s string) {
-	m.item_published = &s
+func (m *ItemMutation) SetItemPublished(t time.Time) {
+	m.item_published = &t
 }
 
 // ItemPublished returns the value of the "item_published" field in the mutation.
-func (m *ItemMutation) ItemPublished() (r string, exists bool) {
+func (m *ItemMutation) ItemPublished() (r time.Time, exists bool) {
 	v := m.item_published
 	if v == nil {
 		return
@@ -2117,7 +2117,7 @@ func (m *ItemMutation) ItemPublished() (r string, exists bool) {
 // OldItemPublished returns the old "item_published" field's value of the Item entity.
 // If the Item object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ItemMutation) OldItemPublished(ctx context.Context) (v string, err error) {
+func (m *ItemMutation) OldItemPublished(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldItemPublished is only allowed on UpdateOne operations")
 	}
@@ -3202,14 +3202,14 @@ func (m *ItemMutation) SetField(name string, value ent.Value) error {
 		m.SetItemLink(v)
 		return nil
 	case item.FieldItemUpdated:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetItemUpdated(v)
 		return nil
 	case item.FieldItemPublished:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

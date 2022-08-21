@@ -91,14 +91,14 @@ func (fu *FeedUpdate) SetFeedFeedLink(s string) *FeedUpdate {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (fu *FeedUpdate) SetFeedUpdated(s string) *FeedUpdate {
-	fu.mutation.SetFeedUpdated(s)
+func (fu *FeedUpdate) SetFeedUpdated(t time.Time) *FeedUpdate {
+	fu.mutation.SetFeedUpdated(t)
 	return fu
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (fu *FeedUpdate) SetFeedPublished(s string) *FeedUpdate {
-	fu.mutation.SetFeedPublished(s)
+func (fu *FeedUpdate) SetFeedPublished(t time.Time) *FeedUpdate {
+	fu.mutation.SetFeedPublished(t)
 	return fu
 }
 
@@ -507,14 +507,14 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := fu.mutation.FeedUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedUpdated,
 		})
 	}
 	if value, ok := fu.mutation.FeedPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedPublished,
 		})
@@ -887,14 +887,14 @@ func (fuo *FeedUpdateOne) SetFeedFeedLink(s string) *FeedUpdateOne {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (fuo *FeedUpdateOne) SetFeedUpdated(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedUpdated(s)
+func (fuo *FeedUpdateOne) SetFeedUpdated(t time.Time) *FeedUpdateOne {
+	fuo.mutation.SetFeedUpdated(t)
 	return fuo
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (fuo *FeedUpdateOne) SetFeedPublished(s string) *FeedUpdateOne {
-	fuo.mutation.SetFeedPublished(s)
+func (fuo *FeedUpdateOne) SetFeedPublished(t time.Time) *FeedUpdateOne {
+	fuo.mutation.SetFeedPublished(t)
 	return fuo
 }
 
@@ -1333,14 +1333,14 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 	}
 	if value, ok := fuo.mutation.FeedUpdated(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedUpdated,
 		})
 	}
 	if value, ok := fuo.mutation.FeedPublished(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedPublished,
 		})

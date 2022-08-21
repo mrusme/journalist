@@ -86,14 +86,14 @@ func (fc *FeedCreate) SetFeedFeedLink(s string) *FeedCreate {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (fc *FeedCreate) SetFeedUpdated(s string) *FeedCreate {
-	fc.mutation.SetFeedUpdated(s)
+func (fc *FeedCreate) SetFeedUpdated(t time.Time) *FeedCreate {
+	fc.mutation.SetFeedUpdated(t)
 	return fc
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (fc *FeedCreate) SetFeedPublished(s string) *FeedCreate {
-	fc.mutation.SetFeedPublished(s)
+func (fc *FeedCreate) SetFeedPublished(t time.Time) *FeedCreate {
+	fc.mutation.SetFeedPublished(t)
 	return fc
 }
 
@@ -524,7 +524,7 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := fc.mutation.FeedUpdated(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedUpdated,
 		})
@@ -532,7 +532,7 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := fc.mutation.FeedPublished(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: feed.FieldFeedPublished,
 		})
@@ -829,7 +829,7 @@ func (u *FeedUpsert) UpdateFeedFeedLink() *FeedUpsert {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (u *FeedUpsert) SetFeedUpdated(v string) *FeedUpsert {
+func (u *FeedUpsert) SetFeedUpdated(v time.Time) *FeedUpsert {
 	u.Set(feed.FieldFeedUpdated, v)
 	return u
 }
@@ -841,7 +841,7 @@ func (u *FeedUpsert) UpdateFeedUpdated() *FeedUpsert {
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (u *FeedUpsert) SetFeedPublished(v string) *FeedUpsert {
+func (u *FeedUpsert) SetFeedPublished(v time.Time) *FeedUpsert {
 	u.Set(feed.FieldFeedPublished, v)
 	return u
 }
@@ -1163,7 +1163,7 @@ func (u *FeedUpsertOne) UpdateFeedFeedLink() *FeedUpsertOne {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (u *FeedUpsertOne) SetFeedUpdated(v string) *FeedUpsertOne {
+func (u *FeedUpsertOne) SetFeedUpdated(v time.Time) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
 		s.SetFeedUpdated(v)
 	})
@@ -1177,7 +1177,7 @@ func (u *FeedUpsertOne) UpdateFeedUpdated() *FeedUpsertOne {
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (u *FeedUpsertOne) SetFeedPublished(v string) *FeedUpsertOne {
+func (u *FeedUpsertOne) SetFeedPublished(v time.Time) *FeedUpsertOne {
 	return u.Update(func(s *FeedUpsert) {
 		s.SetFeedPublished(v)
 	})
@@ -1694,7 +1694,7 @@ func (u *FeedUpsertBulk) UpdateFeedFeedLink() *FeedUpsertBulk {
 }
 
 // SetFeedUpdated sets the "feed_updated" field.
-func (u *FeedUpsertBulk) SetFeedUpdated(v string) *FeedUpsertBulk {
+func (u *FeedUpsertBulk) SetFeedUpdated(v time.Time) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
 		s.SetFeedUpdated(v)
 	})
@@ -1708,7 +1708,7 @@ func (u *FeedUpsertBulk) UpdateFeedUpdated() *FeedUpsertBulk {
 }
 
 // SetFeedPublished sets the "feed_published" field.
-func (u *FeedUpsertBulk) SetFeedPublished(v string) *FeedUpsertBulk {
+func (u *FeedUpsertBulk) SetFeedPublished(v time.Time) *FeedUpsertBulk {
 	return u.Update(func(s *FeedUpsert) {
 		s.SetFeedPublished(v)
 	})

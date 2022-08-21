@@ -2,20 +2,22 @@ package rss
 
 import (
 	// log "github.com/sirupsen/logrus"
-	"github.com/google/uuid"
 	"crypto/sha256"
-  "encoding/hex"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 
 	"strings"
 
 	"github.com/mrusme/journalist/crawler"
 	"github.com/mrusme/journalist/ent"
 
+	"github.com/araddon/dateparse"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/mmcdole/gofeed"
-  "github.com/microcosm-cc/bluemonday"
 )
 
 type Client struct {
@@ -91,6 +93,19 @@ func (c* Client) SetFeed(
   password string,
   dbFeedTmp *ent.FeedCreate,
 ) (*ent.FeedCreate) {
+  // TODO: Get system timezone
+  ltz, _ := time.LoadLocation("UTC")
+  time.Local = ltz
+
+  feedUpdated, err := dateparse.ParseLocal(c.Feed.Updated)
+  if err != nil {
+    feedUpdated = time.Now()
+  }
+  feedPublished, err := dateparse.ParseLocal(c.Feed.Published)
+  if err != nil {
+    feedPublished = time.Now()
+  }
+
   dbFeedTmp = dbFeedTmp.
     SetURL(feedLink).
     SetUsername(username).
@@ -99,8 +114,8 @@ func (c* Client) SetFeed(
     SetFeedDescription(c.Feed.Description).
     SetFeedLink(c.Feed.Link).
     SetFeedFeedLink(c.Feed.FeedLink).
-    SetFeedUpdated(c.Feed.Updated).
-    SetFeedPublished(c.Feed.Published).
+    SetFeedUpdated(feedUpdated).
+    SetFeedPublished(feedPublished).
     SetFeedLanguage(c.Feed.Language).
     SetFeedCopyright(c.Feed.Copyright).
     SetFeedGenerator(c.Feed.Generator).
@@ -133,6 +148,19 @@ func (c* Client) SetItem(
 
   item := c.Feed.Items[idx]
 
+  // TODO: Get system timezone
+  ltz, _ := time.LoadLocation("UTC")
+  time.Local = ltz
+
+  itemUpdated, err := dateparse.ParseLocal(item.Updated)
+  if err != nil {
+    itemUpdated = time.Now()
+  }
+  itemPublished, err := dateparse.ParseLocal(item.Published)
+  if err != nil {
+    itemPublished = time.Now()
+  }
+
   var enclosureJson string = ""
   if item.Enclosures != nil {
     jsonbytes, err := json.Marshal(item.Enclosures)
@@ -152,8 +180,8 @@ func (c* Client) SetItem(
     SetItemDescription(itemDescription).
     SetItemContent(item.Content).
     SetItemLink(item.Link).
-    SetItemUpdated(item.Updated).
-    SetItemPublished(item.Published).
+    SetItemUpdated(itemUpdated).
+    SetItemPublished(itemPublished).
     SetItemCategories(strings.Join(item.Categories, ",")).
     SetItemEnclosures(enclosureJson).
 

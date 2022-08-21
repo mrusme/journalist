@@ -29,9 +29,9 @@ type Item struct {
 	// ItemLink holds the value of the "item_link" field.
 	ItemLink string `json:"item_link,omitempty"`
 	// ItemUpdated holds the value of the "item_updated" field.
-	ItemUpdated string `json:"item_updated,omitempty"`
+	ItemUpdated time.Time `json:"item_updated,omitempty"`
 	// ItemPublished holds the value of the "item_published" field.
-	ItemPublished string `json:"item_published,omitempty"`
+	ItemPublished time.Time `json:"item_published,omitempty"`
 	// ItemAuthorName holds the value of the "item_author_name" field.
 	ItemAuthorName string `json:"item_author_name,omitempty"`
 	// ItemAuthorEmail holds the value of the "item_author_email" field.
@@ -117,9 +117,9 @@ func (*Item) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case item.FieldItemGUID, item.FieldItemTitle, item.FieldItemDescription, item.FieldItemContent, item.FieldItemLink, item.FieldItemUpdated, item.FieldItemPublished, item.FieldItemAuthorName, item.FieldItemAuthorEmail, item.FieldItemImageTitle, item.FieldItemImageURL, item.FieldItemCategories, item.FieldItemEnclosures, item.FieldCrawlerTitle, item.FieldCrawlerAuthor, item.FieldCrawlerExcerpt, item.FieldCrawlerSiteName, item.FieldCrawlerImage, item.FieldCrawlerContentHTML, item.FieldCrawlerContentText:
+		case item.FieldItemGUID, item.FieldItemTitle, item.FieldItemDescription, item.FieldItemContent, item.FieldItemLink, item.FieldItemAuthorName, item.FieldItemAuthorEmail, item.FieldItemImageTitle, item.FieldItemImageURL, item.FieldItemCategories, item.FieldItemEnclosures, item.FieldCrawlerTitle, item.FieldCrawlerAuthor, item.FieldCrawlerExcerpt, item.FieldCrawlerSiteName, item.FieldCrawlerImage, item.FieldCrawlerContentHTML, item.FieldCrawlerContentText:
 			values[i] = new(sql.NullString)
-		case item.FieldCreatedAt, item.FieldUpdatedAt:
+		case item.FieldItemUpdated, item.FieldItemPublished, item.FieldCreatedAt, item.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case item.FieldID:
 			values[i] = new(uuid.UUID)
@@ -177,16 +177,16 @@ func (i *Item) assignValues(columns []string, values []interface{}) error {
 				i.ItemLink = value.String
 			}
 		case item.FieldItemUpdated:
-			if value, ok := values[j].(*sql.NullString); !ok {
+			if value, ok := values[j].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field item_updated", values[j])
 			} else if value.Valid {
-				i.ItemUpdated = value.String
+				i.ItemUpdated = value.Time
 			}
 		case item.FieldItemPublished:
-			if value, ok := values[j].(*sql.NullString); !ok {
+			if value, ok := values[j].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field item_published", values[j])
 			} else if value.Valid {
-				i.ItemPublished = value.String
+				i.ItemPublished = value.Time
 			}
 		case item.FieldItemAuthorName:
 			if value, ok := values[j].(*sql.NullString); !ok {
@@ -344,10 +344,10 @@ func (i *Item) String() string {
 	builder.WriteString(i.ItemLink)
 	builder.WriteString(", ")
 	builder.WriteString("item_updated=")
-	builder.WriteString(i.ItemUpdated)
+	builder.WriteString(i.ItemUpdated.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("item_published=")
-	builder.WriteString(i.ItemPublished)
+	builder.WriteString(i.ItemPublished.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("item_author_name=")
 	builder.WriteString(i.ItemAuthorName)

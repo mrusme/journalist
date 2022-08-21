@@ -58,14 +58,14 @@ func (ic *ItemCreate) SetItemLink(s string) *ItemCreate {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (ic *ItemCreate) SetItemUpdated(s string) *ItemCreate {
-	ic.mutation.SetItemUpdated(s)
+func (ic *ItemCreate) SetItemUpdated(t time.Time) *ItemCreate {
+	ic.mutation.SetItemUpdated(t)
 	return ic
 }
 
 // SetItemPublished sets the "item_published" field.
-func (ic *ItemCreate) SetItemPublished(s string) *ItemCreate {
-	ic.mutation.SetItemPublished(s)
+func (ic *ItemCreate) SetItemPublished(t time.Time) *ItemCreate {
+	ic.mutation.SetItemPublished(t)
 	return ic
 }
 
@@ -536,7 +536,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := ic.mutation.ItemUpdated(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemUpdated,
 		})
@@ -544,7 +544,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := ic.mutation.ItemPublished(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: item.FieldItemPublished,
 		})
@@ -850,7 +850,7 @@ func (u *ItemUpsert) UpdateItemLink() *ItemUpsert {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (u *ItemUpsert) SetItemUpdated(v string) *ItemUpsert {
+func (u *ItemUpsert) SetItemUpdated(v time.Time) *ItemUpsert {
 	u.Set(item.FieldItemUpdated, v)
 	return u
 }
@@ -862,7 +862,7 @@ func (u *ItemUpsert) UpdateItemUpdated() *ItemUpsert {
 }
 
 // SetItemPublished sets the "item_published" field.
-func (u *ItemUpsert) SetItemPublished(v string) *ItemUpsert {
+func (u *ItemUpsert) SetItemPublished(v time.Time) *ItemUpsert {
 	u.Set(item.FieldItemPublished, v)
 	return u
 }
@@ -1240,7 +1240,7 @@ func (u *ItemUpsertOne) UpdateItemLink() *ItemUpsertOne {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (u *ItemUpsertOne) SetItemUpdated(v string) *ItemUpsertOne {
+func (u *ItemUpsertOne) SetItemUpdated(v time.Time) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.SetItemUpdated(v)
 	})
@@ -1254,7 +1254,7 @@ func (u *ItemUpsertOne) UpdateItemUpdated() *ItemUpsertOne {
 }
 
 // SetItemPublished sets the "item_published" field.
-func (u *ItemUpsertOne) SetItemPublished(v string) *ItemUpsertOne {
+func (u *ItemUpsertOne) SetItemPublished(v time.Time) *ItemUpsertOne {
 	return u.Update(func(s *ItemUpsert) {
 		s.SetItemPublished(v)
 	})
@@ -1841,7 +1841,7 @@ func (u *ItemUpsertBulk) UpdateItemLink() *ItemUpsertBulk {
 }
 
 // SetItemUpdated sets the "item_updated" field.
-func (u *ItemUpsertBulk) SetItemUpdated(v string) *ItemUpsertBulk {
+func (u *ItemUpsertBulk) SetItemUpdated(v time.Time) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.SetItemUpdated(v)
 	})
@@ -1855,7 +1855,7 @@ func (u *ItemUpsertBulk) UpdateItemUpdated() *ItemUpsertBulk {
 }
 
 // SetItemPublished sets the "item_published" field.
-func (u *ItemUpsertBulk) SetItemPublished(v string) *ItemUpsertBulk {
+func (u *ItemUpsertBulk) SetItemPublished(v time.Time) *ItemUpsertBulk {
 	return u.Update(func(s *ItemUpsert) {
 		s.SetItemPublished(v)
 	})

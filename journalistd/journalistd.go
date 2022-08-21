@@ -71,7 +71,7 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
     dbFeedTmp := jd.entClient.Feed.
       Create()
     rc.SetFeed(
-      dbFeed.FeedFeedLink,
+      dbFeed.URL,
       dbFeed.Username,
       dbFeed.Password,
       dbFeedTmp,
