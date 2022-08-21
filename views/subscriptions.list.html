@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>{{ .Title }}</title>
-    <link>{{ .Link }}</link>
-    <description>{{ .Description }}</description>
+    <title>{{ escape .Title }}</title>
+    <link>{{ escape .Link }}</link>
+    <description>{{ escape .Description }}</description>
     <generator>{{ .Generator }}</generator>
     <language>{{ .Language }}</language>
-    <lastBuildDate>{{ .LastBuildDate }}</lastBuildDate>
-    <atom:link href="{{ .Link }}" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>{{ timestamp .LastBuildDate }}</lastBuildDate>
+    <atom:link href="{{ escape .Link }}" rel="self" type="application/rss+xml"/>
     {{ range .Items }}
     <item>
       <guid isPermaLink="false">{{ .ItemGUID }}</guid>
-      <link>{{ .ItemLink }}</link>
-      <title>{{ .ItemTitle }}</title>
-      <description>{{ .ItemDescription }}</description>
-      <pubDate>{{ .ItemPublished }}</pubDate>
+      <link>{{ escape .ItemLink }}</link>
+      <title>{{ escape .ItemTitle }}</title>
+      <description>{{ escape .ItemDescription }}</description>
+      <pubDate>{{ timestamp .ItemPublished }}</pubDate>
       <content:encoded>
         <![CDATA[
           <div id="journalist-menu" style="border: 1x solid #121212; border-radius: 5px; margin: 14px; padding: 8px;">
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+            <a href="{{ $.Config.Server.Endpoint.Web }}/actions/read/{{ .ItemGUID }}?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
               Mark <b>this</b> as read
             </a>
             &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_older?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
-              Mark <b>all older and this</b> as read
+            <a href="{{ $.Config.Server.Endpoint.Web }}/actions/read_older/{{ .ItemGUID }}?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>this and all older</b> as read
             </a>
             &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_newer?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
-              Mark <b>all newer and this</b> as read
+            <a href="{{ $.Config.Server.Endpoint.Web }}/actions/read_newer/{{ .ItemGUID }}?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>this and all newer</b> as read
             </a>
             &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_all?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+            <a href="{{ $.Config.Server.Endpoint.Web }}/actions/read_all/{{ .ItemGUID }}?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
               Mark <b>all</b> as read
             </a>
           </div>

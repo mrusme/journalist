@@ -9,6 +9,7 @@ import (
 	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
 	"github.com/mrusme/journalist/journalistd"
+	"github.com/mrusme/journalist/web/actions"
 	"github.com/mrusme/journalist/web/subscriptions"
 )
 
@@ -16,6 +17,7 @@ func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Cl
   web := fiberApp.Group("/web")
   web.Use(authorizer(entClient))
 
+  actions.Register(config, &web, entClient)
   subscriptions.Register(config, &web, entClient)
 }
 

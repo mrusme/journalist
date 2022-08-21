@@ -2,7 +2,9 @@ package web
 
 import (
 	"fmt"
+  "time"
 	"text/template"
+  "html"
 	"io"
 	"net/http"
 	"os"
@@ -53,6 +55,13 @@ func New(directory, extension string) *Engine {
 	engine.AddFunc(engine.layout, func() error {
 		return fmt.Errorf("layout called unexpectedly.")
 	})
+  engine.AddFunc("escape", func(s string) string {
+    return html.EscapeString(s)
+  })
+  engine.AddFunc("timestamp", func(t time.Time) string {
+    return t.Format(time.RFC822Z)
+  })
+
 	return engine
 }
 
@@ -70,6 +79,13 @@ func NewFileSystem(fs http.FileSystem, extension string) *Engine {
 	engine.AddFunc(engine.layout, func() error {
 		return fmt.Errorf("layout called unexpectedly.")
 	})
+  engine.AddFunc("escape", func(s string) string {
+    return html.EscapeString(s)
+  })
+  engine.AddFunc("timestamp", func(t time.Time) string {
+    return t.Format(time.RFC822Z)
+  })
+
 	return engine
 }
 
