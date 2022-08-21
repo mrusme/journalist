@@ -11,9 +11,15 @@ import (
 	"github.com/mrusme/journalist/rss"
 )
 
+var VERSION string
+
 type Journalistd struct {
   config                *Config
   entClient             *ent.Client
+}
+
+func Version() (string) {
+  return VERSION
 }
 
 func New(config *Config, entClient *ent.Client) (*Journalistd) {
