@@ -1,9 +1,11 @@
 package subscriptions
 
 import (
-  "fmt"
-  "time"
+	"fmt"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/subscription"
 	"github.com/mrusme/journalist/ent/user"
@@ -34,6 +36,9 @@ func (h *handler) List(ctx *fiber.Ctx) error {
           user.ID(myId),
         ),
       ),
+    ).
+    Order(
+      ent.Desc(item.FieldItemPublished),
     ).
     All(context.Background())
   if err != nil {
