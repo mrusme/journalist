@@ -36,6 +36,8 @@ type User struct {
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 type UserEdges struct {
+	// Tokens holds the value of the tokens edge.
+	Tokens []*Token `json:"tokens,omitempty"`
 	// SubscribedFeeds holds the value of the subscribed_feeds edge.
 	SubscribedFeeds []*Feed `json:"subscribed_feeds,omitempty"`
 	// ReadItems holds the value of the read_items edge.
@@ -46,13 +48,22 @@ type UserEdges struct {
 	Reads []*Read `json:"reads,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
+}
+
+// TokensOrErr returns the Tokens value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) TokensOrErr() ([]*Token, error) {
+	if e.loadedTypes[0] {
+		return e.Tokens, nil
+	}
+	return nil, &NotLoadedError{edge: "tokens"}
 }
 
 // SubscribedFeedsOrErr returns the SubscribedFeeds value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) SubscribedFeedsOrErr() ([]*Feed, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		return e.SubscribedFeeds, nil
 	}
 	return nil, &NotLoadedError{edge: "subscribed_feeds"}
@@ -61,7 +72,7 @@ func (e UserEdges) SubscribedFeedsOrErr() ([]*Feed, error) {
 // ReadItemsOrErr returns the ReadItems value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ReadItemsOrErr() ([]*Item, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.ReadItems, nil
 	}
 	return nil, &NotLoadedError{edge: "read_items"}
@@ -70,7 +81,7 @@ func (e UserEdges) ReadItemsOrErr() ([]*Item, error) {
 // SubscriptionsOrErr returns the Subscriptions value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) SubscriptionsOrErr() ([]*Subscription, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.Subscriptions, nil
 	}
 	return nil, &NotLoadedError{edge: "subscriptions"}
@@ -79,7 +90,7 @@ func (e UserEdges) SubscriptionsOrErr() ([]*Subscription, error) {
 // ReadsOrErr returns the Reads value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ReadsOrErr() ([]*Read, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.Reads, nil
 	}
 	return nil, &NotLoadedError{edge: "reads"}
@@ -157,6 +168,11 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryTokens queries the "tokens" edge of the User entity.
+func (u *User) QueryTokens() *TokenQuery {
+	return (&UserClient{config: u.config}).QueryTokens(u)
 }
 
 // QuerySubscribedFeeds queries the "subscribed_feeds" edge of the User entity.

@@ -28,6 +28,7 @@ type hooks struct {
 	Item         []ent.Hook
 	Read         []ent.Hook
 	Subscription []ent.Hook
+	Token        []ent.Hook
 	User         []ent.Hook
 }
 

@@ -20,6 +20,8 @@ type Tx struct {
 	Read *ReadClient
 	// Subscription is the client for interacting with the Subscription builders.
 	Subscription *SubscriptionClient
+	// Token is the client for interacting with the Token builders.
+	Token *TokenClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -161,6 +163,7 @@ func (tx *Tx) init() {
 	tx.Item = NewItemClient(tx.config)
 	tx.Read = NewReadClient(tx.config)
 	tx.Subscription = NewSubscriptionClient(tx.config)
+	tx.Token = NewTokenClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

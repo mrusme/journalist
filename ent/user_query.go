@@ -17,6 +17,7 @@ import (
 	"github.com/mrusme/journalist/ent/predicate"
 	"github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/subscription"
+	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
 )
 
@@ -29,6 +30,7 @@ type UserQuery struct {
 	order               []OrderFunc
 	fields              []string
 	predicates          []predicate.User
+	withTokens          *TokenQuery
 	withSubscribedFeeds *FeedQuery
 	withReadItems       *ItemQuery
 	withSubscriptions   *SubscriptionQuery
@@ -67,6 +69,28 @@ func (uq *UserQuery) Unique(unique bool) *UserQuery {
 func (uq *UserQuery) Order(o ...OrderFunc) *UserQuery {
 	uq.order = append(uq.order, o...)
 	return uq
+}
+
+// QueryTokens chains the current query on the "tokens" edge.
+func (uq *UserQuery) QueryTokens() *TokenQuery {
+	query := &TokenQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := uq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(token.Table, token.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.TokensTable, user.TokensColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QuerySubscribedFeeds chains the current query on the "subscribed_feeds" edge.
@@ -338,6 +362,7 @@ func (uq *UserQuery) Clone() *UserQuery {
 		offset:              uq.offset,
 		order:               append([]OrderFunc{}, uq.order...),
 		predicates:          append([]predicate.User{}, uq.predicates...),
+		withTokens:          uq.withTokens.Clone(),
 		withSubscribedFeeds: uq.withSubscribedFeeds.Clone(),
 		withReadItems:       uq.withReadItems.Clone(),
 		withSubscriptions:   uq.withSubscriptions.Clone(),
@@ -347,6 +372,17 @@ func (uq *UserQuery) Clone() *UserQuery {
 		path:   uq.path,
 		unique: uq.unique,
 	}
+}
+
+// WithTokens tells the query-builder to eager-load the nodes that are connected to
+// the "tokens" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithTokens(opts ...func(*TokenQuery)) *UserQuery {
+	query := &TokenQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withTokens = query
+	return uq
 }
 
 // WithSubscribedFeeds tells the query-builder to eager-load the nodes that are connected to
@@ -463,7 +499,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = uq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
+			uq.withTokens != nil,
 			uq.withSubscribedFeeds != nil,
 			uq.withReadItems != nil,
 			uq.withSubscriptions != nil,
@@ -487,6 +524,13 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+	if query := uq.withTokens; query != nil {
+		if err := uq.loadTokens(ctx, query, nodes,
+			func(n *User) { n.Edges.Tokens = []*Token{} },
+			func(n *User, e *Token) { n.Edges.Tokens = append(n.Edges.Tokens, e) }); err != nil {
+			return nil, err
+		}
 	}
 	if query := uq.withSubscribedFeeds; query != nil {
 		if err := uq.loadSubscribedFeeds(ctx, query, nodes,
@@ -519,6 +563,37 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	return nodes, nil
 }
 
+func (uq *UserQuery) loadTokens(ctx context.Context, query *TokenQuery, nodes []*User, init func(*User), assign func(*User, *Token)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Token(func(s *sql.Selector) {
+		s.Where(sql.InValues(user.TokensColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_tokens
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_tokens" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "user_tokens" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
 func (uq *UserQuery) loadSubscribedFeeds(ctx context.Context, query *FeedQuery, nodes []*User, init func(*User), assign func(*User, *Feed)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[uuid.UUID]*User)

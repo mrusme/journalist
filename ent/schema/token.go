@@ -11,32 +11,29 @@ import (
 	"github.com/google/uuid"
 )
 
-// User holds the schema definition for the User entity.
-type User struct {
+// Token holds the schema definition for the Token entity.
+type Token struct {
 	ent.Schema
 }
 
-// Fields of the User.
-func (User) Fields() []ent.Field {
+// Fields of the Token.
+func (Token) Fields() []ent.Field {
   validate := validator.New()
 
   return []ent.Field{
     field.UUID("id", uuid.UUID{}).
       Default(uuid.New),
       // StorageKey("oid"),
-    field.String("username").
+    field.String("type").
+      Default("qat").
+      Match(regexp.MustCompile("^(qat|jwt)$")),
+    field.String("name").
       Validate(func(s string) error {
         return validate.Var(s, "required,alphanum,max=32")
-      }).
-      Unique(),
-    field.String("password").
-      Validate(func(s string) error {
-        return validate.Var(s, "required,min=5")
-      }).
+      }),
+    field.String("token").
+      Unique().
       Sensitive(),
-    field.String("role").
-      Default("user").
-      Match(regexp.MustCompile("^(admin|user)$")),
     field.Time("created_at").
       Default(time.Now),
     field.Time("updated_at").
@@ -49,13 +46,11 @@ func (User) Fields() []ent.Field {
   }
 }
 
-// Edges of the User.
-func (User) Edges() []ent.Edge {
+// Edges of the Token.
+func (Token) Edges() []ent.Edge {
   return []ent.Edge{
-    edge.To("tokens", Token.Type),
-    edge.To("subscribed_feeds", Feed.Type).
-      Through("subscriptions", Subscription.Type),
-    edge.To("read_items", Item.Type).
-      Through("reads", Read.Type),
+    edge.From("owner", User.Type).
+      Ref("tokens").
+      Unique(),
   }
 }

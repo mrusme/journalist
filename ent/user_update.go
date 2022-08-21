@@ -17,6 +17,7 @@ import (
 	"github.com/mrusme/journalist/ent/predicate"
 	"github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/subscription"
+	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
 )
 
@@ -99,6 +100,21 @@ func (uu *UserUpdate) ClearDeletedAt() *UserUpdate {
 	return uu
 }
 
+// AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
+func (uu *UserUpdate) AddTokenIDs(ids ...uuid.UUID) *UserUpdate {
+	uu.mutation.AddTokenIDs(ids...)
+	return uu
+}
+
+// AddTokens adds the "tokens" edges to the Token entity.
+func (uu *UserUpdate) AddTokens(t ...*Token) *UserUpdate {
+	ids := make([]uuid.UUID, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uu.AddTokenIDs(ids...)
+}
+
 // AddSubscribedFeedIDs adds the "subscribed_feeds" edge to the Feed entity by IDs.
 func (uu *UserUpdate) AddSubscribedFeedIDs(ids ...uuid.UUID) *UserUpdate {
 	uu.mutation.AddSubscribedFeedIDs(ids...)
@@ -162,6 +178,27 @@ func (uu *UserUpdate) AddReads(r ...*Read) *UserUpdate {
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// ClearTokens clears all "tokens" edges to the Token entity.
+func (uu *UserUpdate) ClearTokens() *UserUpdate {
+	uu.mutation.ClearTokens()
+	return uu
+}
+
+// RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
+func (uu *UserUpdate) RemoveTokenIDs(ids ...uuid.UUID) *UserUpdate {
+	uu.mutation.RemoveTokenIDs(ids...)
+	return uu
+}
+
+// RemoveTokens removes "tokens" edges to Token entities.
+func (uu *UserUpdate) RemoveTokens(t ...*Token) *UserUpdate {
+	ids := make([]uuid.UUID, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uu.RemoveTokenIDs(ids...)
 }
 
 // ClearSubscribedFeeds clears all "subscribed_feeds" edges to the Feed entity.
@@ -402,6 +439,60 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeTime,
 			Column: user.FieldDeletedAt,
 		})
+	}
+	if uu.mutation.TokensCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedTokensIDs(); len(nodes) > 0 && !uu.mutation.TokensCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.TokensIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uu.mutation.SubscribedFeedsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -746,6 +837,21 @@ func (uuo *UserUpdateOne) ClearDeletedAt() *UserUpdateOne {
 	return uuo
 }
 
+// AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
+func (uuo *UserUpdateOne) AddTokenIDs(ids ...uuid.UUID) *UserUpdateOne {
+	uuo.mutation.AddTokenIDs(ids...)
+	return uuo
+}
+
+// AddTokens adds the "tokens" edges to the Token entity.
+func (uuo *UserUpdateOne) AddTokens(t ...*Token) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uuo.AddTokenIDs(ids...)
+}
+
 // AddSubscribedFeedIDs adds the "subscribed_feeds" edge to the Feed entity by IDs.
 func (uuo *UserUpdateOne) AddSubscribedFeedIDs(ids ...uuid.UUID) *UserUpdateOne {
 	uuo.mutation.AddSubscribedFeedIDs(ids...)
@@ -809,6 +915,27 @@ func (uuo *UserUpdateOne) AddReads(r ...*Read) *UserUpdateOne {
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// ClearTokens clears all "tokens" edges to the Token entity.
+func (uuo *UserUpdateOne) ClearTokens() *UserUpdateOne {
+	uuo.mutation.ClearTokens()
+	return uuo
+}
+
+// RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
+func (uuo *UserUpdateOne) RemoveTokenIDs(ids ...uuid.UUID) *UserUpdateOne {
+	uuo.mutation.RemoveTokenIDs(ids...)
+	return uuo
+}
+
+// RemoveTokens removes "tokens" edges to Token entities.
+func (uuo *UserUpdateOne) RemoveTokens(t ...*Token) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uuo.RemoveTokenIDs(ids...)
 }
 
 // ClearSubscribedFeeds clears all "subscribed_feeds" edges to the Feed entity.
@@ -1079,6 +1206,60 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeTime,
 			Column: user.FieldDeletedAt,
 		})
+	}
+	if uuo.mutation.TokensCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedTokensIDs(); len(nodes) > 0 && !uuo.mutation.TokensCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.TokensIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uuo.mutation.SubscribedFeedsCleared() {
 		edge := &sqlgraph.EdgeSpec{

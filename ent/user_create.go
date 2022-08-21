@@ -17,6 +17,7 @@ import (
 	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/subscription"
+	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
 )
 
@@ -108,6 +109,21 @@ func (uc *UserCreate) SetNillableID(u *uuid.UUID) *UserCreate {
 		uc.SetID(*u)
 	}
 	return uc
+}
+
+// AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
+func (uc *UserCreate) AddTokenIDs(ids ...uuid.UUID) *UserCreate {
+	uc.mutation.AddTokenIDs(ids...)
+	return uc
+}
+
+// AddTokens adds the "tokens" edges to the Token entity.
+func (uc *UserCreate) AddTokens(t ...*Token) *UserCreate {
+	ids := make([]uuid.UUID, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return uc.AddTokenIDs(ids...)
 }
 
 // AddSubscribedFeedIDs adds the "subscribed_feeds" edge to the Feed entity by IDs.
@@ -381,6 +397,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldDeletedAt,
 		})
 		_node.DeletedAt = &value
+	}
+	if nodes := uc.mutation.TokensIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.TokensTable,
+			Columns: []string{user.TokensColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeUUID,
+					Column: token.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.SubscribedFeedsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

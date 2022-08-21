@@ -627,6 +627,34 @@ func DeletedAtNotNil() predicate.User {
 	})
 }
 
+// HasTokens applies the HasEdge predicate on the "tokens" edge.
+func HasTokens() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TokensTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TokensTable, TokensColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTokensWith applies the HasEdge predicate on the "tokens" edge with a given conditions (other predicates).
+func HasTokensWith(preds ...predicate.Token) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TokensInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, TokensTable, TokensColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasSubscribedFeeds applies the HasEdge predicate on the "subscribed_feeds" edge.
 func HasSubscribedFeeds() predicate.User {
 	return predicate.User(func(s *sql.Selector) {

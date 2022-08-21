@@ -14,6 +14,7 @@ import (
 	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/subscription"
+	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
 )
 
@@ -39,6 +40,7 @@ func columnChecker(table string) func(string) error {
 		item.Table:         item.ValidColumn,
 		read.Table:         read.ValidColumn,
 		subscription.Table: subscription.ValidColumn,
+		token.Table:        token.ValidColumn,
 		user.Table:         user.ValidColumn,
 	}
 	check, ok := checks[table]

@@ -25,6 +25,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
+	// EdgeTokens holds the string denoting the tokens edge name in mutations.
+	EdgeTokens = "tokens"
 	// EdgeSubscribedFeeds holds the string denoting the subscribed_feeds edge name in mutations.
 	EdgeSubscribedFeeds = "subscribed_feeds"
 	// EdgeReadItems holds the string denoting the read_items edge name in mutations.
@@ -35,6 +37,13 @@ const (
 	EdgeReads = "reads"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// TokensTable is the table that holds the tokens relation/edge.
+	TokensTable = "tokens"
+	// TokensInverseTable is the table name for the Token entity.
+	// It exists in this package in order to avoid circular dependency with the "token" package.
+	TokensInverseTable = "tokens"
+	// TokensColumn is the table column denoting the tokens relation/edge.
+	TokensColumn = "user_tokens"
 	// SubscribedFeedsTable is the table that holds the subscribed_feeds relation/edge. The primary key declared below.
 	SubscribedFeedsTable = "subscriptions"
 	// SubscribedFeedsInverseTable is the table name for the Feed entity.

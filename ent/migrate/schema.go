@@ -163,6 +163,31 @@ var (
 			},
 		},
 	}
+	// TokensColumns holds the columns for the "tokens" table.
+	TokensColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "type", Type: field.TypeString, Default: "qat"},
+		{Name: "name", Type: field.TypeString},
+		{Name: "token", Type: field.TypeString, Unique: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "user_tokens", Type: field.TypeUUID, Nullable: true},
+	}
+	// TokensTable holds the schema information for the "tokens" table.
+	TokensTable = &schema.Table{
+		Name:       "tokens",
+		Columns:    TokensColumns,
+		PrimaryKey: []*schema.Column{TokensColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "tokens_users_tokens",
+				Columns:    []*schema.Column{TokensColumns[7]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
@@ -185,6 +210,7 @@ var (
 		ItemsTable,
 		ReadsTable,
 		SubscriptionsTable,
+		TokensTable,
 		UsersTable,
 	}
 )
@@ -195,4 +221,5 @@ func init() {
 	ReadsTable.ForeignKeys[1].RefTable = ItemsTable
 	SubscriptionsTable.ForeignKeys[0].RefTable = UsersTable
 	SubscriptionsTable.ForeignKeys[1].RefTable = FeedsTable
+	TokensTable.ForeignKeys[0].RefTable = UsersTable
 }
