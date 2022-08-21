@@ -33,6 +33,9 @@ import (
 //go:embed views/*
 var viewsfs embed.FS
 
+//go:embed favicon.ico
+var favicon embed.FS
+
 var fiberApp *fiber.App
 var fiberLambda *fiberadapter.FiberLambda
 var entClient *ent.Client
@@ -99,6 +102,13 @@ func main() {
   api.Register(&config, fiberApp, entClient)
   web.Register(&config, fiberApp, entClient)
 
+  fiberApp.Get("/favicon.ico", func(ctx *fiber.Ctx) error {
+    fi, err := favicon.Open("favicon.ico")
+    if err != nil {
+      return ctx.SendStatus(fiber.StatusInternalServerError)
+    }
+    return ctx.SendStream(fi)
+  })
 
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
