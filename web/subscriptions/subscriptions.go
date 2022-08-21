@@ -3,14 +3,21 @@ package subscriptions
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent"
+	"github.com/mrusme/journalist/journalistd"
 )
 
 type handler struct {
+  config    *journalistd.Config
   EntClient *ent.Client
 }
 
-func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
+func Register(
+  config *journalistd.Config,
+  fiberRouter *fiber.Router,
+  entClient *ent.Client,
+) () {
   endpoint := new(handler)
+  endpoint.config = config
   endpoint.EntClient = entClient
 
   subscriptionsRouter := (*fiberRouter).Group("/subscriptions")

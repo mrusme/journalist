@@ -16,7 +16,7 @@ func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Cl
   web := fiberApp.Group("/web")
   web.Use(authorizer(entClient))
 
-  subscriptions.Register(&web, entClient)
+  subscriptions.Register(config, &web, entClient)
 }
 
 func authorizer(entClient *ent.Client) fiber.Handler {

@@ -1,23 +1,21 @@
 package subscriptions
 
 import (
-	// "log"
-	// "context"
+  "fmt"
+  "time"
 	"github.com/google/uuid"
-	// "github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/item"
-	// "github.com/mrusme/journalist/ent/read"
 	"github.com/mrusme/journalist/ent/subscription"
 	"github.com/mrusme/journalist/ent/user"
 
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent/user"
-	// "github.com/mrusme/journalist/ent"
 )
 
 func (h *handler) List(ctx *fiber.Ctx) error {
+  qat := ctx.Query("qat")
+  sessionUsername := ctx.Locals("username").(string)
   sessionUserId := ctx.Locals("user_id").(string)
   myId, err := uuid.Parse(sessionUserId)
   if err != nil {
@@ -44,7 +42,23 @@ func (h *handler) List(ctx *fiber.Ctx) error {
   }
 
   err = ctx.Render("views/subscriptions.list", fiber.Map{
+    "Config": h.config,
+    "QAT": qat,
+
     "Title": "Subscriptions",
+    "Link": fmt.Sprintf(
+      "%s/subscriptions?qat=%s",
+      h.config.Server.Endpoint.Web,
+      qat,
+    ),
+    "Description": fmt.Sprintf(
+      "%s' subscriptions",
+      sessionUsername,
+    ),
+    "Generator": "Journalist",
+    "Language": "en-us",
+    "LastBuildDate": time.Now().String(),
+
     "Items": dbItems,
   })
   ctx.Set("Content-type", "text/xml; charset=utf-8")
