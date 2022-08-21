@@ -35,6 +35,7 @@ func Cfg() (Config, error) {
 
   viper.SetDefault("Server.BindIP", "127.0.0.1")
   viper.SetDefault("Server.Port", "8000")
+  viper.SetDefault("Server.Endpoint.Api", "http://127.0.0.1:8000/api")
   viper.SetDefault("Server.Endpoint.Web", "http://127.0.0.1:8000/web")
 
   viper.SetConfigName("journalist.toml")
