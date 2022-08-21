@@ -17,11 +17,22 @@
       <pubDate>{{ .ItemPublished }}</pubDate>
       <content:encoded>
         <![CDATA[
-          <div id="journalist-menu">
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read?qat={{ $.QAT }}">Mark <b>this</b> as read</a> &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_older?qat={{ $.QAT }}">Mark <b>all older and this</b> as read</a> &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_newer?qat={{ $.QAT }}">Mark <b>all newer and this</b> as read</a> &middot;
-            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_all?qat={{ $.QAT }}">Mark <b>all</b> as read</a>
+          <div id="journalist-menu" style="border: 1x solid #121212; border-radius: 5px; margin: 14px; padding: 8px;">
+            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>this</b> as read
+            </a>
+            &middot;
+            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_older?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>all older and this</b> as read
+            </a>
+            &middot;
+            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_newer?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>all newer and this</b> as read
+            </a>
+            &middot;
+            <a href="{{ $.Config.Server.Endpoint.Web }}/items/{{ .ItemGUID }}/read_all?group={{ $.Group }}&{{ $.Token.Type }}={{ $.Token.Token }}">
+              Mark <b>all</b> as read
+            </a>
           </div>
           <br>
           <br>
