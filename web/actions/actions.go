@@ -22,7 +22,7 @@ func Register(
 
   actionsRouter := (*fiberRouter).Group("/actions")
   actionsRouter.Get("/read/:id", endpoint.Read)
-  // actionsRouter.Get("/read_older/:id", endpoint.ReadOlder)
+  actionsRouter.Get("/read_older/:id", endpoint.ReadOlder)
   // actionsRouter.Get("/read_newer/:id", endpoint.ReadNewer)
   // actionsRouter.Get("/read_all/:id", endpoint.ReadAll)
 }
