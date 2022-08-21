@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *handler) ReadOlder(ctx *fiber.Ctx) error {
+func (h *handler) ReadNewer(ctx *fiber.Ctx) error {
   id := ctx.Params("id")
   group := ctx.Query("group")
 
@@ -22,7 +22,7 @@ func (h *handler) ReadOlder(ctx *fiber.Ctx) error {
     myId,
     group,
     id,
-    item.ItemPublishedLT,
+    item.ItemPublishedGT,
   )
   if err != nil {
     ctx.SendStatus(fiber.StatusInternalServerError)
@@ -35,5 +35,6 @@ func (h *handler) ReadOlder(ctx *fiber.Ctx) error {
   // return err
   return ctx.SendStatus(fiber.StatusNoContent)
 }
+
 
 
