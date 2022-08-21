@@ -1,4 +1,6 @@
 #!/bin/sh
+debug="$1"
+
 api_url="http://127.0.0.1:8000/api/v1"
 
 admin_user="admin"
@@ -12,7 +14,8 @@ user2_id=""
 user2_user="user2"
 user2_pass="p4sS!"
 
-feed1_url="https://xn--gckvb8fzb.com"
+feed1_url="http://lorem-rss.herokuapp.com/feed"
+feed2_url="https://xn--gckvb8fzb.com"
 
 perform() {
   action=$(printf "%s" "$1" | tr '[:lower:]' '[:upper:]')
@@ -53,6 +56,10 @@ failfast() {
     exit "$1"
   else
     printf "   SUCCESS\n"
+    if [ "$debug" = "true" ]
+    then
+      printf "   DEBUG: %s\n" "$2"
+    fi
   fi
 }
 
@@ -156,6 +163,24 @@ out=$(
        \"username\": \"$user2_user\",
        \"password\": \"$user2_pass\",
        \"role\": \"user\"
+     }"
+)
+failfast $? "$out"
+#------------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------------#
+printf "\
+## Creating token as %s with name 'mytoken' \
+\n" "$user1_user"
+# -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
+out=$(
+  perform post \
+       on tokens \
+       as $user1_user $user1_pass \
+     with "{
+       \"name\": \"mytoken\"
      }"
 )
 failfast $? "$out"
