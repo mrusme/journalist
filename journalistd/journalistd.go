@@ -12,11 +12,13 @@ import (
 )
 
 type Journalistd struct {
+  config                *Config
   entClient             *ent.Client
 }
 
-func New(entClient *ent.Client) (*Journalistd) {
+func New(config *Config, entClient *ent.Client) (*Journalistd) {
   jd := new(Journalistd)
+  jd.config = config
   jd.entClient = entClient
   return jd
 }

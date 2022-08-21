@@ -1,19 +1,22 @@
 package api
 
 import (
-  "encoding/base64"
-  "strings"
-  // "log"
-  "context"
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/utils"
-  "github.com/gofiber/fiber/v2/middleware/cors"
-  "github.com/mrusme/journalist/ent"
-  "github.com/mrusme/journalist/ent/user"
-  "github.com/mrusme/journalist/api/v1"
+	"encoding/base64"
+	"strings"
+
+	// "log"
+	"context"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/utils"
+	"github.com/mrusme/journalist/api/v1"
+	"github.com/mrusme/journalist/ent"
+	"github.com/mrusme/journalist/ent/user"
+	"github.com/mrusme/journalist/journalistd"
 )
 
-func Register(fiberApp *fiber.App, entClient *ent.Client) () {
+func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Client) () {
   api := fiberApp.Group("/api")
   api.Use(cors.New())
   api.Use(authorizer(entClient))

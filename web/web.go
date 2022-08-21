@@ -7,12 +7,13 @@ import (
   "context"
   "github.com/gofiber/fiber/v2"
   "github.com/gofiber/fiber/v2/utils"
+  "github.com/mrusme/journalist/journalistd"
   "github.com/mrusme/journalist/ent"
   "github.com/mrusme/journalist/ent/user"
   "github.com/mrusme/journalist/web/subscriptions"
 )
 
-func Register(fiberApp *fiber.App, entClient *ent.Client) () {
+func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Client) () {
   web := fiberApp.Group("/web")
   // web.Use(authorizer(entClient))
 

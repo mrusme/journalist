@@ -1,7 +1,6 @@
 package subscriptions
 
 import (
-  "log"
 	// "context"
 	// "github.com/google/uuid"
 
@@ -20,7 +19,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
   }
 
   err = ctx.Render("views/subscriptions.list", fiber.Map{
-    "Title": "Hello World",
+    "Title": "Subscriptions",
     "Items": dbItems,
   })
   ctx.Set("Content-type", "text/xml; charset=utf-8")

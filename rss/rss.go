@@ -3,6 +3,7 @@ package rss
 import (
 	// log "github.com/sirupsen/logrus"
 	"crypto/sha256"
+  "encoding/hex"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -13,6 +14,7 @@ import (
 	"github.com/mrusme/journalist/ent"
 
 	"github.com/mmcdole/gofeed"
+  "github.com/microcosm-cc/bluemonday"
 )
 
 type Client struct {
@@ -67,7 +69,7 @@ func (c *Client) Sync(crawl bool) (error) {
 
     for i := 0; i < len(c.Feed.Items); i++ {
       crwl.Reset()
-      crwl.SetLocation(c.url)
+      crwl.SetLocation(c.Feed.Items[i].Link)
       crwl.SetBasicAuth(c.username, c.password)
       itemCrawled, err := crwl.GetReadable()
       if err != nil {
@@ -137,14 +139,14 @@ func (c* Client) SetItem(
     }
   }
 
-  h := sha256.New()
-  h.Write([]byte(fmt.Sprintf("%s%s", item.Link, item.Updated)))
-  sum := h.Sum(nil)
+  itemDescription := bluemonday.
+    StrictPolicy().
+    Sanitize(item.Description)
 
   dbItemTemp = dbItemTemp.
-    SetItemGUID(string(sum)).
+    SetItemGUID(GenerateGUIDForItem(item)).
     SetItemTitle(item.Title).
-    SetItemDescription(item.Description).
+    SetItemDescription(itemDescription).
     SetItemContent(item.Content).
     SetItemLink(item.Link).
     SetItemUpdated(item.Updated).
@@ -173,5 +175,19 @@ func (c* Client) SetItem(
   }
 
   return dbItemTemp
+}
+
+func GenerateGUID(from string) (string) {
+  h := sha256.New()
+  h.Write([]byte(from))
+  return hex.EncodeToString(
+    h.Sum(nil),
+  )
+}
+
+func GenerateGUIDForItem(item *gofeed.Item) (string) {
+  return GenerateGUID(
+    fmt.Sprintf("%s%s", item.Link, item.Published),
+  )
 }
 

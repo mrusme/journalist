@@ -15,6 +15,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+
 	// "github.com/gofiber/template/html"
 
 	"github.com/mrusme/journalist/ent"
@@ -25,6 +26,8 @@ import (
 	"github.com/mrusme/journalist/web"
 
 	_ "github.com/mattn/go-sqlite3"
+  _ "github.com/lib/pq"
+  _ "github.com/go-sql-driver/mysql"
 )
 
 //go:embed views/*
@@ -35,49 +38,7 @@ var fiberLambda *fiberadapter.FiberLambda
 var entClient *ent.Client
 
 func init() {
-  var err error
-
   log.Printf("Fiber cold start")
-
-  engine := web.NewFileSystem(http.FS(viewsfs), ".html")
-  fiberApp = fiber.New(fiber.Config{
-    Views: engine,
-  })
-
-  entClient, err = ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
-  if err != nil {
-    log.Fatalf("Failed initializing database: %v\n", err)
-  }
-  if err := entClient.Schema.Create(context.Background()); err != nil {
-    log.Fatalf("Failed initializing schema: %v\n", err)
-  }
-
-  var admin *ent.User
-  admin, err = entClient.User.
-    Query().
-    Where(user.Username("admin")).
-    Only(context.Background())
-  if err != nil {
-    appAdminPassword := os.Getenv("JOURNALIST_ADMIN_PASSWORD")
-    if appAdminPassword == "" {
-      appAdminPassword = "admin"
-    }
-    admin, err = entClient.User.
-      Create().
-      SetUsername("admin").
-      SetPassword(appAdminPassword).
-      SetRole("admin").
-      Save(context.Background())
-    if err != nil {
-      log.Fatalf("Failed to query as well as create admin user: %v\n", err)
-    }
-  }
-
-  log.Printf("Admin user: %s:%s\n", admin.Username, admin.Password)
-
-  fiberApp.Use(logger.New())
-  api.Register(fiberApp, entClient)
-  web.Register(fiberApp, entClient)
 
   fiberLambda = fiberadapter.New(fiberApp)
 }
@@ -90,15 +51,60 @@ func Handler(
 }
 
 func main() {
+  var err error
   defer entClient.Close()
 
-  appBindIp := os.Getenv("JOURNALIST_SERVER_BINDIP")
-  appPort := os.Getenv("JOURNALIST_SERVER_PORT")
+  config, err := journalistd.Cfg()
+  if err != nil {
+    log.Panic(err.Error())
+  }
+
+  engine := web.NewFileSystem(http.FS(viewsfs), ".html")
+  fiberApp = fiber.New(fiber.Config{
+    Views: engine,
+  })
+
+  entClient, err = ent.Open(config.Database.Type, config.Database.Connection)
+  if err != nil {
+    log.Fatalf("Failed initializing database: %v\n", err)
+  }
+  if err := entClient.Schema.Create(context.Background()); err != nil {
+    log.Fatalf("Failed initializing schema: %v\n", err)
+  }
+
+  var admin *ent.User
+  admin, err = entClient.User.
+    Query().
+    Where(user.Username(config.Admin.Username)).
+    Only(context.Background())
+  if err != nil {
+    admin, err = entClient.User.
+      Create().
+      SetUsername(config.Admin.Username).
+      SetPassword(config.Admin.Password).
+      SetRole("admin").
+      Save(context.Background())
+    if err != nil {
+      log.Fatalf("Failed to query as well as create admin user: %v\n", err)
+    }
+  }
+
+  if admin.Password == "admin" {
+    log.Printf("Admin user: %s:%s\n", admin.Username, admin.Password)
+  } else {
+    log.Printf("Admin user: %s:xxxxxxxx\n", admin.Username)
+  }
+
+  fiberApp.Use(logger.New())
+  api.Register(&config, fiberApp, entClient)
+  web.Register(&config, fiberApp, entClient)
+
+
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
   if functionName == "" {
     go func() {
-      jd := journalistd.New(entClient)
+      jd := journalistd.New(&config, entClient)
 
       // for {
         time.Sleep(time.Second * 30)
@@ -108,13 +114,7 @@ func main() {
       // }
     }()
 
-    if appBindIp == "" {
-      appBindIp = "127.0.0.1"
-    }
-    if appPort == "" {
-      appPort = "8000"
-    }
-    log.Fatal(fiberApp.Listen(fmt.Sprintf("%s:%s", appBindIp, appPort)))
+    log.Fatal(fiberApp.Listen(fmt.Sprintf("%s:%s", config.Server.BindIP, config.Server.Port)))
   } else {
     lambda.Start(Handler)
   }
