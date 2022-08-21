@@ -76,10 +76,10 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
       dbFeed.Password,
       dbFeedTmp,
     )
-    err = dbFeedTmp.
+    feedID, err := dbFeedTmp.
       OnConflict().
       UpdateNewValues().
-      Exec(context.Background())
+      ID(context.Background())
     if err != nil {
       errs = append(errs, err)
     }
@@ -89,6 +89,7 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
       dbItems[i] = jd.entClient.Item.
         Create()
       dbItems[i] = rc.SetItem(
+        feedID,
         i,
         dbItems[i],
       )

@@ -2,6 +2,7 @@ package rss
 
 import (
 	// log "github.com/sirupsen/logrus"
+	"github.com/google/uuid"
 	"crypto/sha256"
   "encoding/hex"
 	"encoding/json"
@@ -121,6 +122,7 @@ func (c* Client) SetFeed(
 }
 
 func (c* Client) SetItem(
+  feedID uuid.UUID,
   idx int,
   dbItemTemp *ent.ItemCreate,
 ) (*ent.ItemCreate) {
@@ -144,6 +146,7 @@ func (c* Client) SetItem(
     Sanitize(item.Description)
 
   dbItemTemp = dbItemTemp.
+    SetFeedID(feedID).
     SetItemGUID(GenerateGUIDForItem(item)).
     SetItemTitle(item.Title).
     SetItemDescription(itemDescription).
