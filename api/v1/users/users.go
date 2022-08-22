@@ -3,12 +3,13 @@ package users
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/journalistd"
+	"github.com/mrusme/journalist/lib"
 	"go.uber.org/zap"
 )
 
 type handler struct {
-  config    *journalistd.Config
+  jctx      *lib.JournalistContext
+  config    *lib.Config
   entClient *ent.Client
   logger    *zap.Logger
 }
@@ -31,15 +32,14 @@ type UserUpdateModel struct {
 }
 
 func Register(
-  config *journalistd.Config,
+  jctx *lib.JournalistContext,
   fiberRouter *fiber.Router,
-  entClient *ent.Client,
-  logger *zap.Logger,
 ) () {
   endpoint := new(handler)
-  endpoint.config = config
-  endpoint.entClient = entClient
-  endpoint.logger = logger
+  endpoint.jctx = jctx
+  endpoint.config = endpoint.jctx.Config
+  endpoint.entClient = endpoint.jctx.EntClient
+  endpoint.logger = endpoint.jctx.Logger
 
   usersRouter := (*fiberRouter).Group("/users")
   usersRouter.Get("/", endpoint.List)

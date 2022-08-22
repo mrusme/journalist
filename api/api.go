@@ -13,28 +13,24 @@ import (
 	"github.com/mrusme/journalist/api/v1"
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
-	"github.com/mrusme/journalist/journalistd"
-	"go.uber.org/zap"
+	"github.com/mrusme/journalist/lib"
 )
 
 func Register(
-  config *journalistd.Config,
+  jctx *lib.JournalistContext,
   fiberApp *fiber.App,
-  entClient *ent.Client,
-  logger *zap.Logger,
 ) () {
   api := fiberApp.Group("/api")
   api.Use(cors.New())
-  api.Use(authorizer(entClient))
+  api.Use(authorizer(jctx.EntClient))
 
   v1.Register(
-    config,
+    jctx,
     &api,
-    entClient,
-    logger,
   )
 }
 
+// TODO: Move to `middlewares`
 func authorizer(entClient *ent.Client) fiber.Handler {
   return func (ctx *fiber.Ctx) error {
     auth := ctx.Get(fiber.HeaderAuthorization)

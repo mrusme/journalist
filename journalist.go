@@ -16,6 +16,7 @@ import (
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/journalistd"
+	"github.com/mrusme/journalist/lib"
 
 	"github.com/mrusme/journalist/api"
 	"github.com/mrusme/journalist/middlewares/fiberzap"
@@ -48,10 +49,12 @@ func Handler(
 
 func main() {
   var err error
-  var logger *zap.Logger
+  var jctx lib.JournalistContext
+  var config lib.Config
   var entClient *ent.Client
+  var logger *zap.Logger
 
-  config, err := journalistd.Cfg()
+  config, err = lib.Cfg()
   if err != nil {
     panic(err)
   }
@@ -80,10 +83,14 @@ func main() {
     )
   }
 
+  jctx = lib.JournalistContext{
+    Config: &config,
+    EntClient: entClient,
+    Logger: logger,
+  }
+
   jd, err := journalistd.New(
-    &config,
-    entClient,
-    logger,
+    &jctx,
   )
   if err != nil {
     panic(err)
@@ -111,8 +118,15 @@ func main() {
     Logger: logger,
   }))
 
-  api.Register(&config, fiberApp, entClient, logger)
-  web.Register(&config, fiberApp, entClient, logger)
+  api.Register(
+    &jctx,
+    fiberApp,
+  )
+
+  web.Register(
+    &jctx,
+    fiberApp,
+  )
 
   fiberApp.Get("/favicon.ico", func(ctx *fiber.Ctx) error {
     fi, err := favicon.Open("favicon.ico")

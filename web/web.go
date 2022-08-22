@@ -8,36 +8,30 @@ import (
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
-	"github.com/mrusme/journalist/journalistd"
+	"github.com/mrusme/journalist/lib"
 	"github.com/mrusme/journalist/web/actions"
 	"github.com/mrusme/journalist/web/subscriptions"
-	"go.uber.org/zap"
 )
 
 func Register(
-  config *journalistd.Config,
+  jctx *lib.JournalistContext,
   fiberApp *fiber.App,
-  entClient *ent.Client,
-  logger *zap.Logger,
 ) () {
   web := fiberApp.Group("/web")
-  web.Use(authorizer(entClient))
+  web.Use(authorizer(jctx.EntClient))
 
   actions.Register(
-    config,
+    jctx,
     &web,
-    entClient,
-    logger,
   )
 
   subscriptions.Register(
-    config,
+    jctx,
     &web,
-    entClient,
-    logger,
   )
 }
 
+// TODO: Move to `middlewares`
 func authorizer(entClient *ent.Client) fiber.Handler {
   return func (ctx *fiber.Ctx) error {
     qat := ctx.Query("qat")

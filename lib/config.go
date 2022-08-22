@@ -1,4 +1,4 @@
-package journalistd
+package lib
 
 import (
 	"strings"

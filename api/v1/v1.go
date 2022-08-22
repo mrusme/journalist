@@ -5,37 +5,27 @@ import (
 	"github.com/mrusme/journalist/api/v1/feeds"
 	"github.com/mrusme/journalist/api/v1/tokens"
 	"github.com/mrusme/journalist/api/v1/users"
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/journalistd"
-	"go.uber.org/zap"
+	"github.com/mrusme/journalist/lib"
 )
 
 func Register(
-  config *journalistd.Config,
+  jctx *lib.JournalistContext,
   fiberRouter *fiber.Router,
-  entClient *ent.Client,
-  logger *zap.Logger,
 ) () {
   v1 := (*fiberRouter).Group("/v1")
 
   users.Register(
-    config,
+    jctx,
     &v1,
-    entClient,
-    logger,
   )
 
   tokens.Register(
-    config,
+    jctx,
     &v1,
-    entClient,
-    logger,
   )
 
   feeds.Register(
-    config,
+    jctx,
     &v1,
-    entClient,
-    logger,
   )
 }

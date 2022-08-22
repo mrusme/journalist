@@ -12,13 +12,16 @@ import (
 	"github.com/mrusme/journalist/ent/feed"
 	"github.com/mrusme/journalist/ent/user"
 
+	"github.com/mrusme/journalist/lib"
 	"github.com/mrusme/journalist/rss"
 )
 
 var VERSION string
 
 type Journalistd struct {
-  config                *Config
+  jctx                  *lib.JournalistContext
+
+  config                *lib.Config
   entClient             *ent.Client
   logger                *zap.Logger
 
@@ -31,20 +34,19 @@ func Version() (string) {
 }
 
 func New(
-  config *Config,
-  entClient *ent.Client,
-  logger *zap.Logger,
+  jctx *lib.JournalistContext,
 ) (*Journalistd, error) {
   jd := new(Journalistd)
-  jd.config = config
-  jd.entClient = entClient
-  jd.logger = logger
+  jd.jctx = jctx
+  jd.config = jctx.Config
+  jd.entClient = jctx.EntClient
+  jd.logger = jctx.Logger
 
   if err := jd.initAdminUser(); err != nil {
     return nil, err
   }
 
-  interval, err := strconv.Atoi(config.Feeds.AutoRefresh)
+  interval, err := strconv.Atoi(jd.config.Feeds.AutoRefresh)
   if err != nil {
     jd.logger.Error(
       "Feeds.AutoRefresh is not a valid number (seconds)",
