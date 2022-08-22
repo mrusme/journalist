@@ -15,7 +15,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
   role := ctx.Locals("role").(string)
 
   if role == "admin" {
-    dbFeeds, err := h.EntClient.Feed.
+    dbFeeds, err := h.entClient.Feed.
       Query().
       All(context.Background())
     if err != nil {
@@ -51,7 +51,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
         })
     }
 
-    dbUser, err := h.EntClient.User.
+    dbUser, err := h.entClient.User.
       Query().
       WithSubscribedFeeds().
       WithSubscriptions().

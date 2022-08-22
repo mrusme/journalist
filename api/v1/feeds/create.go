@@ -70,7 +70,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     false,
   )
 
-  dbFeedTmp := h.EntClient.Feed.
+  dbFeedTmp := h.entClient.Feed.
     Create()
 
   dbFeedTmp = rssClient.SetFeed(
@@ -105,7 +105,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  dbSubscriptionTmp := h.EntClient.Subscription.
+  dbSubscriptionTmp := h.entClient.Subscription.
     Create().
     SetUserID(myId).
     SetFeedID(feedId)

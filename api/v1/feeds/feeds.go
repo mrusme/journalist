@@ -3,10 +3,14 @@ package feeds
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent"
+	"github.com/mrusme/journalist/journalistd"
+	"go.uber.org/zap"
 )
 
 type handler struct {
-  EntClient *ent.Client
+  config    *journalistd.Config
+  entClient *ent.Client
+  logger    *zap.Logger
 }
 
 type FeedShowModel struct {
@@ -29,9 +33,16 @@ type FeedUpdateModel struct {
   Role              string        `json:"role",validate:""`
 }
 
-func Register(fiberRouter *fiber.Router, entClient *ent.Client) () {
+func Register(
+  config *journalistd.Config,
+  fiberRouter *fiber.Router,
+  entClient *ent.Client,
+  logger *zap.Logger,
+) () {
   endpoint := new(handler)
-  endpoint.EntClient = entClient
+  endpoint.config = config
+  endpoint.entClient = entClient
+  endpoint.logger = logger
 
   feedsRouter := (*fiberRouter).Group("/feeds")
   feedsRouter.Get("/", endpoint.List)

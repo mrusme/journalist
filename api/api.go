@@ -14,14 +14,25 @@ import (
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/user"
 	"github.com/mrusme/journalist/journalistd"
+	"go.uber.org/zap"
 )
 
-func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Client) () {
+func Register(
+  config *journalistd.Config,
+  fiberApp *fiber.App,
+  entClient *ent.Client,
+  logger *zap.Logger,
+) () {
   api := fiberApp.Group("/api")
   api.Use(cors.New())
   api.Use(authorizer(entClient))
 
-  v1.Register(&api, entClient)
+  v1.Register(
+    config,
+    &api,
+    entClient,
+    logger,
+  )
 }
 
 func authorizer(entClient *ent.Client) fiber.Handler {

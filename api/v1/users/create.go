@@ -47,7 +47,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  dbUser, err := h.EntClient.User.
+  dbUser, err := h.entClient.User.
     Create().
     SetUsername(createUser.Username).
     SetPassword(createUser.Password).

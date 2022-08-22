@@ -27,7 +27,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
     return err
   }
 
-  dbItemsTmp := h.EntClient.Subscription.
+  dbItemsTmp := h.entClient.Subscription.
     Query()
 
   if group == "" {

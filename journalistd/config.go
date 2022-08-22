@@ -24,6 +24,10 @@ type Config struct {
       Web                string
     }
   }
+
+  Feeds                  struct {
+    AutoRefresh          string
+  }
 }
 
 func Cfg() (Config, error) {
@@ -37,6 +41,8 @@ func Cfg() (Config, error) {
   viper.SetDefault("Server.Port", "8000")
   viper.SetDefault("Server.Endpoint.Api", "http://127.0.0.1:8000/api")
   viper.SetDefault("Server.Endpoint.Web", "http://127.0.0.1:8000/web")
+
+  viper.SetDefault("Feeds.AutoRefresh", "900")
 
   viper.SetConfigName("journalist.toml")
   viper.SetConfigType("toml")

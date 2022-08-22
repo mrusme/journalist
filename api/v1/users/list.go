@@ -24,7 +24,7 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       })
   }
 
-  dbUsers, err := h.EntClient.User.
+  dbUsers, err := h.entClient.User.
     Query().
     All(context.Background())
   if err != nil {

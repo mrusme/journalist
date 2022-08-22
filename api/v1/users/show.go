@@ -37,7 +37,7 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
       })
   }
 
-  dbUser, err := h.EntClient.User.
+  dbUser, err := h.entClient.User.
     Query().
     Where(
       user.ID(id),

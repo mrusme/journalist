@@ -60,7 +60,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     ),
   )
 
-  dbToken, err := h.EntClient.Token.
+  dbToken, err := h.entClient.Token.
     Create().
     SetType("qat").
     SetName(createToken.Name).
@@ -77,7 +77,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  _, err = h.EntClient.User.
+  _, err = h.entClient.User.
     UpdateOneID(myId).
     AddTokenIDs(dbToken.ID).
     Save(context.Background())

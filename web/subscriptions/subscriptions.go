@@ -4,21 +4,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/journalistd"
+	"go.uber.org/zap"
 )
 
 type handler struct {
   config    *journalistd.Config
-  EntClient *ent.Client
+  entClient *ent.Client
+  logger    *zap.Logger
 }
 
 func Register(
   config *journalistd.Config,
   fiberRouter *fiber.Router,
   entClient *ent.Client,
+  logger *zap.Logger,
 ) () {
   endpoint := new(handler)
   endpoint.config = config
-  endpoint.EntClient = entClient
+  endpoint.entClient = entClient
+  endpoint.logger = logger
 
   subscriptionsRouter := (*fiberRouter).Group("/subscriptions")
   subscriptionsRouter.Get("/", endpoint.List)

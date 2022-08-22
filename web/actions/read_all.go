@@ -23,7 +23,7 @@ func (h *handler) ReadAll(ctx *fiber.Ctx) error {
     return err
   }
 
-  dbTmp := h.EntClient.User.
+  dbTmp := h.entClient.User.
     Query().
     Where(
       user.ID(myId),
@@ -52,12 +52,12 @@ func (h *handler) ReadAll(ctx *fiber.Ctx) error {
 
   bulkReads := make([]*ent.ReadCreate, len(dbItems))
   for i, item := range dbItems {
-    bulkReads[i] = h.EntClient.Read.
+    bulkReads[i] = h.entClient.Read.
       Create().
       SetUserID(myId).
       SetItemID(item.ID)
   }
-  err = h.EntClient.Read.
+  err = h.entClient.Read.
     CreateBulk(bulkReads...).
     OnConflict().
     Ignore().

@@ -60,7 +60,7 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
       })
   }
 
-  dbUserTmp := h.EntClient.User.
+  dbUserTmp := h.entClient.User.
     UpdateOneID(id)
 
   if updateUser.Role != "" {

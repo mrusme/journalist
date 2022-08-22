@@ -28,14 +28,14 @@ func (h *handler) Read(ctx *fiber.Ctx) error {
     return err
   }
 
-  dbUser, err := h.EntClient.User.
+  dbUser, err := h.entClient.User.
   Query().
   Where(
     user.ID(myId),
   ).
   Only(context.Background())
 
-  dbItem, err := h.EntClient.Item.
+  dbItem, err := h.entClient.Item.
   Query().
   Where(
     item.ItemGUID(id),
@@ -68,7 +68,7 @@ func (h *handler) readWithItemCondition(
   itemGUID string,
   itemCondition func(v time.Time) predicate.Item,
 ) error {
-  dbItem, err := h.EntClient.Item.
+  dbItem, err := h.entClient.Item.
     Query().
     Where(
       item.ItemGUID(itemGUID),
@@ -78,7 +78,7 @@ func (h *handler) readWithItemCondition(
     return err
   }
 
-  dbTmp := h.EntClient.User.
+  dbTmp := h.entClient.User.
     Query().
     Where(
       user.ID(userId),
@@ -107,12 +107,12 @@ func (h *handler) readWithItemCondition(
 
   bulkReads := make([]*ent.ReadCreate, len(dbItems))
   for i, item := range dbItems {
-    bulkReads[i] = h.EntClient.Read.
+    bulkReads[i] = h.entClient.Read.
       Create().
       SetUserID(userId).
       SetItemID(item.ID)
   }
-  err = h.EntClient.Read.
+  err = h.entClient.Read.
     CreateBulk(bulkReads...).
     OnConflict().
     Ignore().

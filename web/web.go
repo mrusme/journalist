@@ -11,14 +11,31 @@ import (
 	"github.com/mrusme/journalist/journalistd"
 	"github.com/mrusme/journalist/web/actions"
 	"github.com/mrusme/journalist/web/subscriptions"
+	"go.uber.org/zap"
 )
 
-func Register(config *journalistd.Config, fiberApp *fiber.App, entClient *ent.Client) () {
+func Register(
+  config *journalistd.Config,
+  fiberApp *fiber.App,
+  entClient *ent.Client,
+  logger *zap.Logger,
+) () {
   web := fiberApp.Group("/web")
   web.Use(authorizer(entClient))
 
-  actions.Register(config, &web, entClient)
-  subscriptions.Register(config, &web, entClient)
+  actions.Register(
+    config,
+    &web,
+    entClient,
+    logger,
+  )
+
+  subscriptions.Register(
+    config,
+    &web,
+    entClient,
+    logger,
+  )
 }
 
 func authorizer(entClient *ent.Client) fiber.Handler {
