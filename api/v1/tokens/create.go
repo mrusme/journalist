@@ -2,12 +2,13 @@ package tokens
 
 import (
 	"context"
+	"fmt"
 	"time"
-  "fmt"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/rss"
+	"go.uber.org/zap"
 
 	"github.com/gofiber/fiber/v2"
 	// "github.com/mrusme/journalist/ent/token"
@@ -19,6 +20,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   createToken := new(TokenCreateModel)
   if err = ctx.BodyParser(createToken); err != nil {
+    h.logger.Debug(
+      "Body parsing failed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -30,6 +35,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   validate := validator.New()
   if err = validate.Struct(*createToken); err != nil {
+    h.logger.Debug(
+      "Validation failed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusBadRequest).
       JSON(&fiber.Map{
@@ -42,6 +51,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
   sessionUserId := ctx.Locals("user_id").(string)
   myId, err := uuid.Parse(sessionUserId)
   if err != nil {
+    h.logger.Debug(
+      "Could not parse user ID",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -68,6 +81,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     Save(context.Background())
 
   if err != nil {
+    h.logger.Debug(
+      "Could create token",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -83,6 +100,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     Save(context.Background())
 
   if err != nil {
+    h.logger.Debug(
+      "Could not add new token to user",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{

@@ -5,6 +5,7 @@ import (
 	// "github.com/google/uuid"
 
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 	// "github.com/mrusme/journalist/ent/user"
 	// "github.com/mrusme/journalist/ent"
 )
@@ -15,6 +16,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
   role := ctx.Locals("role").(string)
 
   if role != "admin" {
+    h.logger.Debug(
+      "User not allowed to list users",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusForbidden).
       JSON(&fiber.Map{

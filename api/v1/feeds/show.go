@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent/feed"
 	// "github.com/mrusme/journalist/ent"
+	"go.uber.org/zap"
 )
 
 func (h *handler) Show(ctx *fiber.Ctx) error {
@@ -15,6 +16,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
   param_id := ctx.Params("id")
   id, err := uuid.Parse(param_id)
   if err != nil {
+    h.logger.Debug(
+      "Could not parse user ID",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusBadRequest).
       JSON(&fiber.Map{
@@ -28,6 +33,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
   role := ctx.Locals("role").(string)
 
   if param_id != feed_id && role != "admin" {
+    h.logger.Debug(
+      "User not allowed to see other feeds",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusForbidden).
       JSON(&fiber.Map{
@@ -44,6 +53,11 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
     ).
     Only(context.Background())
   if err != nil {
+    h.logger.Debug(
+      "Could not query feed",
+      zap.String("feedID", param_id),
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{

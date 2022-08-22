@@ -13,6 +13,8 @@ import (
 
 	"github.com/mrusme/journalist/crawler"
 	"github.com/mrusme/journalist/rss"
+
+	"go.uber.org/zap"
 )
 
 func (h *handler) Create(ctx *fiber.Ctx) error {
@@ -23,6 +25,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   createFeed := new(FeedCreateModel)
   if err = ctx.BodyParser(createFeed); err != nil {
+    h.logger.Debug(
+      "Body parsing failed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -34,6 +40,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   validate := validator.New()
   if err = validate.Struct(*createFeed); err != nil {
+    h.logger.Debug(
+      "Validation failed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusBadRequest).
       JSON(&fiber.Map{
@@ -54,6 +64,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   _, feedLink, err := crwlr.GetFeedLink()
   if err != nil {
+    h.logger.Debug(
+      "Could not get feed link",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusBadRequest).
       JSON(&fiber.Map{
@@ -71,6 +85,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     h.logger,
   )
   if len(errr) > 0 {
+    h.logger.Debug(
+      "Could not fetch feed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -94,6 +112,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     UpdateNewValues().
     ID(context.Background())
   if err != nil {
+    h.logger.Debug(
+      "Could not upsert feed",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -106,6 +128,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
   sessionUserId := ctx.Locals("user_id").(string)
   myId, err := uuid.Parse(sessionUserId)
   if err != nil {
+    h.logger.Debug(
+      "Could not parse user ID",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{
@@ -133,6 +159,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
   dbSubscription, err := dbSubscriptionTmp.
     Save(context.Background())
   if err != nil {
+    h.logger.Debug(
+      "Could not add feed subscription",
+      zap.Error(err),
+    )
     return ctx.
       Status(fiber.StatusInternalServerError).
       JSON(&fiber.Map{

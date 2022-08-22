@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/mrusme/journalist/ent/user"
 	// "github.com/mrusme/journalist/ent"
+	"go.uber.org/zap"
 )
 
 func (h *handler) List(ctx *fiber.Ctx) error {
@@ -19,6 +20,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       Query().
       All(context.Background())
     if err != nil {
+      h.logger.Debug(
+        "Could not query all feeds",
+        zap.Error(err),
+      )
       return ctx.
         Status(fiber.StatusInternalServerError).
         JSON(&fiber.Map{
@@ -42,6 +47,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
     sessionUserId := ctx.Locals("user_id").(string)
     myId, err := uuid.Parse(sessionUserId)
     if err != nil {
+      h.logger.Debug(
+        "Could not parse user ID",
+        zap.Error(err),
+      )
       return ctx.
         Status(fiber.StatusInternalServerError).
         JSON(&fiber.Map{
