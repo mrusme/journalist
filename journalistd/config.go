@@ -7,6 +7,8 @@ import (
 )
 
 type Config struct {
+  Debug                  string
+
   Admin                  struct {
     Username             string
     Password             string
@@ -31,6 +33,8 @@ type Config struct {
 }
 
 func Cfg() (Config, error) {
+  viper.SetDefault("Debug", "false")
+
   viper.SetDefault("Admin.Username", "admin")
   viper.SetDefault("Admin.Password", "admin")
 

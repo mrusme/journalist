@@ -2,11 +2,15 @@ package journalistd
 
 import (
 	"context"
+	"strconv"
+	"time"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/feed"
+	"github.com/mrusme/journalist/ent/user"
 
 	"github.com/mrusme/journalist/rss"
 )
@@ -16,17 +20,134 @@ var VERSION string
 type Journalistd struct {
   config                *Config
   entClient             *ent.Client
+  logger                *zap.Logger
+
+  daemonStop            chan bool
+  autoRefreshInterval   time.Duration
 }
 
 func Version() (string) {
   return VERSION
 }
 
-func New(config *Config, entClient *ent.Client) (*Journalistd) {
+func New(
+  config *Config,
+  entClient *ent.Client,
+  logger *zap.Logger,
+) (*Journalistd, error) {
   jd := new(Journalistd)
   jd.config = config
   jd.entClient = entClient
-  return jd
+  jd.logger = logger
+
+  if err := jd.initAdminUser(); err != nil {
+    return nil, err
+  }
+
+  interval, err := strconv.Atoi(config.Feeds.AutoRefresh)
+  if err != nil {
+    jd.logger.Error(
+      "Feeds.AutoRefresh is not a valid number (seconds)",
+      zap.Error(err),
+    )
+    return nil, err
+  }
+  jd.autoRefreshInterval = time.Duration(interval)
+
+  return jd, nil
+}
+
+func (jd *Journalistd) IsDebug() bool {
+  debug, err := strconv.ParseBool(jd.config.Debug)
+  if err != nil {
+    return false
+  }
+
+  return debug
+}
+
+func (jd *Journalistd) initAdminUser() error {
+  var admin *ent.User
+  var err error
+
+  admin, err = jd.entClient.User.
+    Query().
+    Where(user.Username(jd.config.Admin.Username)).
+    Only(context.Background())
+  if err != nil {
+    admin, err = jd.entClient.User.
+      Create().
+      SetUsername(jd.config.Admin.Username).
+      SetPassword(jd.config.Admin.Password).
+      SetRole("admin").
+      Save(context.Background())
+    if err != nil {
+      jd.logger.Error(
+        "Failed query/create admin user",
+        zap.Error(err),
+      )
+      return err
+    }
+  }
+
+  if admin.Password == "admin" {
+    jd.logger.Debug(
+      "Admin user",
+      zap.String("username", admin.Username),
+      zap.String("password", admin.Password),
+    )
+  } else {
+    jd.logger.Debug(
+      "Admin user",
+      zap.String("username", admin.Username),
+      zap.String("password", "xxxxxx"),
+    )
+  }
+
+  return nil
+}
+
+func (jd *Journalistd) Start() bool {
+  jd.logger.Info(
+    "Starting Journalist daemon",
+  )
+  jd.daemonStop = make(chan bool)
+  go jd.daemon()
+  return true
+}
+
+func (jd *Journalistd) Stop() {
+  jd.logger.Info(
+    "Stopping Journalist daemon",
+  )
+  jd.daemonStop <- true
+}
+
+func (jd *Journalistd) daemon() {
+  jd.logger.Debug(
+    "Journalist daemon started, looping",
+  )
+  for {
+    select {
+    case <-jd.daemonStop:
+      jd.logger.Debug(
+        "Journalist daemon loop ended",
+      )
+      return
+    default:
+      jd.logger.Debug(
+        "Running RefreshAll to refresh all feeds",
+      )
+      errs := jd.RefreshAll()
+      if len(errs) > 0 {
+        jd.logger.Error(
+          "RefreshAll completed with errors",
+          zap.Errors("errors", errs),
+        )
+      }
+      time.Sleep(time.Second * jd.autoRefreshInterval)
+    }
+  }
 }
 
 func (jd *Journalistd) RefreshAll() ([]error) {

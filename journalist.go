@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
-	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -17,7 +15,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/ent/user"
 	"github.com/mrusme/journalist/journalistd"
 
 	"github.com/mrusme/journalist/api"
@@ -37,7 +34,6 @@ var favicon embed.FS
 
 var fiberApp *fiber.App
 var fiberLambda *fiberadapter.FiberLambda
-var entClient *ent.Client
 
 func init() {
   fiberLambda = fiberadapter.New(fiberApp)
@@ -52,26 +48,22 @@ func Handler(
 
 func main() {
   var err error
-  defer entClient.Close()
+  var logger *zap.Logger
+  var entClient *ent.Client
 
   config, err := journalistd.Cfg()
   if err != nil {
     panic(err)
   }
 
-  logger, _ := zap.NewProduction()
+  if config.Debug == "true" {
+    logger, _ = zap.NewDevelopment()
+  } else {
+    logger, _ = zap.NewProduction()
+  }
   defer logger.Sync()
   // TODO: Use sugarLogger
   // sugar := logger.Sugar()
-
-  engine := web.NewFileSystem(http.FS(viewsfs), ".html")
-  fiberApp = fiber.New(fiber.Config{
-    Views: engine,
-  })
-  fiberApp.Use(fiberzap.New(fiberzap.Config{
-    Logger: logger,
-  }))
-
 
   entClient, err = ent.Open(config.Database.Type, config.Database.Connection)
   if err != nil {
@@ -80,6 +72,7 @@ func main() {
       zap.Error(err),
     )
   }
+  defer entClient.Close()
   if err := entClient.Schema.Create(context.Background()); err != nil {
     logger.Error(
       "Failed initializing schema",
@@ -87,39 +80,36 @@ func main() {
     )
   }
 
-  var admin *ent.User
-  admin, err = entClient.User.
-    Query().
-    Where(user.Username(config.Admin.Username)).
-    Only(context.Background())
+  jd, err := journalistd.New(
+    &config,
+    entClient,
+    logger,
+  )
   if err != nil {
-    admin, err = entClient.User.
-      Create().
-      SetUsername(config.Admin.Username).
-      SetPassword(config.Admin.Password).
-      SetRole("admin").
-      Save(context.Background())
-    if err != nil {
-      logger.Error(
-        "Failed query/create admin user",
-        zap.Error(err),
-      )
-    }
+    panic(err)
   }
 
-  if admin.Password == "admin" {
-    logger.Debug(
-      "Admin user",
-      zap.String("username", admin.Username),
-      zap.String("password", admin.Password),
-    )
-  } else {
-    logger.Debug(
-      "Admin user",
-      zap.String("username", admin.Username),
-      zap.String("password", "xxxxxx"),
-    )
-  }
+  engine := web.NewFileSystem(http.FS(viewsfs), ".html")
+  fiberApp = fiber.New(fiber.Config{
+    Prefork: false,                // TODO: Make configurable
+    ServerHeader: "",              // TODO: Make configurable
+    StrictRouting: false,
+    CaseSensitive: false,
+    ETag: false,                   // TODO: Make configurable
+    Concurrency: 256 * 1024,       // TODO: Make configurable
+    Views: engine,
+    ProxyHeader: "",               // TODO: Make configurable
+    EnableTrustedProxyCheck: false,// TODO: Make configurable
+    TrustedProxies: []string{},    // TODO: Make configurable
+    DisableStartupMessage: true,
+    AppName: "journalist",
+    ReduceMemoryUsage: false,      // TODO: Make configurable
+    Network: fiber.NetworkTCP,     // TODO: Make configurable
+    EnablePrintRoutes: false,
+  })
+  fiberApp.Use(fiberzap.New(fiberzap.Config{
+    Logger: logger,
+  }))
 
   api.Register(&config, fiberApp, entClient, logger)
   web.Register(&config, fiberApp, entClient, logger)
@@ -135,33 +125,9 @@ func main() {
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
   if config.Feeds.AutoRefresh != "" {
-    interval, err := strconv.Atoi(config.Feeds.AutoRefresh)
-    if err != nil {
-      logger.Fatal(
-        "Feeds.AutoRefresh is not a valid number (seconds)",
-        zap.Error(err),
-      )
-    }
 
     if functionName == "" {
-      go func() {
-        jd := journalistd.New(&config, entClient)
-
-        time.Sleep(time.Second * 10)
-        for {
-          logger.Debug(
-            "Running RefreshAll to refresh all feeds",
-          )
-          errs := jd.RefreshAll()
-          if len(errs) > 0 {
-            logger.Error(
-              "RefreshAll completed with errors",
-              zap.Errors("errors", errs),
-            )
-          }
-          time.Sleep(time.Second * time.Duration(interval))
-        }
-      }()
+      jd.Start()
     } else {
       logger.Warn(
         "Journalist won't start the feed auto refresh thread " +
