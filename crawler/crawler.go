@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 
+	"go.uber.org/zap"
 	"golang.org/x/net/publicsuffix"
 
 	scraper "github.com/tinoquang/go-cloudflare-scraper"
@@ -35,10 +36,13 @@ type Crawler struct {
   password          string
 
   contentType       string
+
+  logger            *zap.Logger
 }
 
-func New() (*Crawler) {
+func New(logger *zap.Logger) (*Crawler) {
   crawler := new(Crawler)
+  crawler.logger = logger
 
   crawler.source = nil
   crawler.Reset()

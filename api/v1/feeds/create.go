@@ -43,7 +43,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  crwlr := crawler.New()
+  crwlr := crawler.New(h.logger)
   defer crwlr.Close()
 
   crwlr.SetLocation(createFeed.URL)

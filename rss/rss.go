@@ -57,7 +57,7 @@ func NewClient(
 func (c *Client) Sync(crawl bool) ([]error) {
   var errs []error
 
-  feedCrwl := crawler.New()
+  feedCrwl := crawler.New(c.logger)
   defer feedCrwl.Close()
   feedCrwl.SetLocation(c.url)
   feedCrwl.SetBasicAuth(c.username, c.password)
@@ -72,7 +72,7 @@ func (c *Client) Sync(crawl bool) ([]error) {
   c.UpdatedAt = time.Now()
 
   if crawl == true {
-    crwl := crawler.New()
+    crwl := crawler.New(c.logger)
     defer crwl.Close()
 
     for i := 0; i < len(c.Feed.Items); i++ {
