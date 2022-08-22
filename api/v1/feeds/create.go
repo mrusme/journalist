@@ -63,17 +63,27 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
       })
   }
 
-  rssClient, err := rss.NewClient(
+  rc, errr := rss.NewClient(
     feedLink,
     createFeed.Username,
     createFeed.Password,
     false,
+    h.logger,
   )
+  if len(errr) > 0 {
+    return ctx.
+      Status(fiber.StatusInternalServerError).
+      JSON(&fiber.Map{
+        "success": false,
+        "feed": nil,
+        "message": err.Error(),
+      })
+  }
 
   dbFeedTmp := h.entClient.Feed.
     Create()
 
-  dbFeedTmp = rssClient.SetFeed(
+  dbFeedTmp = rc.SetFeed(
     feedLink,
     createFeed.Username,
     createFeed.Password,

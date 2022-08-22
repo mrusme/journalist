@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"strings"
 
@@ -29,6 +30,7 @@ type Client struct {
   Items         *[]*gofeed.Item
   ItemsCrawled  []crawler.ItemCrawled
   UpdatedAt     time.Time
+  logger        *zap.Logger
 }
 
 func NewClient(
@@ -36,21 +38,23 @@ func NewClient(
   username string,
   password string,
   crawl bool,
-) (*Client, error) {
+  logger *zap.Logger,
+) (*Client, []error) {
   client := new(Client)
   client.parser = gofeed.NewParser()
   client.url = feedUrl
   client.username = username
   client.password = password
+  client.logger = logger
 
-  if err := client.Sync(crawl); err != nil {
-    return nil, err
+  if errs := client.Sync(crawl); errs != nil {
+    return nil, errs
   }
 
   return client, nil
 }
 
-func (c *Client) Sync(crawl bool) (error) {
+func (c *Client) Sync(crawl bool) ([]error) {
   var errs []error
 
   feedCrwl := crawler.New()
@@ -59,7 +63,8 @@ func (c *Client) Sync(crawl bool) (error) {
   feedCrwl.SetBasicAuth(c.username, c.password)
   feed, err := feedCrwl.ParseFeed()
   if err != nil {
-    return err
+    errs = append(errs, err)
+    return errs
   }
 
   c.Feed = feed
@@ -84,7 +89,7 @@ func (c *Client) Sync(crawl bool) (error) {
     }
   }
 
-  return nil
+  return errs
 }
 
 func (c* Client) SetFeed(

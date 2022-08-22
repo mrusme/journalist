@@ -184,14 +184,15 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
   }
 
   for _, dbFeed := range dbFeeds {
-    rc, err := rss.NewClient(
+    rc, errr := rss.NewClient(
       dbFeed.URL,
       dbFeed.Username,
       dbFeed.Password,
       true,
+      jd.logger,
     )
-    if err != nil {
-      errs = append(errs, err)
+    if len(errr) > 0 {
+      errs = append(errs, errr...)
       continue
     }
 
