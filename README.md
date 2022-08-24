@@ -46,7 +46,7 @@ program.
 
 Journalist will read its config either from a file or from environment
 variables. Every configuration key available in the
-[`example-journalist.toml`](example-journalist.toml) can be exported as
+example [`journalist.toml`](examples/etc/journalist.toml) can be exported as
 environment variable, by separating scopes using `_` and prepend `JOURNALIST` to
 it. For example, the following configuration:
 
@@ -126,12 +126,69 @@ Connection = "mysqluser:mysqlpassword@tcp(mysqlhost:port)/database?parseTime=tru
 
 #### Custom
 
-TODO
+All that's needed is a [configuration](#configuration) and Journalist can be
+launched by e.g. running `./journalist` in a terminal.
+
+
+#### Supervisor
+
+To run Journalist via `supervisord`, create a config like this inside
+`/etc/supervisord.conf` or `/etc/supervisor/conf.d/journalist.conf`:
+
+```ini
+[program:journalist]
+command=/path/to/binary/of/journalist
+process_name=%(program_name)s
+numprocs=1
+directory=/home/journalist
+autostart=true
+autorestart=unexpected
+startsecs=10
+startretries=3
+exitcodes=0
+stopsignal=TERM
+stopwaitsecs=10
+user=journalist
+redirect_stderr=false
+stdout_logfile=/var/log/journalist.out.log
+stdout_logfile_maxbytes=1MB
+stdout_logfile_backups=10
+stdout_capture_maxbytes=1MB
+stdout_events_enabled=false
+stderr_logfile=/var/log/journalist.err.log
+stderr_logfile_maxbytes=1MB
+stderr_logfile_backups=10
+stderr_capture_maxbytes=1MB
+stderr_events_enabled=false
+```
+
+**Note:** It is advisable to run Journalist under its own, dedicated daemon
+user (`journalist` in this example), so make sure to either adjust `directory`
+as well as `user` or create a user called `journalist`.
 
 
 #### OpenBSD rc
 
-TODO
+As before, create a configuration file under `/etc/journalist.toml`.
+
+Then copy the [example rc.d script](examples/etc/rc.d/journalist) to
+`/etc/rc.d/journalist` and copy the binary to e.g.
+`/usr/local/bin/journalist`. Last but not least, update the `/etc/rc.conf.local`
+file to contain the following line:
+
+```conf
+journalist_user="_journalist"
+```
+
+It is advisable to run journalist as a dedicated user, hence create the
+`_journalist` daemon account or adjust the line above according to your setup.
+
+You can now run Journalist by enabling and starting the service:
+
+```sh
+rcctl enable journalist
+rcctl start journalist
+```
 
 
 #### systemd
@@ -168,48 +225,33 @@ docker run -it --rm --name journalist \
   journalist:latest
 ```
 
+Alternatively a configuration TOML can be passed into the container like so:
+
+```sh
+docker run -it --rm --name journalist \
+  -v /path/to/my/local/journalist.toml:/etc/journalist.toml \
+  -p 0.0.0.0:8000:8000 \
+  journalist:latest
+```
+
+
+#### Kubernetes
+
+TODO
+
 
 #### DigitalOcean App Platform
 
-You can use the following App Spec to deploy `journalist` for as little as $12
-per month on [DigitalOcean's App Platform](https://m.do.co/c/9d1b223a47bc). 
-Fork this repo into your GitHub account, connect that with DO and 
-replace `$$ACCOUNT$$` with your account's name in the App Spec:
-
-```yaml
-databases:
-- engine: PG
-  name: journalist
-  num_nodes: 1
-  size: db-s-dev-database
-  version: "12"
-name: journalist
-region: nyc
-services:
-- dockerfile_path: Dockerfile
-  envs:
-  - key: JOURNALIST_DATABASE_TYPE
-    scope: RUN_TIME
-    value: "postgres"
-  - key: JOURNALIST_DATABASE_CONNECTION
-    scope: RUN_TIME
-    value: "${journalist.DATABASE_URL}"
-  github:
-    branch: master
-    deploy_on_push: true
-    repo: $$ACCOUNT$$/journalist
-  http_port: 8000
-  instance_count: 1
-  instance_size_slug: basic-xxs
-  name: journalist
-  routes:
-  - path: /
-```
+Journalist can be deployed on [DigitalOcean's App
+Platform](https://m.do.co/c/9d48825ddae1) for as little as ~$12 per month. Fork
+this repo into your GitHub account, adjust the [`.do/app.yaml`](.do/app.yaml)
+accordingly and connect the forked repo [on
+DigitalOcean](https://cloud.digitalocean.com/apps/new).
 
 
 #### DigitalOcean Function
 
-Soon available.
+Available soon.
 
 
 #### Aamazon Web Services Lambda Function
