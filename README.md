@@ -9,19 +9,66 @@ Journalist. An RSS aggregator.
 
 ## What is `journalist`?
 
-[Get more information here](https://マリウス.com/journalist-v1/).
+Journalist is an RSS aggregator that can sync subscriptions and read/unread
+items across multiple clients without requiring a special client-side
+integration. Clients can use Journalist by simply subscribing to its
+personalized RSS feed.
+
+Journalist aims to become a self-hosted alternative to services like Feedly,
+Feedbin and others. It aims to offer a similar set of features like FreshRSS,
+NewsBlur and Miniflux while being easier to set up/maintain and overall more
+lightweight.
+
+Find out more about Journalist [here](https://マリウス.com/journalist-v1/).
 
 
-## Build
+## Development
+
+### Build
+
+You can build Journalist yourself simply by running `make` in the repository
+folder:
 
 ```sh
 make
 ```
 
+This will build a binary called `journalist`.
+
 
 ## Usage
 
-TODO
+Journalist ist a single binary service can be run on any Linux/Unix machine
+by setting the required configuration values and launching the `journalist`
+program.
+
+### Configuration
+
+Journalist will read its config either from a file or from environment
+variables. Every configuration key available in the
+[`example-journalist.toml`](example-journalist.toml) can be exported as
+environment variable, by separating scopes using `_` and prepend `JOURNALIST` to
+it. For example, the following configuration:
+
+```toml
+[Server]
+BindIP = "0.0.0.0"
+```
+
+... can also be specified as an environment variable:
+
+```sh
+export JOURNALIST_SERVER_BINDIP="0.0.0.0"
+```
+
+Journalist will try to read the `journalist.toml` file from one of the following
+paths:
+
+- `/etc/journalist.toml`
+- `$XDG_CONFIG_HOME/journalist.toml`
+- `$HOME/.config/journalist.toml`
+- `$HOME/journalist.toml`
+- `$PWD/journalist.toml`
 
 
 ### Database
@@ -31,8 +78,21 @@ database types are SQLite, PostgreSQL and MySQL. The database can be configured
 using the `JOURNALIST_DATABASE_TYPE` and `JOURNALIST_DATABASE_CONNECTION` env,
 or the `Database.Type` and `Database.Connection` config properties.
 
+**WARNING:** If you do not specify a database configuration, Journalist will use
+an in-memory SQLite database! As soon as Journalist shuts down, all data
+inside the in-memory database is gone!
 
-#### Docker PostgreSQL Example
+
+#### SQLite File Example
+
+```toml
+[Database]
+Type = "sqlite3"
+Connection = "file:my-database.sqlite?cache=shared&_fk=1"
+```
+
+
+#### PostgreSQL Example *(using Docker for PostgreSQL)*
 
 Run the database:
 
@@ -53,9 +113,13 @@ Connection = "host=127.0.0.1 port=5432 dbname=journalist user=postgres password=
 ```
 
 
-### Configuration
+#### MySQL Example
 
-TODO
+```toml
+[Database]
+Type = "mysql"
+Connection = "mysqluser:mysqlpassword@tcp(mysqlhost:port)/database?parseTime=true"
+```
 
 
 ### Deployment
