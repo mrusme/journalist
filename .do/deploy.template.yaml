@@ -1,0 +1,8 @@
+spec:
+  name: journalist
+  services:
+  - name: journalist
+    git:
+      branch: master
+      repo_clone_url: https://github.com/mrusme/journalist.git
+
