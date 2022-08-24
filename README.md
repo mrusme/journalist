@@ -11,6 +11,7 @@ Journalist. An RSS aggregator.
 
 [Get more information here](https://マリウス.com/journalist-v1/).
 
+
 ## Build
 
 ```sh
@@ -22,12 +23,14 @@ make
 
 TODO
 
+
 ### Database
 
 Journalist requires a database to store users and subscriptions. Supported
 database types are SQLite, PostgreSQL and MySQL. The database can be configured
 using the `JOURNALIST_DATABASE_TYPE` and `JOURNALIST_DATABASE_CONNECTION` env,
 or the `Database.Type` and `Database.Connection` config properties.
+
 
 #### Docker PostgreSQL Example
 
@@ -54,7 +57,22 @@ Connection = "host=127.0.0.1 port=5432 dbname=journalist user=postgres password=
 
 TODO
 
+
 ### Deployment
+
+#### Custom
+
+TODO
+
+
+#### OpenBSD rc
+
+TODO
+
+
+#### systemd
+
+TODO
 
 
 #### Docker
@@ -123,4 +141,24 @@ services:
   routes:
   - path: /
 ```
+
+
+#### DigitalOcean Function
+
+Soon available.
+
+
+#### Aamazon Web Services Lambda Function
+
+TODO
+
+
+#### Google Cloud Function
+
+TODO
+
+
+## API
+
+TODO
 
