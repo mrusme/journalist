@@ -1,7 +1,7 @@
 #!/bin/sh
 debug="$1"
 
-api_url="http://127.0.0.1:8000/api/v1"
+export JOURNALIST_API_URL="http://127.0.0.1:8000/api/v1"
 
 admin_user="admin"
 admin_pass="admin"
@@ -16,38 +16,6 @@ user2_pass="p4sS!"
 
 feed1_url="http://lorem-rss.herokuapp.com/feed"
 feed2_url="https://xn--gckvb8fzb.com"
-
-perform() {
-  action=$(printf "%s" "$1" | tr '[:lower:]' '[:upper:]')
-  # "on"=$2
-  endpoint="$3"
-  # "as"=$4
-  user="$5"
-  pass="$6"
-  # "with"=$7
-  payload="$8"
-
-  if [ "$payload" = "" ]
-  then
-    json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint")
-  else
-    json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint" -d "$payload")
-  fi
-
-  if [ $? -ne 0 ]
-  then
-    printf "{}"
-    return 1
-  fi
-
-  printf "%s" "$json"
-  if printf "%s" "$json" | jq '.success' | grep "false" > /dev/null
-  then
-    return 2
-  fi
-
-  return 0
-}
 
 failfast() {
   if [ "$1" -ne "0" ]
@@ -70,7 +38,7 @@ printf "\
 \n"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform get \
+  ./redacteur perform get \
        on users \
        as $admin_user $admin_pass
 )
@@ -84,7 +52,7 @@ printf "\
 \n" "$user1_user"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform post \
+  ./redacteur perform post \
        on users \
        as $admin_user $admin_pass \
      with "{
@@ -104,7 +72,7 @@ printf "\
 \n"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform get \
+  ./redacteur perform get \
        on users \
        as $admin_user $admin_pass
 )
@@ -120,7 +88,7 @@ printf "\
 \n" "$user1_user"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform put \
+  ./redacteur perform put \
        on users/$user1_id \
        as $admin_user $admin_pass \
      with "{
@@ -138,7 +106,7 @@ printf "\
 \n" "$user1_user"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform put \
+  ./redacteur perform put \
        on users/$user1_id \
        as $admin_user $admin_pass \
      with "{
@@ -156,7 +124,7 @@ printf "\
 \n" "$user2_user"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform post \
+  ./redacteur perform post \
        on users \
        as $admin_user $admin_pass \
      with "{
@@ -176,7 +144,7 @@ printf "\
 \n" "$user1_user"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform post \
+  ./redacteur perform post \
        on tokens \
        as $user1_user $user1_pass \
      with "{
@@ -194,7 +162,7 @@ printf "\
 \n" "$user1_user" "$feed1_url"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform post \
+  ./redacteur perform post \
        on feeds \
        as $user1_user $user1_pass \
      with "{
@@ -214,7 +182,7 @@ printf "\
 \n" "$user2_user" "$feed1_url"
 # -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - #
 out=$(
-  perform post \
+  ./redacteur perform post \
        on feeds \
        as $user2_user $user2_pass \
      with "{

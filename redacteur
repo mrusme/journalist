@@ -1,0 +1,61 @@
+#!/bin/sh
+
+api_url="$JOURNALIST_API_URL"
+
+if ! type curl > /dev/null
+then
+  printf "curl missing, please install\n"
+  exit 1
+fi
+if ! type jq > /dev/null
+then
+  printf "jq missing, please install\n"
+  exit 1
+fi
+
+if [ "$#" -lt 7 ]
+then
+  printf "usage: %s perform <action> on <endpoint> as <username> <password> [with <payload>]\n" "$0"
+  printf "\n"
+  printf "action: get, post, put, delete\n"
+  printf "endpoint: users[/<id>], tokens[/<id>], feeds[/<id>]\n"
+  printf "payload: JSON string\n"
+  printf "\n"
+  printf "examples:\n"
+  printf "\n"
+  printf "%s perform get on users/d83807a0-22ec-4c9f-94bf-fee5cf882d6e as admin \$(pass show journalist/admin)\n" "$0"
+  printf "%s perform post on tokens as myuser mypassword with '{ \"name\": \"mytoken\" }'\n" "$0"
+  printf "\n"
+  exit 1
+fi
+
+# "perform"=$1
+action=$(printf "%s" "$2" | tr '[:lower:]' '[:upper:]')
+# "on"=$3
+endpoint="$4"
+# "as"=$5
+user="$6"
+pass="$7"
+# "with"=$8
+payload="$9"
+
+if [ "$payload" = "" ]
+then
+  json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint")
+else
+  json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint" -d "$payload")
+fi
+
+if [ $? -ne 0 ]
+then
+  printf "{}"
+  exit 1
+fi
+
+printf "%s" "$json"
+if printf "%s" "$json" | jq '.success' | grep "false" > /dev/null
+then
+  exit 2
+fi
+
+exit 0
