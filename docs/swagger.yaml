@@ -1,0 +1,424 @@
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  feeds.FeedCreateModel:
+    properties:
+      group:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      url:
+        type: string
+      username:
+        type: string
+    type: object
+  feeds.FeedCreateResponse:
+    properties:
+      feed:
+        $ref: '#/definitions/feeds.FeedShowModel'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  feeds.FeedListResponse:
+    properties:
+      feeds:
+        items:
+          $ref: '#/definitions/feeds.FeedShowModel'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  feeds.FeedShowModel:
+    properties:
+      group:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+  feeds.FeedShowResponse:
+    properties:
+      feed:
+        $ref: '#/definitions/feeds.FeedShowModel'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  tokens.TokenCreateModel:
+    properties:
+      name:
+        type: string
+    type: object
+  tokens.TokenCreateResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      token:
+        $ref: '#/definitions/tokens.TokenShowModel'
+    type: object
+  tokens.TokenShowModel:
+    properties:
+      id:
+        type: string
+      token:
+        type: string
+      tokenname:
+        type: string
+      type:
+        type: string
+    type: object
+  users.UserCreateModel:
+    properties:
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  users.UserCreateResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      user:
+        $ref: '#/definitions/users.UserShowModel'
+    type: object
+  users.UserListResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      users:
+        items:
+          $ref: '#/definitions/users.UserShowModel'
+        type: array
+    type: object
+  users.UserShowModel:
+    properties:
+      id:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  users.UserShowResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      user:
+        $ref: '#/definitions/users.UserShowModel'
+    type: object
+  users.UserUpdateModel:
+    properties:
+      password:
+        type: string
+      role:
+        type: string
+    type: object
+  users.UserUpdateResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+      user:
+        $ref: '#/definitions/users.UserShowModel'
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: marius@xn--gckvb8fzb.com
+    name: Marius
+    url: https://xn--gckvb8fzb.com
+  description: The Journalist REST API v1
+  license:
+    name: GPL-3.0
+    url: https://github.com/mrusme/journalist/blob/master/LICENSE
+  title: Journalist API
+  version: "1.0"
+paths:
+  /feeds:
+    get:
+      consumes:
+      - application/json
+      description: Get all feeds
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/feeds.FeedListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/feeds.FeedListResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/feeds.FeedListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/feeds.FeedListResponse'
+      summary: List feeds
+      tags:
+      - feeds
+    post:
+      consumes:
+      - application/json
+      description: Add a new feed
+      parameters:
+      - description: Add feed
+        in: body
+        name: feed
+        required: true
+        schema:
+          $ref: '#/definitions/feeds.FeedCreateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/feeds.FeedCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/feeds.FeedCreateResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/feeds.FeedCreateResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/feeds.FeedCreateResponse'
+      summary: Create a feed
+      tags:
+      - feeds
+  /feeds/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get feed by ID
+      parameters:
+      - description: Feed ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/feeds.FeedShowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/feeds.FeedShowResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/feeds.FeedShowResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/feeds.FeedShowResponse'
+      summary: Show a feed
+      tags:
+      - feeds
+  /tokens:
+    post:
+      consumes:
+      - application/json
+      description: Add a new token
+      parameters:
+      - description: Add token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/tokens.TokenCreateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tokens.TokenCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/tokens.TokenCreateResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/tokens.TokenCreateResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/tokens.TokenCreateResponse'
+      summary: Create a token
+      tags:
+      - tokens
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.UserListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.UserListResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/users.UserListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/users.UserListResponse'
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Add a new user
+      parameters:
+      - description: Add user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.UserCreateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.UserCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.UserCreateResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/users.UserCreateResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/users.UserCreateResponse'
+      summary: Create a user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.UserShowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.UserShowResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/users.UserShowResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/users.UserShowResponse'
+      summary: Show a user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Change an existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Change user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.UserUpdateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.UserUpdateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.UserUpdateResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/users.UserUpdateResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/users.UserUpdateResponse'
+      summary: Update a user
+      tags:
+      - users
+produces:
+- application/json
+schemes:
+- http
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

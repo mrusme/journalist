@@ -1,9 +1,13 @@
+.PHONY: ent swagger build
 VERSION := $(shell git describe --tags)
 
-all: generate build
+all: ent swagger build
 
-generate:
+ent:
 	ent generate --feature sql/upsert ./ent/schema
+
+swagger:
+	swag init -g api/api.go
 
 build:
 	go build -ldflags "-X github.com/mrusme/journalist/journalistd.VERSION=$(VERSION)"

@@ -11,6 +11,24 @@ import (
 	// "github.com/mrusme/journalist/ent"
 )
 
+type UserCreateResponse struct {
+  Success           bool            `json:"success"`
+  User              *UserShowModel  `json:"user"`
+  Message           string          `json:"message"`
+}
+
+// Create godoc
+// @Summary      Create a user
+// @Description  Add a new user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user body      UserCreateModel true "Add user"
+// @Success      200  {object}  UserCreateResponse
+// @Failure      400  {object}  UserCreateResponse
+// @Failure      404  {object}  UserCreateResponse
+// @Failure      500  {object}  UserCreateResponse
+// @Router       /users [post]
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 
@@ -23,10 +41,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": "Only admins are allowed to create users",
+      JSON(UserCreateResponse{
+        Success: false,
+        User: nil,
+        Message: "Only admins are allowed to create users",
       })
   }
 
@@ -38,10 +56,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserCreateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -53,10 +71,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserCreateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -74,10 +92,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserCreateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -89,10 +107,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "user": showUser,
-      "message": "",
+    JSON(UserCreateResponse{
+      Success: true,
+      User: &showUser,
+      Message: "",
     })
 }
 

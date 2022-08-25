@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"strings"
 
-	// "log"
 	"context"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,6 +15,23 @@ import (
 	"github.com/mrusme/journalist/lib"
 )
 
+// @title Journalist API
+// @version 1.0
+// @description The Journalist REST API v1
+
+// @contact.name Marius
+// @contact.url https://xn--gckvb8fzb.com
+// @contact.email marius@xn--gckvb8fzb.com
+
+// @license.name GPL-3.0
+// @license.url https://github.com/mrusme/journalist/blob/master/LICENSE
+
+// @host localhost:8000
+// @BasePath /api/v1
+// @accept json
+// @produce json
+// @schemes http
+// @securityDefinitions.basic  BasicAuth
 func Register(
   jctx *lib.JournalistContext,
   fiberApp *fiber.App,

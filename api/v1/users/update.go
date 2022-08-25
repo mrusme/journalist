@@ -10,6 +10,25 @@ import (
 	// "github.com/mrusme/journalist/ent"
 )
 
+type UserUpdateResponse struct {
+  Success           bool            `json:"success"`
+  User              *UserShowModel  `json:"user"`
+  Message           string          `json:"message"`
+}
+
+// Update godoc
+// @Summary      Update a user
+// @Description  Change an existing user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string true "User ID"
+// @Param        user body      UserUpdateModel true "Change user"
+// @Success      200  {object}  UserUpdateResponse
+// @Failure      400  {object}  UserUpdateResponse
+// @Failure      404  {object}  UserUpdateResponse
+// @Failure      500  {object}  UserUpdateResponse
+// @Router       /users/{id} [put]
 func (h *handler) Update(ctx *fiber.Ctx) error {
   var err error
 
@@ -18,10 +37,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
   if err != nil {
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserUpdateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -31,10 +50,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
   if param_id != user_id && role != "admin" {
     return ctx.
       Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": "Only admins are allowed to update other users",
+      JSON(UserUpdateResponse{
+        Success: false,
+        User: nil,
+        Message: "Only admins are allowed to update other users",
       })
   }
 
@@ -42,10 +61,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
   if err = ctx.BodyParser(updateUser); err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserUpdateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -53,10 +72,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
   if err = validate.Struct(*updateUser); err != nil {
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserUpdateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -69,10 +88,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
     } else {
       return ctx.
         Status(fiber.StatusForbidden).
-        JSON(&fiber.Map{
-          "success": false,
-          "user": nil,
-          "message": "Only admins are allowed to update roles",
+        JSON(UserUpdateResponse{
+          Success: false,
+          User: nil,
+          Message: "Only admins are allowed to update roles",
         })
     }
   }
@@ -87,10 +106,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserUpdateResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -102,10 +121,10 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "user": showUser,
-      "message": "",
+    JSON(UserUpdateResponse{
+      Success: true,
+      User: &showUser,
+      Message: "",
     })
 }
 

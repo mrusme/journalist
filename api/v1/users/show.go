@@ -9,6 +9,24 @@ import (
 	// "github.com/mrusme/journalist/ent"
 )
 
+type UserShowResponse struct {
+  Success           bool           `json:"success"`
+  User              *UserShowModel `json:"user"`
+  Message           string         `json:"message"`
+}
+
+// Show godoc
+// @Summary      Show a user
+// @Description  Get user by ID
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string true "User ID"
+// @Success      200  {object}  UserShowResponse
+// @Failure      400  {object}  UserShowResponse
+// @Failure      404  {object}  UserShowResponse
+// @Failure      500  {object}  UserShowResponse
+// @Router       /users/{id} [get]
 func (h *handler) Show(ctx *fiber.Ctx) error {
   var err error
 
@@ -17,10 +35,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
   if err != nil {
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserShowResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -30,10 +48,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
   if param_id != user_id && role != "admin" {
     return ctx.
       Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": "Only admins are allowed to see other users",
+      JSON(UserShowResponse{
+        Success: false,
+        User: nil,
+        Message: "Only admins are allowed to see other users",
       })
   }
 
@@ -46,10 +64,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "user": nil,
-        "message": err.Error(),
+      JSON(UserShowResponse{
+        Success: false,
+        User: nil,
+        Message: err.Error(),
       })
   }
 
@@ -61,10 +79,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "user": showUser,
-      "message": "",
+    JSON(UserShowResponse{
+      Success: true,
+      User: &showUser,
+      Message: "",
     })
 }
 

@@ -10,6 +10,23 @@ import (
 	"go.uber.org/zap"
 )
 
+type FeedListResponse struct {
+  Success           bool             `json:"success"`
+  Feeds             *[]FeedShowModel `json:"feeds"`
+  Message           string           `json:"message"`
+}
+
+// List godoc
+// @Summary      List feeds
+// @Description  Get all feeds
+// @Tags         feeds
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  FeedListResponse
+// @Failure      400  {object}  FeedListResponse
+// @Failure      404  {object}  FeedListResponse
+// @Failure      500  {object}  FeedListResponse
+// @Router       /feeds [get]
 func (h *handler) List(ctx *fiber.Ctx) error {
   var showFeeds []FeedShowModel
 
@@ -26,10 +43,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       )
       return ctx.
         Status(fiber.StatusInternalServerError).
-        JSON(&fiber.Map{
-          "success": false,
-          "feeds": nil,
-          "message": err.Error(),
+        JSON(FeedListResponse{
+          Success: false,
+          Feeds: nil,
+          Message: err.Error(),
         })
     }
 
@@ -53,10 +70,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
       )
       return ctx.
         Status(fiber.StatusInternalServerError).
-        JSON(&fiber.Map{
-          "success": false,
-          "feed": nil,
-          "message": err.Error(),
+        JSON(FeedListResponse{
+          Success: false,
+          Feeds: nil,
+          Message: err.Error(),
         })
     }
 
@@ -81,10 +98,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "feeds": showFeeds,
-      "message": "",
+    JSON(FeedListResponse{
+      Success: true,
+      Feeds: &showFeeds,
+      Message: "",
     })
 }
 

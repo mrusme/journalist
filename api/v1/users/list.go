@@ -10,6 +10,23 @@ import (
 	// "github.com/mrusme/journalist/ent"
 )
 
+type UserListResponse struct {
+  Success           bool             `json:"success"`
+  Users             *[]UserShowModel `json:"users"`
+  Message           string           `json:"message"`
+}
+
+// List godoc
+// @Summary      List users
+// @Description  Get all users
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  UserListResponse
+// @Failure      400  {object}  UserListResponse
+// @Failure      404  {object}  UserListResponse
+// @Failure      500  {object}  UserListResponse
+// @Router       /users [get]
 func (h *handler) List(ctx *fiber.Ctx) error {
   var err error
 
@@ -22,10 +39,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "users": nil,
-        "message": "Only admins are allowed to list users",
+      JSON(UserListResponse{
+        Success: false,
+        Users: nil,
+        Message: "Only admins are allowed to list users",
       })
   }
 
@@ -35,10 +52,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
   if err != nil {
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "users": nil,
-        "message": err.Error(),
+      JSON(UserListResponse{
+        Success: false,
+        Users: nil,
+        Message: err.Error(),
       })
   }
 
@@ -54,10 +71,10 @@ func (h *handler) List(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "users": showUsers,
-      "message": "",
+    JSON(UserListResponse{
+      Success: true,
+      Users: &showUsers,
+      Message: "",
     })
 }
 

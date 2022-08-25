@@ -10,6 +10,24 @@ import (
 	"go.uber.org/zap"
 )
 
+type FeedShowResponse struct {
+  Success           bool           `json:"success"`
+  Feed              *FeedShowModel `json:"feed"`
+  Message           string         `json:"message"`
+}
+
+// Show godoc
+// @Summary      Show a feed
+// @Description  Get feed by ID
+// @Tags         feeds
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string true "Feed ID"
+// @Success      200  {object}  FeedShowResponse
+// @Failure      400  {object}  FeedShowResponse
+// @Failure      404  {object}  FeedShowResponse
+// @Failure      500  {object}  FeedShowResponse
+// @Router       /feeds/{id} [get]
 func (h *handler) Show(ctx *fiber.Ctx) error {
   var err error
 
@@ -22,10 +40,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedShowResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -39,10 +57,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusForbidden).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": "Only admins are allowed to see other feeds",
+      JSON(FeedShowResponse{
+        Success: false,
+        Feed: nil,
+        Message: "Only admins are allowed to see other feeds",
       })
   }
 
@@ -60,10 +78,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedShowResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -76,10 +94,10 @@ func (h *handler) Show(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "feed": showFeed,
-      "message": "",
+    JSON(FeedShowResponse{
+      Success: true,
+      Feed: &showFeed,
+      Message: "",
     })
 }
 

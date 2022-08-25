@@ -15,6 +15,24 @@ import (
 	// "github.com/mrusme/journalist/ent"
 )
 
+type TokenCreateResponse struct {
+  Success           bool            `json:"success"`
+  Token             *TokenShowModel `json:"token"`
+  Message           string          `json:"message"`
+}
+
+// Create godoc
+// @Summary      Create a token
+// @Description  Add a new token
+// @Tags         tokens
+// @Accept       json
+// @Produce      json
+// @Param        token body     TokenCreateModel true "Add token"
+// @Success      200  {object}  TokenCreateResponse
+// @Failure      400  {object}  TokenCreateResponse
+// @Failure      404  {object}  TokenCreateResponse
+// @Failure      500  {object}  TokenCreateResponse
+// @Router       /tokens [post]
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 
@@ -26,10 +44,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "token": nil,
-        "message": err.Error(),
+      JSON(TokenCreateResponse{
+        Success: false,
+        Token: nil,
+        Message: err.Error(),
       })
   }
 
@@ -41,10 +59,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "token": nil,
-        "message": err.Error(),
+      JSON(TokenCreateResponse{
+        Success: false,
+        Token: nil,
+        Message: err.Error(),
       })
   }
 
@@ -57,10 +75,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(TokenCreateResponse{
+        Success: false,
+        Token: nil,
+        Message: err.Error(),
       })
   }
 
@@ -87,10 +105,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "token": nil,
-        "message": err.Error(),
+      JSON(TokenCreateResponse{
+        Success: false,
+        Token: nil,
+        Message: err.Error(),
       })
   }
 
@@ -106,10 +124,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "token": nil,
-        "message": err.Error(),
+      JSON(TokenCreateResponse{
+        Success: false,
+        Token: nil,
+        Message: err.Error(),
       })
   }
 
@@ -122,10 +140,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "token": showToken,
-      "message": "",
+    JSON(TokenCreateResponse{
+      Success: true,
+      Token: &showToken,
+      Message: "",
     })
 }
 

@@ -17,6 +17,24 @@ import (
 	"go.uber.org/zap"
 )
 
+type FeedCreateResponse struct {
+  Success           bool           `json:"success"`
+  Feed              *FeedShowModel `json:"feed"`
+  Message           string         `json:"message"`
+}
+
+// Create godoc
+// @Summary      Create a feed
+// @Description  Add a new feed
+// @Tags         feeds
+// @Accept       json
+// @Produce      json
+// @Param        feed body      FeedCreateModel  true "Add feed"
+// @Success      200  {object}  FeedCreateResponse
+// @Failure      400  {object}  FeedCreateResponse
+// @Failure      404  {object}  FeedCreateResponse
+// @Failure      500  {object}  FeedCreateResponse
+// @Router       /feeds [post]
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 
@@ -31,10 +49,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -46,10 +64,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -70,10 +88,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusBadRequest).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -91,10 +109,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -118,10 +136,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -134,10 +152,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -165,10 +183,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     )
     return ctx.
       Status(fiber.StatusInternalServerError).
-      JSON(&fiber.Map{
-        "success": false,
-        "feed": nil,
-        "message": err.Error(),
+      JSON(FeedCreateResponse{
+        Success: false,
+        Feed: nil,
+        Message: err.Error(),
       })
   }
 
@@ -181,10 +199,10 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 
   return ctx.
     Status(fiber.StatusOK).
-    JSON(&fiber.Map{
-      "success": true,
-      "feed": showFeed,
-      "message": "",
+    JSON(FeedCreateResponse{
+      Success: true,
+      Feed: &showFeed,
+      Message: "",
     })
 }
 
