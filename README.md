@@ -22,27 +22,72 @@ lightweight.
 Find out more about Journalist [here](https://マリウス.com/journalist-v1/).
 
 
-## Development
-
-### Build
-
-You can build Journalist yourself simply by running `make` in the repository
-folder:
-
-```sh
-make
-```
-
-This will build a binary called `journalist`.
-
-
 ## Usage
 
-Journalist ist a single binary service can be run on any Linux/Unix machine
+Journalist is a single binary service can be run on any Linux/Unix machine
 by setting the required configuration values and launching the `journalist`
 program.
 
-### Configuration
+Before using Journalist from an RSS client, it first requires
+[configuration](#configuration) and [deployment](#deployment).
+
+### Getting Started
+
+As soon as Journalist was [configured](#configuration) and
+[deployed](#deployment) properly, a new user can be added using the admin user
+that Journalist creates automatically (default login: `admin`:`admin`).
+
+First, make sure to export `JOURNALIST_API_URL` in the current terminal session:
+
+```sh
+$ export JOURNALIST_API_URL="http://127.0.0.1:8000/api"
+```
+
+Then, using [Redacteur](#redacteur), a new user can be added like this:
+
+```sh
+$ JOURNALIST_API_USERNAME=admin JOURNALIST_API_PASSWORD=admin \
+  ./redacteur add user
+Username: johndoe
+Password: MySecretPassword123
+Role (admin/[user]): user
+```
+
+Next, a new QAT (*Quick Access Token*) for the user can be issued:
+
+```sh
+$ JOURNALIST_API_USERNAME=johndoe JOURNALIST_API_PASSWORD=MySecretPassword123 \
+  ./redacteur add token
+Token name: FeederAndroidClient
+```
+
+Copy the `token` from the JSON response, as this is required to subscribe to the
+Journalist feed.
+
+Next, add a new feed to the user (a.k.a. *subscribe to*):
+
+```sh
+$ JOURNALIST_API_USERNAME=johndoe JOURNALIST_API_PASSWORD=MySecretPassword123 \
+  ./redacteur add feed
+URL: https://xn--gckvb8fzb.com
+Name: マリウス
+Group: Journals
+```
+
+Feel free to add further feeds the same way. `Group` describes a *folder*
+underneath the feed should be grouped. Groups can be named freely.
+
+With the *Quick Access Token* (`token`) that was copied previously, the
+following URL can now be added to any RSS feed reader:
+
+```
+http://127.0.0.1:8000/web/subscriptions?qat=TOKEN-HERE
+```
+
+More information and RSS feed URLs can be found under [Web](#web).
+
+
+## Configuration
 
 Journalist will read its config either from a file or from environment
 variables. Every configuration key available in the
@@ -284,5 +329,69 @@ TODO: Database
 
 ## API
 
-TODO
+Journalist provides an HTTP REST API for managing user accounts, tokens and
+feeds, which is available through the `/api/v1` endpoint. A full OpenAPI/Swagger
+documentation of the API can be found inside the [`docs/`](docs/) folder.
+
+### Redacteur
+
+This repository comes with a handy client for the Journalist API called
+[*Redacteur*](redacteur). Redacteur can be used to perform actions on the API,
+either by manually specifying the exact API request (`redacteur perform ...`) or
+by using a shorthand function like `create user`, which runs interactively.
+
+Find out more by running `redacteur help`.
+
+
+## Web
+
+`/web` is the HTTP web endpoint of Journalist that serves aggregated RSS feeds
+as well as *action* endpoints that allow for example marking items as read.
+
+To subscribe to a Journalist user's aggregated RSS feed a *Quick Access Token*
+is required. It can be generated using [Redacteur](#redacteur).
+
+With the `QAT`, any RSS feed reader can subscribe to the following URL:
+
+```
+<JOURNALIST_SERVER_ENDPOINT_WEB>/subscriptions?qat=<TOKEN>
+```
+
+Additionally, subscriptions can be separated by *group*, simply by adding the
+`group` parameter to the URL:
+
+```
+<JOURNALIST_SERVER_ENDPOINT_WEB>/subscriptions?qat=<TOKEN>&group=Journals
+```
+
+With that, only feeds within the *Journal* group will be included in the RSS
+feed.
+
+### Mark as Read
+
+Feed items can be marked as read using the inline Journalist menu that is
+injected on the top of every RSS item. It contains a link to an *actions
+endpoint* of Journalist that will mark either a single item or a specific range
+of items as read. This will result in these items not showing up in the
+Journalist subscription feed anymore. This way every other client that will
+eventually refresh the feed won't *see* these items anymore and hopefully not
+display them.
+
+You might need to adjust client settings in order to disable caching of items.
+Additionally, if a client has previously synced the items, it might not
+automatically remove them from the feed. Whether and how good this works depends
+on the client's implementation.
+
+
+## Development
+
+You can build Journalist yourself simply by running `make` in the repository
+folder:
+
+```sh
+make
+```
+
+This will build a binary called `journalist`.
+
 
