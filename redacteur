@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 api_url="$JOURNALIST_API_URL"
 
 depcheck() {
   dep="$1"
-  if ! type $dep > /dev/null
+  if ! type "$dep" > /dev/null
   then
-    printf "$dep missing, please install\n"
+    printf "%s missing, please install\n" "$dep"
     exit 1
   fi
 }

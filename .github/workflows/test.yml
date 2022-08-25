@@ -3,7 +3,10 @@ name: Test
 on: [push]
 
 jobs:
-  build:
+  test:
+    defaults:
+      run:
+        shell: bash
 
     runs-on: ubuntu-latest
     steps:
