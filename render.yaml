@@ -7,9 +7,9 @@ services:
     numInstances: 1
     healthCheckPath: /health
     envVars:
-      - key: JOURNALIST_DATABASE_TYPE
-        value: "postgres"
-      - key: JOURNALIST_DATABASE_CONNECTION
+      - key: JOURNALIST_SERVER_BINDIP
+        value: "0.0.0.0"
+      - key: DATABASE_URL
         fromDatabase:
           name: journalistdb
           property: connectionString

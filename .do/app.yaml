@@ -3,10 +3,9 @@ region: nyc
 services:
 - name: journalist
   envs:
-  - key: JOURNALIST_DATABASE_TYPE
-    scope: RUN_TIME
-    value: "postgres"
-  - key: JOURNALIST_DATABASE_CONNECTION
+  - key: JOURNALIST_SERVER_BINDIP
+    value: 0.0.0.0
+  - key: DATABASE_URL
     scope: RUN_TIME
     value: "${journalistdb.DATABASE_URL}"
   image:

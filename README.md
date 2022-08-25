@@ -256,6 +256,8 @@ Alternatively, you can also directly connect this public repo.
 
 #### DigitalOcean App Platform
 
+[![Deploy to DO](https://www.deploytodo.com/do-btn-blue-ghost.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/mrusme/journalist/tree/master&refcode=9d48825ddae1)
+  
 Journalist can be deployed on [DigitalOcean's App
 Platform](https://m.do.co/c/9d48825ddae1).
 

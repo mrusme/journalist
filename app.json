@@ -11,8 +11,8 @@
   "logo": "https://github.com/mrusme/journalist/raw/master/documentation/journalist.png",
   "image": "mrusme/journalist",
   "env": {
-    "JOURNALIST_DATABASE_TYPE": {
-      "value": "postgres"
+    "JOURNALIST_SERVER_BINDIP": {
+      "value": "0.0.0.0"
     }
   },
   "formation": {
