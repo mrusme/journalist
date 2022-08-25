@@ -1,6 +1,10 @@
 package lib
 
 import (
+  "fmt"
+  "net"
+	"net/url"
+	"os"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -71,6 +75,48 @@ func Cfg() (Config, error) {
     return Config{}, err
   }
 
+  config = *ParseDatabaseURL(&config)
+
   return config, nil
+}
+
+func ParseDatabaseURL(config *Config) (*Config) {
+  databaseURL := os.Getenv("DATABASE_URL")
+  if databaseURL == "" {
+    return config
+  }
+
+  dbURL, err := url.Parse(databaseURL)
+  if err != nil {
+    return config
+  }
+
+  host, port, _ := net.SplitHostPort(dbURL.Host)
+  dbname := strings.TrimLeft(dbURL.Path, "/")
+  user := dbURL.User.Username()
+  password, _ := dbURL.User.Password()
+
+  switch(dbURL.Scheme) {
+  case "postgresql", "postgres":
+    if port == "" {
+      port = "5432"
+    }
+    config.Database.Type = "postgres"
+    config.Database.Connection = fmt.Sprintf(
+      "host=%s port=%s dbname=%s user=%s password=%s",
+       host,   port,   dbname,   user,   password,
+    )
+  case "mysql":
+    if port == "" {
+      port = "3306"
+    }
+    config.Database.Type = "mysql"
+    config.Database.Connection = fmt.Sprintf(
+      "%s:%s@tcp(%s:%s)/%s?parseTime=True",
+       user, password, host, port, dbname,
+    )
+  }
+
+  return config
 }
 
