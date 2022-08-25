@@ -240,12 +240,27 @@ docker run -it --rm --name journalist \
 TODO
 
 
+#### Render
+
+Fork this repo into your GitHub account, adjust the
+[`render.yaml`](render.yaml) accordingly and connect the forked repo [on
+Render](https://dashboard.render.com/select-repo?type=blueprint).
+
+Alternatively, you can also directly connect this public repo.
+
+
+#### Heroku
+
+TODO
+
+
 #### DigitalOcean App Platform
 
 Journalist can be deployed on [DigitalOcean's App
-Platform](https://m.do.co/c/9d48825ddae1) for as little as ~$12 per month. Fork
-this repo into your GitHub account, adjust the [`.do/app.yaml`](.do/app.yaml)
-accordingly and connect the forked repo [on
+Platform](https://m.do.co/c/9d48825ddae1) for as little as ~$12 per month.
+
+Fork this repo into your GitHub account, adjust the
+[`.do/app.yaml`](.do/app.yaml) accordingly and connect the forked repo [on
 DigitalOcean](https://cloud.digitalocean.com/apps/new).
 
 
