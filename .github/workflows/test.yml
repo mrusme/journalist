@@ -22,7 +22,7 @@ jobs:
         run: make
 
       - name: Go test
-        run: go test -v ./...
+        run: go test -v ./
 
       - name: Run Journalist in background
         run: |
