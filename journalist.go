@@ -1,30 +1,31 @@
 package main
 
 import (
-	"context"
-	"embed"
-	"fmt"
-	"net/http"
-	"os"
+  "context"
+  "embed"
+  "fmt"
+  "net/http"
+  "os"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
-	"go.uber.org/zap"
+  "github.com/aws/aws-lambda-go/events"
+  "github.com/aws/aws-lambda-go/lambda"
+  fiberadapter "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
 
-	"github.com/gofiber/fiber/v2"
+  "go.uber.org/zap"
 
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/journalistd"
-	"github.com/mrusme/journalist/lib"
+  "github.com/gofiber/fiber/v2"
 
-	"github.com/mrusme/journalist/api"
-	"github.com/mrusme/journalist/middlewares/fiberzap"
-	"github.com/mrusme/journalist/web"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/journalistd"
+  "github.com/mrusme/journalist/lib"
 
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+  "github.com/mrusme/journalist/api"
+  "github.com/mrusme/journalist/middlewares/fiberzap"
+  "github.com/mrusme/journalist/web"
+
+  _ "github.com/go-sql-driver/mysql"
+  _ "github.com/lib/pq"
+  _ "github.com/mattn/go-sqlite3"
 )
 
 //go:embed views/*
@@ -36,24 +37,13 @@ var favicon embed.FS
 var fiberApp *fiber.App
 var fiberLambda *fiberadapter.FiberLambda
 
+var config lib.Config
+var logger *zap.Logger
+
 func init() {
-  fiberLambda = fiberadapter.New(fiberApp)
-}
-
-func Handler(
-  ctx context.Context,
-  req events.APIGatewayProxyRequest,
-) (events.APIGatewayProxyResponse, error) {
-  return fiberLambda.ProxyWithContext(ctx, req)
-}
-
-func main() {
   var err error
-  var jctx lib.JournalistContext
-  var config lib.Config
-  var entClient *ent.Client
-  var logger *zap.Logger
 
+  fiberLambda = fiberadapter.New(fiberApp)
   config, err = lib.Cfg()
   if err != nil {
     panic(err)
@@ -67,6 +57,33 @@ func main() {
   defer logger.Sync()
   // TODO: Use sugarLogger
   // sugar := logger.Sugar()
+}
+
+func AWSLambdaHandler(
+  ctx context.Context,
+  req events.APIGatewayProxyRequest,
+) (events.APIGatewayProxyResponse, error) {
+  return fiberLambda.ProxyWithContext(ctx, req)
+}
+
+func GCFHandler(
+  w http.ResponseWriter,
+  r *http.Request,
+) {
+  err := CloudFunctionRouteToFiber(fiberApp, w, r)
+  if err != nil {
+    logger.Error(
+      "Handler error",
+      zap.Error(err),
+    )
+    return
+  }
+}
+
+func main() {
+  var err error
+  var jctx lib.JournalistContext
+  var entClient *ent.Client
 
   entClient, err = ent.Open(config.Database.Type, config.Database.Connection)
   if err != nil {
@@ -161,7 +178,7 @@ func main() {
       zap.Error(fiberApp.Listen(listenAddr)),
     )
   } else {
-    lambda.Start(Handler)
+    lambda.Start(AWSLambdaHandler)
   }
 }
 

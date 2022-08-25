@@ -206,7 +206,7 @@ and can be pulled using the following command:
 docker pull mrusme/journalist
 ```
 
-GitHub release versions are available as Docker image tags (e.g. `0.0.1`). 
+GitHub release versions are available as Docker image tags (e.g. `1.0.0`). 
 The `latest` image tag contains the latest code of the `master` branch.
 
 It's possible to build journalist locally as a Docker container like this:
@@ -275,7 +275,11 @@ TODO
 
 #### Google Cloud Function
 
-TODO
+```sh
+gcloud functions deploy GCFHandler --runtime go116 --trigger-http
+```
+
+TODO: Database
 
 
 ## API
