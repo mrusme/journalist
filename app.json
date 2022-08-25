@@ -1,0 +1,33 @@
+{
+  "name": "Journalist",
+  "description": "An RSS aggregator",
+  "keywords": [
+    "journalist",
+    "rss",
+    "aggregator"
+  ],
+  "website": "https://xn--gckvb8fzb.com/tag/journalist",
+  "repository": "https://github.com/mrusme/journalist",
+  "logo": "https://github.com/mrusme/journalist/raw/master/documentation/journalist.png",
+  "image": "mrusme/journalist",
+  "env": {
+    "JOURNALIST_DATABASE_TYPE": {
+      "value": "postgres"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "14"
+      }
+    }
+  ]
+}
+
