@@ -180,6 +180,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/feeds.FeedListResponse'
+      security:
+      - BasicAuth: []
       summary: List feeds
       tags:
       - feeds
@@ -213,6 +215,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/feeds.FeedCreateResponse'
+      security:
+      - BasicAuth: []
       summary: Create a feed
       tags:
       - feeds
@@ -246,6 +250,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/feeds.FeedShowResponse'
+      security:
+      - BasicAuth: []
       summary: Show a feed
       tags:
       - feeds
@@ -280,6 +286,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/tokens.TokenCreateResponse'
+      security:
+      - BasicAuth: []
       summary: Create a token
       tags:
       - tokens
@@ -307,6 +315,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/users.UserListResponse'
+      security:
+      - BasicAuth: []
       summary: List users
       tags:
       - users
@@ -340,6 +350,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/users.UserCreateResponse'
+      security:
+      - BasicAuth: []
       summary: Create a user
       tags:
       - users
@@ -373,6 +385,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/users.UserShowResponse'
+      security:
+      - BasicAuth: []
       summary: Show a user
       tags:
       - users
@@ -411,6 +425,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/users.UserUpdateResponse'
+      security:
+      - BasicAuth: []
       summary: Update a user
       tags:
       - users

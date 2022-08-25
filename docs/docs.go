@@ -32,6 +32,11 @@ const docTemplate = `{
     "paths": {
         "/feeds": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get all feeds",
                 "consumes": [
                     "application/json"
@@ -71,6 +76,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new feed",
                 "consumes": [
                     "application/json"
@@ -123,6 +133,11 @@ const docTemplate = `{
         },
         "/feeds/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get feed by ID",
                 "consumes": [
                     "application/json"
@@ -173,6 +188,11 @@ const docTemplate = `{
         },
         "/tokens": {
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new token",
                 "consumes": [
                     "application/json"
@@ -225,6 +245,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get all users",
                 "consumes": [
                     "application/json"
@@ -264,6 +289,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new user",
                 "consumes": [
                     "application/json"
@@ -316,6 +346,11 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get user by ID",
                 "consumes": [
                     "application/json"
@@ -364,6 +399,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Change an existing user",
                 "consumes": [
                     "application/json"

@@ -27,6 +27,7 @@ type UserListResponse struct {
 // @Failure      404  {object}  UserListResponse
 // @Failure      500  {object}  UserListResponse
 // @Router       /users [get]
+// @security     BasicAuth
 func (h *handler) List(ctx *fiber.Ctx) error {
   var err error
 

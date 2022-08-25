@@ -33,6 +33,7 @@ type TokenCreateResponse struct {
 // @Failure      404  {object}  TokenCreateResponse
 // @Failure      500  {object}  TokenCreateResponse
 // @Router       /tokens [post]
+// @security     BasicAuth
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 

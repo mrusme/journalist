@@ -29,6 +29,7 @@ type UserUpdateResponse struct {
 // @Failure      404  {object}  UserUpdateResponse
 // @Failure      500  {object}  UserUpdateResponse
 // @Router       /users/{id} [put]
+// @security     BasicAuth
 func (h *handler) Update(ctx *fiber.Ctx) error {
   var err error
 

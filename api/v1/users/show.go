@@ -27,6 +27,7 @@ type UserShowResponse struct {
 // @Failure      404  {object}  UserShowResponse
 // @Failure      500  {object}  UserShowResponse
 // @Router       /users/{id} [get]
+// @security     BasicAuth
 func (h *handler) Show(ctx *fiber.Ctx) error {
   var err error
 

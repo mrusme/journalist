@@ -35,6 +35,7 @@ type FeedCreateResponse struct {
 // @Failure      404  {object}  FeedCreateResponse
 // @Failure      500  {object}  FeedCreateResponse
 // @Router       /feeds [post]
+// @security     BasicAuth
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 

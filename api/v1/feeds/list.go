@@ -27,6 +27,7 @@ type FeedListResponse struct {
 // @Failure      404  {object}  FeedListResponse
 // @Failure      500  {object}  FeedListResponse
 // @Router       /feeds [get]
+// @security     BasicAuth
 func (h *handler) List(ctx *fiber.Ctx) error {
   var showFeeds []FeedShowModel
 

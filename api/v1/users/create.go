@@ -29,6 +29,7 @@ type UserCreateResponse struct {
 // @Failure      404  {object}  UserCreateResponse
 // @Failure      500  {object}  UserCreateResponse
 // @Router       /users [post]
+// @security     BasicAuth
 func (h *handler) Create(ctx *fiber.Ctx) error {
   var err error
 

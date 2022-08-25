@@ -28,6 +28,11 @@
     "paths": {
         "/feeds": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get all feeds",
                 "consumes": [
                     "application/json"
@@ -67,6 +72,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new feed",
                 "consumes": [
                     "application/json"
@@ -119,6 +129,11 @@
         },
         "/feeds/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get feed by ID",
                 "consumes": [
                     "application/json"
@@ -169,6 +184,11 @@
         },
         "/tokens": {
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new token",
                 "consumes": [
                     "application/json"
@@ -221,6 +241,11 @@
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get all users",
                 "consumes": [
                     "application/json"
@@ -260,6 +285,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Add a new user",
                 "consumes": [
                     "application/json"
@@ -312,6 +342,11 @@
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Get user by ID",
                 "consumes": [
                     "application/json"
@@ -360,6 +395,11 @@
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "description": "Change an existing user",
                 "consumes": [
                     "application/json"

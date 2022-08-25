@@ -28,6 +28,7 @@ type FeedShowResponse struct {
 // @Failure      404  {object}  FeedShowResponse
 // @Failure      500  {object}  FeedShowResponse
 // @Router       /feeds/{id} [get]
+// @security     BasicAuth
 func (h *handler) Show(ctx *fiber.Ctx) error {
   var err error
 
