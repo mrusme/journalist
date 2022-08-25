@@ -153,6 +153,11 @@ func main() {
     return ctx.SendStream(fi)
   })
 
+  fiberApp.Get("/health", func(ctx *fiber.Ctx) error {
+    // TODO: Check for issues
+    return ctx.SendStatus(fiber.StatusNoContent)
+  })
+
   functionName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 
   if config.Feeds.AutoRefresh != "" {
