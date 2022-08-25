@@ -1,9 +1,9 @@
-name: Test
+name: Tests
 
 on: [push]
 
 jobs:
-  test:
+  tests:
     defaults:
       run:
         shell: bash
@@ -35,5 +35,5 @@ jobs:
         env:
           JOURNALIST_API_URL: http://127.0.0.1:8000/api
         run: |
-          ./test.sh
+          ./test.sh true
 
