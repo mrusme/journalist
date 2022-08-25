@@ -258,10 +258,7 @@ Alternatively, you can also directly connect this public repo.
 
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue-ghost.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/mrusme/journalist/tree/master&refcode=9d48825ddae1)
   
-Journalist can be deployed on [DigitalOcean's App
-Platform](https://m.do.co/c/9d48825ddae1).
-
-Fork this repo into your GitHub account, adjust the
+Alternatively, fork this repo into your GitHub account, adjust the
 [`.do/app.yaml`](.do/app.yaml) accordingly and connect the forked repo [on
 DigitalOcean](https://cloud.digitalocean.com/apps/new).
 
