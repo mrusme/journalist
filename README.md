@@ -1,4 +1,4 @@
-![journalist](documentation/journalist.png)
+![journalist](journalist.png)
 -------------------------------------------
 
 [![Release](https://github.com/mrusme/journalist/actions/workflows/release.yml/badge.svg)](https://github.com/mrusme/journalist/releases)

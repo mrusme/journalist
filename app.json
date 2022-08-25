@@ -8,7 +8,7 @@
   ],
   "website": "https://xn--gckvb8fzb.com/tag/journalist",
   "repository": "https://github.com/mrusme/journalist",
-  "logo": "https://github.com/mrusme/journalist/raw/master/documentation/journalist.png",
+  "logo": "https://github.com/mrusme/journalist/raw/master/journalist.png",
   "image": "mrusme/journalist",
   "env": {
     "JOURNALIST_SERVER_BINDIP": {
