@@ -21,20 +21,47 @@ usage() {
   printf "\n"
   printf "  perform: Perform raw API call\n"
   printf "    args:\n"
-  printf "    <action> on <endpoint> as <username> <password> [with <payload>]\n" "$0"
+  printf "    <action> on <endpoint> as <username> <password> "
+  printf "[with <payload>]\n"
   printf "\n"
   printf "    action:   get, post, put, delete\n"
   printf "    endpoint: users[/<id>], tokens[/<id>], feeds[/<id>]\n"
   printf "    payload:  JSON string\n"
   printf "\n"
+  printf "    env: JOURNALIST_API_URL\n"
+  printf "\n"
   printf "    EXAMPLES\n"
   printf "\n"
-  printf "    %s perform get on users/d83807a0-22ec-4c9f-94bf-fee5cf882d6e as admin \$(pass show journalist/admin)\n" "$0"
-  printf "    %s perform post on tokens as myuser mypassword with '{ \"name\": \"mytoken\" }'\n" "$0"
+  printf "    %s perform get \\ \n" "$0"
+  printf "       on users/d83807a0-22ec-4c9f-94bf-fee5cf882d6e\\ \n"
+  printf "       as admin \$(pass show journalist/admin)\n"
+  printf "\n"
+  printf "    %s perform post \\ \n" "$0"
+  printf "       on tokens \\ \n"
+  printf "       as myuser mypassword \\ \n"
+  printf "       with '{ \"name\": \"mytoken\" }'\n"
+  printf "\n"
+  printf "  add: Helper for adding users, tokens, feeds, etc.\n"
+  printf "    args:\n"
+  printf "    <entity>\n"
+  printf "\n"
+  printf "    entity: user, token, feed\n"
+  printf "\n"
+  printf "    env: JOURNALIST_API_URL, JOURNALIST_API_USERNAME,\n"
+  printf "         JOURNALIST_API_PASSWORD\n"
+  printf "\n"
+  printf "    EXAMPLES\n"
+  printf "\n"
+  printf "    %s add user\n" "$0"
+  printf "\n"
+  printf "    %s add token\n" "$0"
   printf "\n"
   printf "ENVIRONMENT\n"
   printf "\n"
-  printf "  JOURNALIST_API_URL: url to Journalist's API endpoint, e.g. http://127.0.0.1:8000/api\n"
+  printf "  JOURNALIST_API_URL: Journalist API endpoint, "
+  printf "e.g. http://127.0.0.1:8000/api\n"
+  printf "  JOURNALIST_API_USERNAME: user to use for API requests\n"
+  printf "  JOURNALIST_API_PASSWORD: password for API user\n"
   printf "\n"
 }
 
@@ -56,9 +83,20 @@ perform() {
 
   if [ "$payload" = "" ]
   then
-    json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint")
+    json=$(curl \
+      -s \
+      -u "$user:$pass" \
+      -H 'Content-Type: application/json; charset=utf-8' \
+      -X "$action" \
+      "$api_url/$endpoint")
   else
-    json=$(curl -s -u "$user:$pass" -H 'Content-Type: application/json; charset=utf-8' -X "$action" "$api_url/$endpoint" -d "$payload")
+    json=$(curl \
+      -s \
+      -u "$user:$pass" \
+      -H 'Content-Type: application/json; charset=utf-8' \
+      -X "$action" \
+      "$api_url/$endpoint" \
+      -d "$payload")
   fi
 
   if [ $? -ne 0 ]
@@ -76,6 +114,81 @@ perform() {
   return 0
 }
 
+add() {
+  if [ "$#" -lt 1 ]
+  then
+    usage
+    exit 1
+  fi
+
+  case "$1" in
+    "user")
+      add_user
+      ;;
+    "token")
+      add_token
+      ;;
+    "feed")
+      add_feed
+      ;;
+  esac
+}
+
+add_user() {
+  printf "Username: "
+  read -r username
+  printf "Password: "
+  read -r password
+  printf "Role (admin/[user]): "
+  read -r role
+  if [ "$role" = "" ]
+  then
+    role="user"
+  fi
+
+  perform post \
+       on users \
+       as "$JOURNALIST_API_USERNAME" "$JOURNALIST_API_PASSWORD" \
+     with "{
+       \"username\": \"$username\",
+       \"password\": \"$password\",
+       \"role\": \"$role\"
+     }"
+  exit $?
+}
+
+add_token() {
+  printf "Token name: "
+  read -r tokenname
+
+  perform post \
+       on tokens \
+       as "$JOURNALIST_API_USERNAME" "$JOURNALIST_API_PASSWORD" \
+     with "{
+       \"name\": \"$tokenname\"
+     }"
+  exit $?
+}
+
+add_feed() {
+  printf "URL: "
+  read -r url
+  printf "Name: "
+  read -r feedname
+  printf "Group: "
+  read -r group
+
+  perform post \
+       on feeds \
+       as "$JOURNALIST_API_USERNAME" "$JOURNALIST_API_PASSWORD" \
+     with "{
+       \"name\": \"$feedname\",
+       \"url\": \"$url\",
+       \"group\": \"$group\"
+     }"
+  exit $?
+}
+
 depcheck curl
 depcheck jq
 
@@ -90,6 +203,10 @@ subcommand="$1"
 case "$subcommand" in
   "perform")
     perform "${@:2}"
+    exit $?
+    ;;
+  "add")
+    add "${@:2}"
     exit $?
     ;;
   *)
