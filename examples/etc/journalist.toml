@@ -1,1 +1,21 @@
-TODO
+Debug = false
+
+[Admin]
+Username = "admin"
+Password = "admin"
+
+[Database]
+Type = "sqlite3"
+Connection = "file:journalist.db?cache=shared&_fk=1"
+
+[Server]
+BindIP = "127.0.0.1"
+Port = 8000
+
+[Server.Endpoint]
+Api = "http://127.0.0.1:8000/api"
+Web = "http://127.0.0.1:8000/web"
+
+[Feeds]
+AutoRefresh = 900
+
