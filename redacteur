@@ -209,6 +209,10 @@ case "$subcommand" in
     add "${@:2}"
     exit $?
     ;;
+  "help")
+    usage
+    exit 0
+    ;;
   *)
     usage
     exit 1
