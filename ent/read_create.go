@@ -284,7 +284,6 @@ func (rc *ReadCreate) createSpec() (*Read, *sqlgraph.CreateSpec) {
 //			SetUserID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (rc *ReadCreate) OnConflict(opts ...sql.ConflictOption) *ReadUpsertOne {
 	rc.conflict = opts
 	return &ReadUpsertOne{
@@ -298,7 +297,6 @@ func (rc *ReadCreate) OnConflict(opts ...sql.ConflictOption) *ReadUpsertOne {
 //	client.Read.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (rc *ReadCreate) OnConflictColumns(columns ...string) *ReadUpsertOne {
 	rc.conflict = append(rc.conflict, sql.ConflictColumns(columns...))
 	return &ReadUpsertOne{
@@ -366,7 +364,6 @@ func (u *ReadUpsert) UpdateCreatedAt() *ReadUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ReadUpsertOne) UpdateNewValues() *ReadUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -380,10 +377,9 @@ func (u *ReadUpsertOne) UpdateNewValues() *ReadUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Read.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Read.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *ReadUpsertOne) Ignore() *ReadUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -582,7 +578,6 @@ func (rcb *ReadCreateBulk) ExecX(ctx context.Context) {
 //			SetUserID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (rcb *ReadCreateBulk) OnConflict(opts ...sql.ConflictOption) *ReadUpsertBulk {
 	rcb.conflict = opts
 	return &ReadUpsertBulk{
@@ -596,7 +591,6 @@ func (rcb *ReadCreateBulk) OnConflict(opts ...sql.ConflictOption) *ReadUpsertBul
 //	client.Read.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (rcb *ReadCreateBulk) OnConflictColumns(columns ...string) *ReadUpsertBulk {
 	rcb.conflict = append(rcb.conflict, sql.ConflictColumns(columns...))
 	return &ReadUpsertBulk{
@@ -621,7 +615,6 @@ type ReadUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ReadUpsertBulk) UpdateNewValues() *ReadUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -641,7 +634,6 @@ func (u *ReadUpsertBulk) UpdateNewValues() *ReadUpsertBulk {
 //	client.Read.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *ReadUpsertBulk) Ignore() *ReadUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

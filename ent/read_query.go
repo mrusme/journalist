@@ -334,7 +334,6 @@ func (rq *ReadQuery) WithItem(opts ...func(*ItemQuery)) *ReadQuery {
 //		GroupBy(read.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (rq *ReadQuery) GroupBy(field string, fields ...string) *ReadGroupBy {
 	grbuild := &ReadGroupBy{config: rq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -361,7 +360,6 @@ func (rq *ReadQuery) GroupBy(field string, fields ...string) *ReadGroupBy {
 //	client.Read.Query().
 //		Select(read.FieldUserID).
 //		Scan(ctx, &v)
-//
 func (rq *ReadQuery) Select(fields ...string) *ReadSelect {
 	rq.fields = append(rq.fields, fields...)
 	selbuild := &ReadSelect{ReadQuery: rq}

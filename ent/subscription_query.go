@@ -334,7 +334,6 @@ func (sq *SubscriptionQuery) WithFeed(opts ...func(*FeedQuery)) *SubscriptionQue
 //		GroupBy(subscription.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (sq *SubscriptionQuery) GroupBy(field string, fields ...string) *SubscriptionGroupBy {
 	grbuild := &SubscriptionGroupBy{config: sq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -361,7 +360,6 @@ func (sq *SubscriptionQuery) GroupBy(field string, fields ...string) *Subscripti
 //	client.Subscription.Query().
 //		Select(subscription.FieldUserID).
 //		Scan(ctx, &v)
-//
 func (sq *SubscriptionQuery) Select(fields ...string) *SubscriptionSelect {
 	sq.fields = append(sq.fields, fields...)
 	selbuild := &SubscriptionSelect{SubscriptionQuery: sq}

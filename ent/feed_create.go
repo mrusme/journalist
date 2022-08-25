@@ -709,7 +709,6 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 //			SetURL(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fc *FeedCreate) OnConflict(opts ...sql.ConflictOption) *FeedUpsertOne {
 	fc.conflict = opts
 	return &FeedUpsertOne{
@@ -723,7 +722,6 @@ func (fc *FeedCreate) OnConflict(opts ...sql.ConflictOption) *FeedUpsertOne {
 //	client.Feed.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fc *FeedCreate) OnConflictColumns(columns ...string) *FeedUpsertOne {
 	fc.conflict = append(fc.conflict, sql.ConflictColumns(columns...))
 	return &FeedUpsertOne{
@@ -1025,7 +1023,6 @@ func (u *FeedUpsert) ClearDeletedAt() *FeedUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeedUpsertOne) UpdateNewValues() *FeedUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1039,10 +1036,9 @@ func (u *FeedUpsertOne) UpdateNewValues() *FeedUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Feed.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Feed.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *FeedUpsertOne) Ignore() *FeedUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1514,7 +1510,6 @@ func (fcb *FeedCreateBulk) ExecX(ctx context.Context) {
 //			SetURL(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fcb *FeedCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeedUpsertBulk {
 	fcb.conflict = opts
 	return &FeedUpsertBulk{
@@ -1528,7 +1523,6 @@ func (fcb *FeedCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeedUpsertBul
 //	client.Feed.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fcb *FeedCreateBulk) OnConflictColumns(columns ...string) *FeedUpsertBulk {
 	fcb.conflict = append(fcb.conflict, sql.ConflictColumns(columns...))
 	return &FeedUpsertBulk{
@@ -1553,7 +1547,6 @@ type FeedUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeedUpsertBulk) UpdateNewValues() *FeedUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1573,7 +1566,6 @@ func (u *FeedUpsertBulk) UpdateNewValues() *FeedUpsertBulk {
 //	client.Feed.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *FeedUpsertBulk) Ignore() *FeedUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
