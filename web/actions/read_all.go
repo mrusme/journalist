@@ -19,7 +19,11 @@ func (h *handler) ReadAll(ctx *fiber.Ctx) error {
   sessionUserId := ctx.Locals("user_id").(string)
   myId, err := uuid.Parse(sessionUserId)
   if err != nil {
-    ctx.SendStatus(fiber.StatusInternalServerError)
+    h.resp(ctx, fiber.Map{
+      "Success": false,
+      "Title": "Error",
+      "Message": err.Error(),
+    })
     return err
   }
 
@@ -46,7 +50,11 @@ func (h *handler) ReadAll(ctx *fiber.Ctx) error {
     All(context.Background())
 
   if err != nil {
-    ctx.SendStatus(fiber.StatusInternalServerError)
+    h.resp(ctx, fiber.Map{
+      "Success": false,
+      "Title": "Error",
+      "Message": err.Error(),
+    })
     return err
   }
 
@@ -64,14 +72,18 @@ func (h *handler) ReadAll(ctx *fiber.Ctx) error {
     Exec(context.Background())
 
   if err != nil {
-    ctx.SendStatus(fiber.StatusInternalServerError)
+    h.resp(ctx, fiber.Map{
+      "Success": false,
+      "Title": "Error",
+      "Message": err.Error(),
+    })
     return err
   }
 
-  // err = ctx.Render("views/actions.read", fiber.Map{
-  // })
-  // ctx.Set("Content-type", "text/html; charset=utf-8")
-  // return err
-  return ctx.SendStatus(fiber.StatusNoContent)
+  return h.resp(ctx, fiber.Map{
+    "Success": true,
+    "Title": "Marked as read",
+    "Message": "Item was marked as read!",
+  })
 }
 

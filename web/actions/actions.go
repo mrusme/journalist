@@ -33,3 +33,9 @@ func Register(
 }
 
 
+func (h *handler) resp(ctx *fiber.Ctx, content fiber.Map) (error) {
+  err := ctx.Render("views/actions", content)
+  ctx.Set("Content-type", "text/html; charset=utf-8")
+  return err
+}
+
