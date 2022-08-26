@@ -20,7 +20,10 @@ Feedbin and others. It aims to offer a similar set of features like FreshRSS,
 NewsBlur and Miniflux while being easier to set up/maintain and overall more
 lightweight.
 
-Find out more about Journalist [here](https://マリウス.com/journalist-v1/).
+Find out more about Journalist [here](https://xn--gckvb8fzb.com/journalist-v1/).
+If you're looking for pre-v1.0.0 versions of Journalist, please check out the
+[v0 branch](https://github.com/mrusme/journalist/tree/v0). *v1.0.0 and later
+versions are not compatible to / upgradeable from pre-v1.0.0 versions!*
 
 
 ## Usage
