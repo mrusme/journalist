@@ -10,6 +10,7 @@ import (
 
 	"github.com/mrusme/journalist/ent"
 	"github.com/mrusme/journalist/ent/feed"
+	"github.com/mrusme/journalist/ent/item"
 	"github.com/mrusme/journalist/ent/user"
 
 	"github.com/mrusme/journalist/lib"
@@ -138,13 +139,17 @@ func (jd *Journalistd) daemon() {
       return
     default:
       jd.logger.Debug(
-        "Running RefreshAll to refresh all feeds",
+        "RefreshAll starting, refreshing all feeds",
       )
       errs := jd.RefreshAll()
       if len(errs) > 0 {
         jd.logger.Error(
           "RefreshAll completed with errors",
           zap.Errors("errors", errs),
+        )
+      } else {
+        jd.logger.Debug(
+          "RefreshAll completed",
         )
       }
       time.Sleep(time.Second * jd.autoRefreshInterval)
@@ -179,6 +184,11 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
     Where(
       feed.IDIn(feedIds...),
     ).
+    WithItems(func(query *ent.ItemQuery) {
+      query.
+        Select(item.FieldItemGUID).
+        Where(item.CrawlerContentHTMLNEQ(""))
+    }).
     All(context.Background())
   if err != nil {
     errs = append(errs, err)
@@ -186,11 +196,17 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) ([]error) {
   }
 
   for _, dbFeed := range dbFeeds {
+    var exceptItemGUIDs []string
+    for _, exceptItem := range dbFeed.Edges.Items {
+      exceptItemGUIDs = append(exceptItemGUIDs, exceptItem.ItemGUID)
+    }
+
     rc, errr := rss.NewClient(
       dbFeed.URL,
       dbFeed.Username,
       dbFeed.Password,
       true,
+      exceptItemGUIDs,
       jd.logger,
     )
     if len(errr) > 0 {

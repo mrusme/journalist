@@ -101,6 +101,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
     createFeed.Username,
     createFeed.Password,
     false,
+    []string{},
     h.logger,
   )
   if len(errr) > 0 {

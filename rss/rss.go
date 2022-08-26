@@ -29,6 +29,7 @@ type Client struct {
   Feed          *gofeed.Feed
   Items         *[]*gofeed.Item
   ItemsCrawled  []crawler.ItemCrawled
+  exceptItemGUIDs []string
   UpdatedAt     time.Time
   logger        *zap.Logger
 }
@@ -38,6 +39,7 @@ func NewClient(
   username string,
   password string,
   crawl bool,
+  exceptItemGUIDs []string,
   logger *zap.Logger,
 ) (*Client, []error) {
   client := new(Client)
@@ -45,6 +47,7 @@ func NewClient(
   client.url = feedUrl
   client.username = username
   client.password = password
+  client.exceptItemGUIDs = exceptItemGUIDs
   client.logger = logger
 
   if errs := client.Sync(crawl); errs != nil {
@@ -57,12 +60,22 @@ func NewClient(
 func (c *Client) Sync(crawl bool) ([]error) {
   var errs []error
 
+  c.logger.Debug(
+    "Starting RSS Sync procedure",
+    zap.Bool("crawl", crawl),
+  )
+
   feedCrwl := crawler.New(c.logger)
   defer feedCrwl.Close()
   feedCrwl.SetLocation(c.url)
   feedCrwl.SetBasicAuth(c.username, c.password)
   feed, err := feedCrwl.ParseFeed()
   if err != nil {
+    c.logger.Debug(
+      "RSS Sync error occurred for feed crawling",
+      zap.String("url", c.url),
+      zap.Error(err),
+    )
     errs = append(errs, err)
     return errs
   }
@@ -72,15 +85,45 @@ func (c *Client) Sync(crawl bool) ([]error) {
   c.UpdatedAt = time.Now()
 
   if crawl == true {
+    c.logger.Debug(
+      "RSS Sync starting crawling procedure",
+      zap.Int("exceptItemGUIDsLength", len(c.exceptItemGUIDs)),
+    )
     crwl := crawler.New(c.logger)
     defer crwl.Close()
 
     for i := 0; i < len(c.Feed.Items); i++ {
+      var foundException bool = false
+      itemGUID := GenerateGUIDForItem(c.Feed.Items[i])
+      for _, exceptItemGUID := range c.exceptItemGUIDs {
+        if exceptItemGUID == itemGUID {
+          c.logger.Debug(
+            "Crawler found exception, breaking",
+            zap.String("itemGUID", exceptItemGUID),
+            zap.String("itemLink", c.Feed.Items[i].Link),
+          )
+          foundException = true
+          break
+        }
+      }
+
+      if foundException == true {
+        continue
+      }
+      c.logger.Debug(
+        "Crawler found no exception, continuing with item",
+        zap.String("itemLink", c.Feed.Items[i].Link),
+      )
       crwl.Reset()
       crwl.SetLocation(c.Feed.Items[i].Link)
       crwl.SetBasicAuth(c.username, c.password)
       itemCrawled, err := crwl.GetReadable()
       if err != nil {
+        c.logger.Debug(
+          "Crawler failed to GetReadable",
+          zap.String("itemLink", c.Feed.Items[i].Link),
+          zap.Error(err),
+        )
         errs = append(errs, err)
         continue
       }
