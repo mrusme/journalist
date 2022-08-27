@@ -4,30 +4,118 @@ builds:
     env:
       - CGO_ENABLED=0
     goos:
+      - aix
+      - android
       - darwin
+      - dragonfly
+      - freebsd
       - linux
       - netbsd
       - openbsd
-      - freebsd
       - plan9
+      - solaris
       - windows
     goarch:
       - 386
       - amd64
       - arm
       - arm64
+      - ppc64
+      - ppc64le
+      - riscv64
     goarm:
+      - 5
       - 6
       - 7
     ignore:
+      - goos: aix
+        goarch: 386
+      - goos: aix
+        goarch: amd64
+      - goos: aix
+        goarch: arm
+      - goos: aix
+        goarch: arm64
+      - goos: aix
+        goarch: ppc64le
+      - goos: aix
+        goarch: riscv64
+
+      - goos: android
+        goarch: ppc64
+      - goos: android
+        goarch: ppc64le
+      - goos: android
+        goarch: riscv64
+
       - goos: darwin
         goarch: 386
       - goos: darwin
         goarch: arm
-      - goos: netbsd
+      - goos: darwin
+        goarch: ppc64
+      - goos: darwin
+        goarch: ppc64le
+      - goos: darwin
+        goarch: riscv64
+
+      - goos: dragonfly
+        goarch: 386
+      - goos: dragonfly
+        goarch: arm
+      - goos: dragonfly
         goarch: arm64
+      - goos: dragonfly
+        goarch: ppc64
+      - goos: dragonfly
+        goarch: ppc64le
+      - goos: dragonfly
+        goarch: riscv64
+
       - goos: freebsd
         goarm: arm64
-      - goos: plan0
+      - goos: freebsd
+        goarm: ppc64
+      - goos: freebsd
+        goarm: ppc64le
+      - goos: freebsd
+        goarm: riscv64
+
+      - goos: netbsd
+        goarch: arm64
+      - goos: netbsd
+        goarch: ppc64
+      - goos: netbsd
+        goarch: ppc64le
+      - goos: netbsd
+        goarch: riscv64
+
+      - goos: plan9
         goarm: arm64
+      - goos: plan9
+        goarm: ppc64
+      - goos: plan9
+        goarm: ppc64le
+      - goos: plan9
+        goarm: riscv64
+
+      - goos: solaris
+        goarm: 386
+      - goos: solaris
+        goarm: arm
+      - goos: solaris
+        goarm: arm64
+      - goos: solaris
+        goarm: ppc64
+      - goos: solaris
+        goarm: ppc64le
+      - goos: solaris
+        goarm: riscv64
+
+      - goos: windows
+        goarm: ppc64
+      - goos: windows
+        goarm: ppc64le
+      - goos: windows
+        goarm: riscv64
 

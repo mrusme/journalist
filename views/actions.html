@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ .Title }}</title>
+    <style>
+      * {
+        font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      }
+
+      html,body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      .bg {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg">
+      <div class="msg">
+        {{ .Message }}<br>
+        <button onclick="history.back()">Go Back</button>
+      </div>
+    </div>
+  </body>
+</html>
+

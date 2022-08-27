@@ -1,0 +1,46 @@
+spec:
+  name: journalist
+  services:
+  - name: journalist
+    envs:
+    - key: JOURNALIST_SERVER_BINDIP
+      value: 0.0.0.0
+    - key: DATABASE_URL
+      scope: RUN_TIME
+      value: "${journalistdb.DATABASE_URL}"
+    image:
+      registry_type: "DOCKER_HUB"
+      registry: "mrusme"
+      repository: "journalist"
+      tag: "latest"
+    http_port: 8000
+    health_check:
+      initial_delay_seconds: 10
+      period_seconds: 60
+      timeout_seconds: 30
+      http_path: /health
+      port: 8000
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+    - path: /health
+      preserve_path_prefix: true
+    - path: /web
+      preserve_path_prefix: true
+    - path: /api
+      preserve_path_prefix: true
+    cors:
+      allow_origins:
+        - regex: "*"
+      allow_methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+  databases:
+  - name: journalistdb
+    engine: PG
+    production: true
+    db_user: journalist
+    db_name: journalist
+

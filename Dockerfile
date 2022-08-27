@@ -10,4 +10,4 @@ FROM ${ARCH}alpine:latest AS container
 
 COPY --from=builder /go/src/app/journalist /usr/bin/journalist
 
-CMD ["journalist", "server"]
+CMD ["journalist"]

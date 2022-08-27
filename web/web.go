@@ -1,35 +1,66 @@
 package web
 
 import (
-  log "github.com/sirupsen/logrus"
-  "net/http"
-  "net/url"
-  readability "github.com/go-shiori/go-readability"
-  "github.com/mrusme/journalist/db"
+  // "log"
+  "context"
+
+  "github.com/gofiber/fiber/v2"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent/token"
+  "github.com/mrusme/journalist/ent/user"
+  "github.com/mrusme/journalist/lib"
+  "github.com/mrusme/journalist/web/actions"
+  "github.com/mrusme/journalist/web/subscriptions"
 )
 
-func MakeItemReadable(item *db.Item) (error) {
-  pageUrl := item.Link
-  log.Debug("Making " + pageUrl + " readable ...")
+func Register(
+  jctx *lib.JournalistContext,
+  fiberApp *fiber.App,
+) () {
+  web := fiberApp.Group("/web")
+  web.Use(authorizer(jctx.EntClient))
 
-  resp, err := http.Get(pageUrl)
-  if err != nil {
-    log.Debug("Failed to get page: " + pageUrl)
-    return err
-  }
-  defer resp.Body.Close()
+  actions.Register(
+    jctx,
+    &web,
+  )
 
-  urlUrl, err := url.Parse(pageUrl)
-  if err != nil {
-    return err
-  }
-
-  article, err := readability.FromReader(resp.Body, urlUrl)
-  if err != nil {
-    return err
-  }
-
-  item.AssignReadableFromArticle(&article)
-
-  return nil
+  subscriptions.Register(
+    jctx,
+    &web,
+  )
 }
+
+// TODO: Move to `middlewares`
+func authorizer(entClient *ent.Client) fiber.Handler {
+  return func (ctx *fiber.Ctx) error {
+    qat := ctx.Query("qat")
+    if qat == "" {
+      return ctx.SendStatus(fiber.StatusUnauthorized)
+    }
+
+    u, err := entClient.User.
+      Query().
+      WithTokens().
+      Where(
+        user.HasTokensWith(
+          token.Token(qat),
+        ),
+      ).
+      Only(context.Background())
+    if err != nil {
+      return ctx.SendStatus(fiber.StatusUnauthorized)
+    }
+
+    if u == nil {
+      return ctx.SendStatus(fiber.StatusUnauthorized)
+    }
+
+    ctx.Locals("user_id", u.ID.String())
+    ctx.Locals("username", u.Username)
+    // ctx.Locals("password", u.Password)
+    ctx.Locals("role", u.Role)
+    return ctx.Next()
+  }
+}
+

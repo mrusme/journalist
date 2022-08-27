@@ -1,0 +1,11 @@
+#!/bin/ksh
+
+daemon="/usr/local/bin/journalist"
+
+. /etc/rc.d/rc.subr
+
+rc_start() {
+  ${rcexec} "${daemon} ${daemon_flags} 2>&1 | logger -t journalist &"
+}
+
+rc_cmd $1
