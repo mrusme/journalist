@@ -1,19 +1,14 @@
 # .goreleaser.yaml
 builds:
   -
-    env:
-      - CGO_ENABLED=0
     goos:
-      - aix
-      - android
       - darwin
       - dragonfly
       - freebsd
       - linux
       - netbsd
       - openbsd
-      - plan9
-      - solaris
+      # - plan9
       - windows
     goarch:
       - 386
@@ -28,26 +23,6 @@ builds:
       - 6
       - 7
     ignore:
-      - goos: aix
-        goarch: 386
-      - goos: aix
-        goarch: amd64
-      - goos: aix
-        goarch: arm
-      - goos: aix
-        goarch: arm64
-      - goos: aix
-        goarch: ppc64le
-      - goos: aix
-        goarch: riscv64
-
-      - goos: android
-        goarch: ppc64
-      - goos: android
-        goarch: ppc64le
-      - goos: android
-        goarch: riscv64
-
       - goos: darwin
         goarch: 386
       - goos: darwin
@@ -90,27 +65,14 @@ builds:
       - goos: netbsd
         goarch: riscv64
 
-      - goos: plan9
-        goarm: arm64
-      - goos: plan9
-        goarm: ppc64
-      - goos: plan9
-        goarm: ppc64le
-      - goos: plan9
-        goarm: riscv64
-
-      - goos: solaris
-        goarm: 386
-      - goos: solaris
-        goarm: arm
-      - goos: solaris
-        goarm: arm64
-      - goos: solaris
-        goarm: ppc64
-      - goos: solaris
-        goarm: ppc64le
-      - goos: solaris
-        goarm: riscv64
+      #- goos: plan9
+      #  goarm: arm64
+      #- goos: plan9
+      #  goarm: ppc64
+      #- goos: plan9
+      #  goarm: ppc64le
+      #- goos: plan9
+      #  goarm: riscv64
 
       - goos: windows
         goarm: ppc64
