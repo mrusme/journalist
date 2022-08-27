@@ -1,13 +1,13 @@
 package users
 
 import (
-	"context"
-	"github.com/google/uuid"
+  "context"
+  "github.com/google/uuid"
   "github.com/go-playground/validator/v10"
 
-	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent/user"
-	// "github.com/mrusme/journalist/ent"
+  "github.com/gofiber/fiber/v2"
+  // "github.com/mrusme/journalist/ent/user"
+  // "github.com/mrusme/journalist/ent"
 )
 
 type UserUpdateResponse struct {

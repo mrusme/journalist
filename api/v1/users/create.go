@@ -1,14 +1,14 @@
 package users
 
 import (
-	"context"
-	// "github.com/google/uuid"
-	"github.com/go-playground/validator/v10"
-	"go.uber.org/zap"
+  "context"
+  // "github.com/google/uuid"
+  "github.com/go-playground/validator/v10"
+  "go.uber.org/zap"
 
-	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent/user"
-	// "github.com/mrusme/journalist/ent"
+  "github.com/gofiber/fiber/v2"
+  // "github.com/mrusme/journalist/ent/user"
+  // "github.com/mrusme/journalist/ent"
 )
 
 type UserCreateResponse struct {

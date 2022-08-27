@@ -1,13 +1,13 @@
 package crawler
 
 import (
-	"fmt"
-	"strings"
+  "fmt"
+  "strings"
 
-	"github.com/mmcdole/gofeed"
-	"golang.org/x/net/html"
+  "github.com/mmcdole/gofeed"
+  "golang.org/x/net/html"
 
-	"errors"
+  "errors"
 )
 
 func (c *Crawler) GetFeedLink() (string, string, error) {

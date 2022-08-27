@@ -1,13 +1,13 @@
 package feeds
 
 import (
-	"context"
-	"github.com/google/uuid"
+  "context"
+  "github.com/google/uuid"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/mrusme/journalist/ent/user"
-	// "github.com/mrusme/journalist/ent"
-	"go.uber.org/zap"
+  "github.com/gofiber/fiber/v2"
+  "github.com/mrusme/journalist/ent/user"
+  // "github.com/mrusme/journalist/ent"
+  "go.uber.org/zap"
 )
 
 type FeedListResponse struct {

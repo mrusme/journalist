@@ -1,19 +1,19 @@
 package subscriptions
 
 import (
-	"fmt"
-	"time"
+  "fmt"
+  "time"
 
-	"github.com/google/uuid"
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/ent/item"
-	"github.com/mrusme/journalist/ent/subscription"
-	"github.com/mrusme/journalist/ent/user"
-	"github.com/mrusme/journalist/journalistd"
+  "github.com/google/uuid"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent/item"
+  "github.com/mrusme/journalist/ent/subscription"
+  "github.com/mrusme/journalist/ent/user"
+  "github.com/mrusme/journalist/journalistd"
 
-	"context"
+  "context"
 
-	"github.com/gofiber/fiber/v2"
+  "github.com/gofiber/fiber/v2"
 )
 
 func (h *handler) List(ctx *fiber.Ctx) error {

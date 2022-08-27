@@ -1,16 +1,16 @@
 package web
 
 import (
-	// "log"
-	"context"
+  // "log"
+  "context"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/ent/token"
-	"github.com/mrusme/journalist/ent/user"
-	"github.com/mrusme/journalist/lib"
-	"github.com/mrusme/journalist/web/actions"
-	"github.com/mrusme/journalist/web/subscriptions"
+  "github.com/gofiber/fiber/v2"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent/token"
+  "github.com/mrusme/journalist/ent/user"
+  "github.com/mrusme/journalist/lib"
+  "github.com/mrusme/journalist/web/actions"
+  "github.com/mrusme/journalist/web/subscriptions"
 )
 
 func Register(

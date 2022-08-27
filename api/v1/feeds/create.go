@@ -2,19 +2,19 @@ package feeds
 
 import (
   // "strings"
-	"context"
+  "context"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
+  "github.com/go-playground/validator/v10"
+  "github.com/google/uuid"
 
-	"github.com/gofiber/fiber/v2"
-	// "github.com/mrusme/journalist/ent/user"
-	// "github.com/mrusme/journalist/ent"
+  "github.com/gofiber/fiber/v2"
+  // "github.com/mrusme/journalist/ent/user"
+  // "github.com/mrusme/journalist/ent"
 
-	"github.com/mrusme/journalist/crawler"
-	"github.com/mrusme/journalist/rss"
+  "github.com/mrusme/journalist/crawler"
+  "github.com/mrusme/journalist/rss"
 
-	"go.uber.org/zap"
+  "go.uber.org/zap"
 )
 
 type FeedCreateResponse struct {

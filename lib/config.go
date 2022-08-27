@@ -3,11 +3,11 @@ package lib
 import (
   "fmt"
   "net"
-	"net/url"
-	"os"
-	"strings"
+  "net/url"
+  "os"
+  "strings"
 
-	"github.com/spf13/viper"
+  "github.com/spf13/viper"
 )
 
 type Config struct {

@@ -1,10 +1,10 @@
 package subscriptions
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/lib"
-	"go.uber.org/zap"
+  "github.com/gofiber/fiber/v2"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/lib"
+  "go.uber.org/zap"
 )
 
 type handler struct {

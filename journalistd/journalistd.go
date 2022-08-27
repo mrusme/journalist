@@ -1,20 +1,20 @@
 package journalistd
 
 import (
-	"context"
-	"strconv"
-	"time"
+  "context"
+  "strconv"
+  "time"
 
-	"github.com/google/uuid"
-	"go.uber.org/zap"
+  "github.com/google/uuid"
+  "go.uber.org/zap"
 
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/ent/feed"
-	"github.com/mrusme/journalist/ent/item"
-	"github.com/mrusme/journalist/ent/user"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent/feed"
+  "github.com/mrusme/journalist/ent/item"
+  "github.com/mrusme/journalist/ent/user"
 
-	"github.com/mrusme/journalist/lib"
-	"github.com/mrusme/journalist/rss"
+  "github.com/mrusme/journalist/lib"
+  "github.com/mrusme/journalist/rss"
 )
 
 var VERSION string

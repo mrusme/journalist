@@ -371,6 +371,7 @@ func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQu
 //		GroupBy(feed.FieldURL).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 	grbuild := &FeedGroupBy{config: fq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -397,6 +398,7 @@ func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 //	client.Feed.Query().
 //		Select(feed.FieldURL).
 //		Scan(ctx, &v)
+//
 func (fq *FeedQuery) Select(fields ...string) *FeedSelect {
 	fq.fields = append(fq.fields, fields...)
 	selbuild := &FeedSelect{FeedQuery: fq}

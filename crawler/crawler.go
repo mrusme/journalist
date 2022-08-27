@@ -1,18 +1,18 @@
 package crawler
 
 import (
-	"io"
-	"net/http"
-	"net/http/cookiejar"
-	"net/url"
-	"os"
+  "io"
+  "net/http"
+  "net/http/cookiejar"
+  "net/url"
+  "os"
 
-	"go.uber.org/zap"
-	"golang.org/x/net/publicsuffix"
+  "go.uber.org/zap"
+  "golang.org/x/net/publicsuffix"
 
-	scraper "github.com/tinoquang/go-cloudflare-scraper"
+  scraper "github.com/tinoquang/go-cloudflare-scraper"
 
-	"github.com/go-shiori/go-readability"
+  "github.com/go-shiori/go-readability"
 )
 
 type ItemCrawled struct {

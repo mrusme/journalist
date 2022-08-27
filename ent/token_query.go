@@ -299,6 +299,7 @@ func (tq *TokenQuery) WithOwner(opts ...func(*UserQuery)) *TokenQuery {
 //		GroupBy(token.FieldType).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
+//
 func (tq *TokenQuery) GroupBy(field string, fields ...string) *TokenGroupBy {
 	grbuild := &TokenGroupBy{config: tq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -325,6 +326,7 @@ func (tq *TokenQuery) GroupBy(field string, fields ...string) *TokenGroupBy {
 //	client.Token.Query().
 //		Select(token.FieldType).
 //		Scan(ctx, &v)
+//
 func (tq *TokenQuery) Select(fields ...string) *TokenSelect {
 	tq.fields = append(tq.fields, fields...)
 	selbuild := &TokenSelect{TokenQuery: tq}

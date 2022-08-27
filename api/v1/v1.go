@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/mrusme/journalist/api/v1/feeds"
-	"github.com/mrusme/journalist/api/v1/tokens"
-	"github.com/mrusme/journalist/api/v1/users"
-	"github.com/mrusme/journalist/lib"
+  "github.com/gofiber/fiber/v2"
+  "github.com/mrusme/journalist/api/v1/feeds"
+  "github.com/mrusme/journalist/api/v1/tokens"
+  "github.com/mrusme/journalist/api/v1/users"
+  "github.com/mrusme/journalist/lib"
 )
 
 func Register(

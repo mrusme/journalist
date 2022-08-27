@@ -1,9 +1,9 @@
 package lib
 
 import (
-	"go.uber.org/zap"
+  "go.uber.org/zap"
 
-	"github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent"
 )
 
 type JournalistContext struct {

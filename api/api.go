@@ -1,18 +1,18 @@
 package api
 
 import (
-	"encoding/base64"
-	"strings"
+  "encoding/base64"
+  "strings"
 
-	"context"
+  "context"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/utils"
-	"github.com/mrusme/journalist/api/v1"
-	"github.com/mrusme/journalist/ent"
-	"github.com/mrusme/journalist/ent/user"
-	"github.com/mrusme/journalist/lib"
+  "github.com/gofiber/fiber/v2"
+  "github.com/gofiber/fiber/v2/middleware/cors"
+  "github.com/gofiber/fiber/v2/utils"
+  "github.com/mrusme/journalist/api/v1"
+  "github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/ent/user"
+  "github.com/mrusme/journalist/lib"
 )
 
 // @title Journalist API

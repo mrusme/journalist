@@ -1,24 +1,24 @@
 package rss
 
 import (
-	// log "github.com/sirupsen/logrus"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"time"
+  // log "github.com/sirupsen/logrus"
+  "crypto/sha256"
+  "encoding/hex"
+  "encoding/json"
+  "fmt"
+  "time"
 
-	"github.com/google/uuid"
-	"go.uber.org/zap"
+  "github.com/google/uuid"
+  "go.uber.org/zap"
 
-	"strings"
+  "strings"
 
-	"github.com/mrusme/journalist/crawler"
-	"github.com/mrusme/journalist/ent"
+  "github.com/mrusme/journalist/crawler"
+  "github.com/mrusme/journalist/ent"
 
-	"github.com/araddon/dateparse"
-	"github.com/microcosm-cc/bluemonday"
-	"github.com/mmcdole/gofeed"
+  "github.com/araddon/dateparse"
+  "github.com/microcosm-cc/bluemonday"
+  "github.com/mmcdole/gofeed"
 )
 
 type Client struct {
