@@ -1,6 +1,7 @@
 package crawler
 
 import (
+	"bufio"
   "io"
   "net/http"
   "net/http/cookiejar"
@@ -74,10 +75,13 @@ func (c *Crawler) Reset() {
 
 func (c *Crawler) SetLocation(sourceLocation string) (error) {
   var urlUrl *url.URL
+  var err error
 
-  urlUrl, err := url.Parse(sourceLocation)
-  if err != nil {
-    return err
+  if sourceLocation != "-" {
+    urlUrl, err = url.Parse(sourceLocation)
+    if err != nil {
+      return err
+    }
   }
 
   c.sourceLocation = sourceLocation
@@ -117,11 +121,16 @@ func (c *Crawler) GetReadable() (ItemCrawled, error) {
 func (c *Crawler) FromAuto() (error) {
   var err error
 
-  switch(c.sourceLocationUrl.Scheme) {
-  case "http", "https":
-    err = c.FromHTTP()
-  default:
-    err = c.FromFile()
+  switch(c.sourceLocation) {
+    case "-":
+      err = c.FromStdin()
+    default:
+      switch(c.sourceLocationUrl.Scheme) {
+      case "http", "https":
+        err = c.FromHTTP()
+      default:
+        err = c.FromFile()
+      }
   }
 
   return err
@@ -176,6 +185,12 @@ func (c *Crawler) FromFile() (error) {
 
   c.Close()
   c.source = file
+  return nil
+}
+
+func (c *Crawler) FromStdin() (error) {
+  c.Close()
+  c.source = io.NopCloser(bufio.NewReader(os.Stdin))
   return nil
 }
 
