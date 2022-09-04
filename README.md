@@ -1,9 +1,10 @@
-![journalist](journalist.png)
--------------------------------------------
-
+Journalist
+----------
 [![Tests](https://github.com/mrusme/journalist/actions/workflows/tests.yml/badge.svg)](https://github.com/mrusme/journalist/actions/workflows/tests.yml)
 [![Release](https://github.com/mrusme/journalist/actions/workflows/release.yml/badge.svg)](https://github.com/mrusme/journalist/releases)
 [![Docker](https://github.com/mrusme/journalist/actions/workflows/docker.yml/badge.svg)](https://hub.docker.com/r/mrusme/journalist)
+
+![journalist](journalist.png)
 
 Journalist. An RSS aggregator.
 
