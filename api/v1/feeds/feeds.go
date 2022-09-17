@@ -17,23 +17,22 @@ type handler struct {
 
 type FeedShowModel struct {
   ID                string        `json:"id"`
-  Name              string        `json:"name",validate:"optional,alphanum,max=32"`
+  Name              string        `json:"name,omitempty" validate:"omitempty,max=32"`
   URL               string        `json:"url"`
-  Group             string        `json:"group",validate:"optional,alphanum,max=32"`
+  Group             string        `json:"group,omitempty" validate:"omitempty,max=32"`
 }
 
 type FeedCreateModel struct {
-  Name              string        `json:"name",validate:"optional,alphanum,max=32"`
-  URL               string        `json:"url",validate:"required,url"`
-  Username          string        `json:"username",validate:"optional,required_with=password"`
-  Password          string        `json:"password",validate:"optional,required_with=username"`
-  Group             string        `json:"group",validate:"optional,alphanum,max=32"`
+  Name              string        `json:"name,omitempty" validate:"omitempty,max=32"`
+  URL               string        `json:"url" validate:"required,url"`
+  Username          string        `json:"username,omitempty" validate:"omitempty,required_with=password"`
+  Password          string        `json:"password,omitempty" validate:"omitempty,required_with=username"`
+  Group             string        `json:"group,omitempty" validate:"omitempty,max=32"`
 }
 
-type FeedUpdateModel struct {
-  Password          string        `json:"password",validate:"min=5"`
-  Role              string        `json:"role",validate:""`
-}
+/* type FeedUpdateModel struct {
+  Password          string        `json:"password,omitempty" validate:"omitempty,min=5"`
+} */
 
 func Register(
   jctx *lib.JournalistContext,

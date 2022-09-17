@@ -22,7 +22,7 @@ type TokenShowModel struct {
 }
 
 type TokenCreateModel struct {
-  Name              string        `json:"name",validate:"required,alphanum,max=32"`
+  Name              string        `json:"name" validate:"required,alphanum,max=32"`
 }
 
 

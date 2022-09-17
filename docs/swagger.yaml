@@ -5,8 +5,10 @@ definitions:
   feeds.FeedCreateModel:
     properties:
       group:
+        maxLength: 32
         type: string
       name:
+        maxLength: 32
         type: string
       password:
         type: string
@@ -14,6 +16,8 @@ definitions:
         type: string
       username:
         type: string
+    required:
+    - url
     type: object
   feeds.FeedCreateResponse:
     properties:
@@ -38,10 +42,12 @@ definitions:
   feeds.FeedShowModel:
     properties:
       group:
+        maxLength: 32
         type: string
       id:
         type: string
       name:
+        maxLength: 32
         type: string
       url:
         type: string
@@ -58,7 +64,10 @@ definitions:
   tokens.TokenCreateModel:
     properties:
       name:
+        maxLength: 32
         type: string
+    required:
+    - name
     type: object
   tokens.TokenCreateResponse:
     properties:
@@ -87,7 +96,12 @@ definitions:
       role:
         type: string
       username:
+        maxLength: 32
         type: string
+    required:
+    - password
+    - role
+    - username
     type: object
   users.UserCreateResponse:
     properties:
@@ -130,6 +144,7 @@ definitions:
   users.UserUpdateModel:
     properties:
       password:
+        minLength: 5
         type: string
       role:
         type: string

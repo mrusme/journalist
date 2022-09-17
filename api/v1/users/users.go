@@ -21,14 +21,14 @@ type UserShowModel struct {
 }
 
 type UserCreateModel struct {
-  Username          string        `json:"username",validate:"required,alphanum,max=32"`
-  Password          string        `json:"password",validate:"required"`
-  Role              string        `json:"role",validate:"required"`
+  Username          string        `json:"username" validate:"required,alphanum,max=32"`
+  Password          string        `json:"password" validate:"required"`
+  Role              string        `json:"role" validate:"required"`
 }
 
 type UserUpdateModel struct {
-  Password          string        `json:"password",validate:"min=5"`
-  Role              string        `json:"role",validate:""`
+  Password          string        `json:"password,omitempty" validate:"omitempty,min=5"`
+  Role              string        `json:"role,omitempty" validate:"omitempty"`
 }
 
 func Register(

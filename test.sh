@@ -8,11 +8,11 @@ admin_pass="admin"
 
 user1_id=""
 user1_user="user1"
-user1_pass="p4sS!"
+user1_pass="p4sS!123456"
 
 user2_id=""
 user2_user="user2"
-user2_pass="p4sS!"
+user2_pass="p4sS!123456"
 
 feed1_url="http://lorem-rss.herokuapp.com/feed"
 feed2_url="https://xn--gckvb8fzb.com"

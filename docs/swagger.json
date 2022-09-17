@@ -461,12 +461,17 @@
     "definitions": {
         "feeds.FeedCreateModel": {
             "type": "object",
+            "required": [
+                "url"
+            ],
             "properties": {
                 "group": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "password": {
                     "type": "string"
@@ -514,13 +519,15 @@
             "type": "object",
             "properties": {
                 "group": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "id": {
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "url": {
                     "type": "string"
@@ -543,9 +550,13 @@
         },
         "tokens.TokenCreateModel": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 }
             }
         },
@@ -582,6 +593,11 @@
         },
         "users.UserCreateModel": {
             "type": "object",
+            "required": [
+                "password",
+                "role",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
@@ -590,7 +606,8 @@
                     "type": "string"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 }
             }
         },
@@ -657,7 +674,8 @@
             "type": "object",
             "properties": {
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 5
                 },
                 "role": {
                     "type": "string"

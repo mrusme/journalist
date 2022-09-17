@@ -465,12 +465,17 @@ const docTemplate = `{
     "definitions": {
         "feeds.FeedCreateModel": {
             "type": "object",
+            "required": [
+                "url"
+            ],
             "properties": {
                 "group": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "password": {
                     "type": "string"
@@ -518,13 +523,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "group": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "id": {
                     "type": "string"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 },
                 "url": {
                     "type": "string"
@@ -547,9 +554,13 @@ const docTemplate = `{
         },
         "tokens.TokenCreateModel": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 }
             }
         },
@@ -586,6 +597,11 @@ const docTemplate = `{
         },
         "users.UserCreateModel": {
             "type": "object",
+            "required": [
+                "password",
+                "role",
+                "username"
+            ],
             "properties": {
                 "password": {
                     "type": "string"
@@ -594,7 +610,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32
                 }
             }
         },
@@ -661,7 +678,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 5
                 },
                 "role": {
                     "type": "string"
