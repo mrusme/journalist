@@ -390,8 +390,14 @@ on the client's implementation.
 
 ## Development
 
-You can build Journalist yourself simply by running `make` in the repository
-folder:
+First, install all required dependencies by running the following command in the
+repository folder:
+
+```sh
+make install-deps
+```
+
+You can then build Journalist by running `make`:
 
 ```sh
 make
