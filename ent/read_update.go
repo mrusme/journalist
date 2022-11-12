@@ -174,11 +174,7 @@ func (ru *ReadUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := ru.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: read.FieldCreatedAt,
-		})
+		_spec.SetField(read.FieldCreatedAt, field.TypeTime, value)
 	}
 	if ru.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -442,11 +438,7 @@ func (ruo *ReadUpdateOne) sqlSave(ctx context.Context) (_node *Read, err error) 
 		}
 	}
 	if value, ok := ruo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: read.FieldCreatedAt,
-		})
+		_spec.SetField(read.FieldCreatedAt, field.TypeTime, value)
 	}
 	if ruo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

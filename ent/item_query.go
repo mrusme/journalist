@@ -372,7 +372,6 @@ func (iq *ItemQuery) WithReads(opts ...func(*ReadQuery)) *ItemQuery {
 //		GroupBy(item.FieldItemGUID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (iq *ItemQuery) GroupBy(field string, fields ...string) *ItemGroupBy {
 	grbuild := &ItemGroupBy{config: iq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -399,13 +398,17 @@ func (iq *ItemQuery) GroupBy(field string, fields ...string) *ItemGroupBy {
 //	client.Item.Query().
 //		Select(item.FieldItemGUID).
 //		Scan(ctx, &v)
-//
 func (iq *ItemQuery) Select(fields ...string) *ItemSelect {
 	iq.fields = append(iq.fields, fields...)
 	selbuild := &ItemSelect{ItemQuery: iq}
 	selbuild.label = item.Label
 	selbuild.flds, selbuild.scan = &iq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a ItemSelect configured with the given aggregations.
+func (iq *ItemQuery) Aggregate(fns ...AggregateFunc) *ItemSelect {
+	return iq.Select().Aggregate(fns...)
 }
 
 func (iq *ItemQuery) prepareQuery(ctx context.Context) error {
@@ -441,10 +444,10 @@ func (iq *ItemQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Item, e
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, item.ForeignKeys...)
 	}
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Item).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &Item{config: iq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -537,18 +540,18 @@ func (iq *ItemQuery) loadReadByUsers(ctx context.Context, query *UserQuery, node
 	neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
 		assign := spec.Assign
 		values := spec.ScanValues
-		spec.ScanValues = func(columns []string) ([]interface{}, error) {
+		spec.ScanValues = func(columns []string) ([]any, error) {
 			values, err := values(columns[1:])
 			if err != nil {
 				return nil, err
 			}
-			return append([]interface{}{new(uuid.UUID)}, values...), nil
+			return append([]any{new(uuid.UUID)}, values...), nil
 		}
-		spec.Assign = func(columns []string, values []interface{}) error {
+		spec.Assign = func(columns []string, values []any) error {
 			outValue := *values[0].(*uuid.UUID)
 			inValue := *values[1].(*uuid.UUID)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*Item]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*Item]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -607,11 +610,14 @@ func (iq *ItemQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (iq *ItemQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := iq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := iq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (iq *ItemQuery) querySpec() *sqlgraph.QuerySpec {
@@ -712,7 +718,7 @@ func (igb *ItemGroupBy) Aggregate(fns ...AggregateFunc) *ItemGroupBy {
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (igb *ItemGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (igb *ItemGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := igb.path(ctx)
 	if err != nil {
 		return err
@@ -721,7 +727,7 @@ func (igb *ItemGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return igb.sqlScan(ctx, v)
 }
 
-func (igb *ItemGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (igb *ItemGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range igb.fields {
 		if !item.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -746,8 +752,6 @@ func (igb *ItemGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range igb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(igb.fields)+len(igb.fns))
 		for _, f := range igb.fields {
@@ -767,8 +771,14 @@ type ItemSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (is *ItemSelect) Aggregate(fns ...AggregateFunc) *ItemSelect {
+	is.fns = append(is.fns, fns...)
+	return is
+}
+
 // Scan applies the selector query and scans the result into the given value.
-func (is *ItemSelect) Scan(ctx context.Context, v interface{}) error {
+func (is *ItemSelect) Scan(ctx context.Context, v any) error {
 	if err := is.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -776,7 +786,17 @@ func (is *ItemSelect) Scan(ctx context.Context, v interface{}) error {
 	return is.sqlScan(ctx, v)
 }
 
-func (is *ItemSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (is *ItemSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(is.fns))
+	for _, fn := range is.fns {
+		aggregation = append(aggregation, fn(is.sql))
+	}
+	switch n := len(*is.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		is.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		is.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := is.sql.Query()
 	if err := is.driver.Query(ctx, query, args, rows); err != nil {

@@ -35,7 +35,7 @@ func IDNEQ(id uuid.UUID) predicate.Subscription {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Subscription {
 	return predicate.Subscription(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -46,7 +46,7 @@ func IDIn(ids ...uuid.UUID) predicate.Subscription {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Subscription {
 	return predicate.Subscription(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -133,7 +133,7 @@ func UserIDNEQ(v uuid.UUID) predicate.Subscription {
 
 // UserIDIn applies the In predicate on the "user_id" field.
 func UserIDIn(vs ...uuid.UUID) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -144,7 +144,7 @@ func UserIDIn(vs ...uuid.UUID) predicate.Subscription {
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
 func UserIDNotIn(vs ...uuid.UUID) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -169,7 +169,7 @@ func FeedIDNEQ(v uuid.UUID) predicate.Subscription {
 
 // FeedIDIn applies the In predicate on the "feed_id" field.
 func FeedIDIn(vs ...uuid.UUID) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -180,7 +180,7 @@ func FeedIDIn(vs ...uuid.UUID) predicate.Subscription {
 
 // FeedIDNotIn applies the NotIn predicate on the "feed_id" field.
 func FeedIDNotIn(vs ...uuid.UUID) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -205,7 +205,7 @@ func NameNEQ(v string) predicate.Subscription {
 
 // NameIn applies the In predicate on the "name" field.
 func NameIn(vs ...string) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -216,7 +216,7 @@ func NameIn(vs ...string) predicate.Subscription {
 
 // NameNotIn applies the NotIn predicate on the "name" field.
 func NameNotIn(vs ...string) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -304,7 +304,7 @@ func GroupNEQ(v string) predicate.Subscription {
 
 // GroupIn applies the In predicate on the "group" field.
 func GroupIn(vs ...string) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -315,7 +315,7 @@ func GroupIn(vs ...string) predicate.Subscription {
 
 // GroupNotIn applies the NotIn predicate on the "group" field.
 func GroupNotIn(vs ...string) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -403,7 +403,7 @@ func CreatedAtNEQ(v time.Time) predicate.Subscription {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -414,7 +414,7 @@ func CreatedAtIn(vs ...time.Time) predicate.Subscription {
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Subscription {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}

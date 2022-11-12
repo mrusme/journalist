@@ -334,7 +334,6 @@ func (sq *SubscriptionQuery) WithFeed(opts ...func(*FeedQuery)) *SubscriptionQue
 //		GroupBy(subscription.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (sq *SubscriptionQuery) GroupBy(field string, fields ...string) *SubscriptionGroupBy {
 	grbuild := &SubscriptionGroupBy{config: sq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -361,13 +360,17 @@ func (sq *SubscriptionQuery) GroupBy(field string, fields ...string) *Subscripti
 //	client.Subscription.Query().
 //		Select(subscription.FieldUserID).
 //		Scan(ctx, &v)
-//
 func (sq *SubscriptionQuery) Select(fields ...string) *SubscriptionSelect {
 	sq.fields = append(sq.fields, fields...)
 	selbuild := &SubscriptionSelect{SubscriptionQuery: sq}
 	selbuild.label = subscription.Label
 	selbuild.flds, selbuild.scan = &sq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a SubscriptionSelect configured with the given aggregations.
+func (sq *SubscriptionQuery) Aggregate(fns ...AggregateFunc) *SubscriptionSelect {
+	return sq.Select().Aggregate(fns...)
 }
 
 func (sq *SubscriptionQuery) prepareQuery(ctx context.Context) error {
@@ -395,10 +398,10 @@ func (sq *SubscriptionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 			sq.withFeed != nil,
 		}
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Subscription).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &Subscription{config: sq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -491,11 +494,14 @@ func (sq *SubscriptionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (sq *SubscriptionQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := sq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := sq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (sq *SubscriptionQuery) querySpec() *sqlgraph.QuerySpec {
@@ -596,7 +602,7 @@ func (sgb *SubscriptionGroupBy) Aggregate(fns ...AggregateFunc) *SubscriptionGro
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (sgb *SubscriptionGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (sgb *SubscriptionGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := sgb.path(ctx)
 	if err != nil {
 		return err
@@ -605,7 +611,7 @@ func (sgb *SubscriptionGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return sgb.sqlScan(ctx, v)
 }
 
-func (sgb *SubscriptionGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (sgb *SubscriptionGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range sgb.fields {
 		if !subscription.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -630,8 +636,6 @@ func (sgb *SubscriptionGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range sgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(sgb.fields)+len(sgb.fns))
 		for _, f := range sgb.fields {
@@ -651,8 +655,14 @@ type SubscriptionSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (ss *SubscriptionSelect) Aggregate(fns ...AggregateFunc) *SubscriptionSelect {
+	ss.fns = append(ss.fns, fns...)
+	return ss
+}
+
 // Scan applies the selector query and scans the result into the given value.
-func (ss *SubscriptionSelect) Scan(ctx context.Context, v interface{}) error {
+func (ss *SubscriptionSelect) Scan(ctx context.Context, v any) error {
 	if err := ss.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -660,7 +670,17 @@ func (ss *SubscriptionSelect) Scan(ctx context.Context, v interface{}) error {
 	return ss.sqlScan(ctx, v)
 }
 
-func (ss *SubscriptionSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ss *SubscriptionSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(ss.fns))
+	for _, fn := range ss.fns {
+		aggregation = append(aggregation, fn(ss.sql))
+	}
+	switch n := len(*ss.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		ss.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		ss.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := ss.sql.Query()
 	if err := ss.driver.Query(ctx, query, args, rows); err != nil {

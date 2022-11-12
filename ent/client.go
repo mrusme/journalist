@@ -132,7 +132,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 //		Feed.
 //		Query().
 //		Count(ctx)
-//
 func (c *Client) Debug() *Client {
 	if c.debug {
 		return c
@@ -216,7 +215,7 @@ func (c *FeedClient) DeleteOne(f *Feed) *FeedDeleteOne {
 	return c.DeleteOneID(f.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *FeedClient) DeleteOneID(id uuid.UUID) *FeedDeleteOne {
 	builder := c.Delete().Where(feed.ID(id))
 	builder.mutation.id = &id
@@ -248,7 +247,7 @@ func (c *FeedClient) GetX(ctx context.Context, id uuid.UUID) *Feed {
 // QueryItems queries the items edge of a Feed.
 func (c *FeedClient) QueryItems(f *Feed) *ItemQuery {
 	query := &ItemQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(feed.Table, feed.FieldID, id),
@@ -264,7 +263,7 @@ func (c *FeedClient) QueryItems(f *Feed) *ItemQuery {
 // QuerySubscribedUsers queries the subscribed_users edge of a Feed.
 func (c *FeedClient) QuerySubscribedUsers(f *Feed) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(feed.Table, feed.FieldID, id),
@@ -280,7 +279,7 @@ func (c *FeedClient) QuerySubscribedUsers(f *Feed) *UserQuery {
 // QuerySubscriptions queries the subscriptions edge of a Feed.
 func (c *FeedClient) QuerySubscriptions(f *Feed) *SubscriptionQuery {
 	query := &SubscriptionQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(feed.Table, feed.FieldID, id),
@@ -354,7 +353,7 @@ func (c *ItemClient) DeleteOne(i *Item) *ItemDeleteOne {
 	return c.DeleteOneID(i.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *ItemClient) DeleteOneID(id uuid.UUID) *ItemDeleteOne {
 	builder := c.Delete().Where(item.ID(id))
 	builder.mutation.id = &id
@@ -386,7 +385,7 @@ func (c *ItemClient) GetX(ctx context.Context, id uuid.UUID) *Item {
 // QueryFeed queries the feed edge of a Item.
 func (c *ItemClient) QueryFeed(i *Item) *FeedQuery {
 	query := &FeedQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(item.Table, item.FieldID, id),
@@ -402,7 +401,7 @@ func (c *ItemClient) QueryFeed(i *Item) *FeedQuery {
 // QueryReadByUsers queries the read_by_users edge of a Item.
 func (c *ItemClient) QueryReadByUsers(i *Item) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(item.Table, item.FieldID, id),
@@ -418,7 +417,7 @@ func (c *ItemClient) QueryReadByUsers(i *Item) *UserQuery {
 // QueryReads queries the reads edge of a Item.
 func (c *ItemClient) QueryReads(i *Item) *ReadQuery {
 	query := &ReadQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(item.Table, item.FieldID, id),
@@ -492,7 +491,7 @@ func (c *ReadClient) DeleteOne(r *Read) *ReadDeleteOne {
 	return c.DeleteOneID(r.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *ReadClient) DeleteOneID(id uuid.UUID) *ReadDeleteOne {
 	builder := c.Delete().Where(read.ID(id))
 	builder.mutation.id = &id
@@ -524,7 +523,7 @@ func (c *ReadClient) GetX(ctx context.Context, id uuid.UUID) *Read {
 // QueryUser queries the user edge of a Read.
 func (c *ReadClient) QueryUser(r *Read) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(read.Table, read.FieldID, id),
@@ -540,7 +539,7 @@ func (c *ReadClient) QueryUser(r *Read) *UserQuery {
 // QueryItem queries the item edge of a Read.
 func (c *ReadClient) QueryItem(r *Read) *ItemQuery {
 	query := &ItemQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(read.Table, read.FieldID, id),
@@ -614,7 +613,7 @@ func (c *SubscriptionClient) DeleteOne(s *Subscription) *SubscriptionDeleteOne {
 	return c.DeleteOneID(s.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *SubscriptionClient) DeleteOneID(id uuid.UUID) *SubscriptionDeleteOne {
 	builder := c.Delete().Where(subscription.ID(id))
 	builder.mutation.id = &id
@@ -646,7 +645,7 @@ func (c *SubscriptionClient) GetX(ctx context.Context, id uuid.UUID) *Subscripti
 // QueryUser queries the user edge of a Subscription.
 func (c *SubscriptionClient) QueryUser(s *Subscription) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(subscription.Table, subscription.FieldID, id),
@@ -662,7 +661,7 @@ func (c *SubscriptionClient) QueryUser(s *Subscription) *UserQuery {
 // QueryFeed queries the feed edge of a Subscription.
 func (c *SubscriptionClient) QueryFeed(s *Subscription) *FeedQuery {
 	query := &FeedQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(subscription.Table, subscription.FieldID, id),
@@ -736,7 +735,7 @@ func (c *TokenClient) DeleteOne(t *Token) *TokenDeleteOne {
 	return c.DeleteOneID(t.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *TokenClient) DeleteOneID(id uuid.UUID) *TokenDeleteOne {
 	builder := c.Delete().Where(token.ID(id))
 	builder.mutation.id = &id
@@ -768,7 +767,7 @@ func (c *TokenClient) GetX(ctx context.Context, id uuid.UUID) *Token {
 // QueryOwner queries the owner edge of a Token.
 func (c *TokenClient) QueryOwner(t *Token) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := t.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(token.Table, token.FieldID, id),
@@ -842,7 +841,7 @@ func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
 	return c.DeleteOneID(u.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *UserClient) DeleteOneID(id uuid.UUID) *UserDeleteOne {
 	builder := c.Delete().Where(user.ID(id))
 	builder.mutation.id = &id
@@ -874,7 +873,7 @@ func (c *UserClient) GetX(ctx context.Context, id uuid.UUID) *User {
 // QueryTokens queries the tokens edge of a User.
 func (c *UserClient) QueryTokens(u *User) *TokenQuery {
 	query := &TokenQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
@@ -890,7 +889,7 @@ func (c *UserClient) QueryTokens(u *User) *TokenQuery {
 // QuerySubscribedFeeds queries the subscribed_feeds edge of a User.
 func (c *UserClient) QuerySubscribedFeeds(u *User) *FeedQuery {
 	query := &FeedQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
@@ -906,7 +905,7 @@ func (c *UserClient) QuerySubscribedFeeds(u *User) *FeedQuery {
 // QueryReadItems queries the read_items edge of a User.
 func (c *UserClient) QueryReadItems(u *User) *ItemQuery {
 	query := &ItemQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
@@ -922,7 +921,7 @@ func (c *UserClient) QueryReadItems(u *User) *ItemQuery {
 // QuerySubscriptions queries the subscriptions edge of a User.
 func (c *UserClient) QuerySubscriptions(u *User) *SubscriptionQuery {
 	query := &SubscriptionQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
@@ -938,7 +937,7 @@ func (c *UserClient) QuerySubscriptions(u *User) *SubscriptionQuery {
 // QueryReads queries the reads edge of a User.
 func (c *UserClient) QueryReads(u *User) *ReadQuery {
 	query := &ReadQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),

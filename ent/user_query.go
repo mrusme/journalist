@@ -443,7 +443,6 @@ func (uq *UserQuery) WithReads(opts ...func(*ReadQuery)) *UserQuery {
 //		GroupBy(user.FieldUsername).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 	grbuild := &UserGroupBy{config: uq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -470,13 +469,17 @@ func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 //	client.User.Query().
 //		Select(user.FieldUsername).
 //		Scan(ctx, &v)
-//
 func (uq *UserQuery) Select(fields ...string) *UserSelect {
 	uq.fields = append(uq.fields, fields...)
 	selbuild := &UserSelect{UserQuery: uq}
 	selbuild.label = user.Label
 	selbuild.flds, selbuild.scan = &uq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a UserSelect configured with the given aggregations.
+func (uq *UserQuery) Aggregate(fns ...AggregateFunc) *UserSelect {
+	return uq.Select().Aggregate(fns...)
 }
 
 func (uq *UserQuery) prepareQuery(ctx context.Context) error {
@@ -507,10 +510,10 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 			uq.withReads != nil,
 		}
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*User).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &User{config: uq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -620,18 +623,18 @@ func (uq *UserQuery) loadSubscribedFeeds(ctx context.Context, query *FeedQuery, 
 	neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
 		assign := spec.Assign
 		values := spec.ScanValues
-		spec.ScanValues = func(columns []string) ([]interface{}, error) {
+		spec.ScanValues = func(columns []string) ([]any, error) {
 			values, err := values(columns[1:])
 			if err != nil {
 				return nil, err
 			}
-			return append([]interface{}{new(uuid.UUID)}, values...), nil
+			return append([]any{new(uuid.UUID)}, values...), nil
 		}
-		spec.Assign = func(columns []string, values []interface{}) error {
+		spec.Assign = func(columns []string, values []any) error {
 			outValue := *values[0].(*uuid.UUID)
 			inValue := *values[1].(*uuid.UUID)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*User]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*User]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -678,18 +681,18 @@ func (uq *UserQuery) loadReadItems(ctx context.Context, query *ItemQuery, nodes 
 	neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
 		assign := spec.Assign
 		values := spec.ScanValues
-		spec.ScanValues = func(columns []string) ([]interface{}, error) {
+		spec.ScanValues = func(columns []string) ([]any, error) {
 			values, err := values(columns[1:])
 			if err != nil {
 				return nil, err
 			}
-			return append([]interface{}{new(uuid.UUID)}, values...), nil
+			return append([]any{new(uuid.UUID)}, values...), nil
 		}
-		spec.Assign = func(columns []string, values []interface{}) error {
+		spec.Assign = func(columns []string, values []any) error {
 			outValue := *values[0].(*uuid.UUID)
 			inValue := *values[1].(*uuid.UUID)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*User]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*User]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -775,11 +778,14 @@ func (uq *UserQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (uq *UserQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := uq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := uq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (uq *UserQuery) querySpec() *sqlgraph.QuerySpec {
@@ -880,7 +886,7 @@ func (ugb *UserGroupBy) Aggregate(fns ...AggregateFunc) *UserGroupBy {
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (ugb *UserGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (ugb *UserGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := ugb.path(ctx)
 	if err != nil {
 		return err
@@ -889,7 +895,7 @@ func (ugb *UserGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return ugb.sqlScan(ctx, v)
 }
 
-func (ugb *UserGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (ugb *UserGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range ugb.fields {
 		if !user.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -914,8 +920,6 @@ func (ugb *UserGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range ugb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(ugb.fields)+len(ugb.fns))
 		for _, f := range ugb.fields {
@@ -935,8 +939,14 @@ type UserSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (us *UserSelect) Aggregate(fns ...AggregateFunc) *UserSelect {
+	us.fns = append(us.fns, fns...)
+	return us
+}
+
 // Scan applies the selector query and scans the result into the given value.
-func (us *UserSelect) Scan(ctx context.Context, v interface{}) error {
+func (us *UserSelect) Scan(ctx context.Context, v any) error {
 	if err := us.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -944,7 +954,17 @@ func (us *UserSelect) Scan(ctx context.Context, v interface{}) error {
 	return us.sqlScan(ctx, v)
 }
 
-func (us *UserSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (us *UserSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(us.fns))
+	for _, fn := range us.fns {
+		aggregation = append(aggregation, fn(us.sql))
+	}
+	switch n := len(*us.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		us.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		us.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := us.sql.Query()
 	if err := us.driver.Query(ctx, query, args, rows); err != nil {

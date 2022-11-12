@@ -467,163 +467,83 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = &id
 	}
 	if value, ok := fc.mutation.URL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldURL,
-		})
+		_spec.SetField(feed.FieldURL, field.TypeString, value)
 		_node.URL = value
 	}
 	if value, ok := fc.mutation.Username(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldUsername,
-		})
+		_spec.SetField(feed.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
 	if value, ok := fc.mutation.Password(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldPassword,
-		})
+		_spec.SetField(feed.FieldPassword, field.TypeString, value)
 		_node.Password = value
 	}
 	if value, ok := fc.mutation.FeedTitle(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedTitle,
-		})
+		_spec.SetField(feed.FieldFeedTitle, field.TypeString, value)
 		_node.FeedTitle = value
 	}
 	if value, ok := fc.mutation.FeedDescription(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedDescription,
-		})
+		_spec.SetField(feed.FieldFeedDescription, field.TypeString, value)
 		_node.FeedDescription = value
 	}
 	if value, ok := fc.mutation.FeedLink(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedLink, field.TypeString, value)
 		_node.FeedLink = value
 	}
 	if value, ok := fc.mutation.FeedFeedLink(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedFeedLink, field.TypeString, value)
 		_node.FeedFeedLink = value
 	}
 	if value, ok := fc.mutation.FeedUpdated(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedUpdated,
-		})
+		_spec.SetField(feed.FieldFeedUpdated, field.TypeTime, value)
 		_node.FeedUpdated = value
 	}
 	if value, ok := fc.mutation.FeedPublished(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedPublished,
-		})
+		_spec.SetField(feed.FieldFeedPublished, field.TypeTime, value)
 		_node.FeedPublished = value
 	}
 	if value, ok := fc.mutation.FeedAuthorName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorName,
-		})
+		_spec.SetField(feed.FieldFeedAuthorName, field.TypeString, value)
 		_node.FeedAuthorName = value
 	}
 	if value, ok := fc.mutation.FeedAuthorEmail(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorEmail,
-		})
+		_spec.SetField(feed.FieldFeedAuthorEmail, field.TypeString, value)
 		_node.FeedAuthorEmail = value
 	}
 	if value, ok := fc.mutation.FeedLanguage(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLanguage,
-		})
+		_spec.SetField(feed.FieldFeedLanguage, field.TypeString, value)
 		_node.FeedLanguage = value
 	}
 	if value, ok := fc.mutation.FeedImageTitle(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageTitle,
-		})
+		_spec.SetField(feed.FieldFeedImageTitle, field.TypeString, value)
 		_node.FeedImageTitle = value
 	}
 	if value, ok := fc.mutation.FeedImageURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageURL,
-		})
+		_spec.SetField(feed.FieldFeedImageURL, field.TypeString, value)
 		_node.FeedImageURL = value
 	}
 	if value, ok := fc.mutation.FeedCopyright(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCopyright,
-		})
+		_spec.SetField(feed.FieldFeedCopyright, field.TypeString, value)
 		_node.FeedCopyright = value
 	}
 	if value, ok := fc.mutation.FeedGenerator(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedGenerator,
-		})
+		_spec.SetField(feed.FieldFeedGenerator, field.TypeString, value)
 		_node.FeedGenerator = value
 	}
 	if value, ok := fc.mutation.FeedCategories(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCategories,
-		})
+		_spec.SetField(feed.FieldFeedCategories, field.TypeString, value)
 		_node.FeedCategories = value
 	}
 	if value, ok := fc.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldCreatedAt,
-		})
+		_spec.SetField(feed.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := fc.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldUpdatedAt,
-		})
+		_spec.SetField(feed.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := fc.mutation.DeletedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldDeletedAt,
-		})
+		_spec.SetField(feed.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
 	if nodes := fc.mutation.ItemsIDs(); len(nodes) > 0 {
@@ -709,7 +629,6 @@ func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 //			SetURL(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fc *FeedCreate) OnConflict(opts ...sql.ConflictOption) *FeedUpsertOne {
 	fc.conflict = opts
 	return &FeedUpsertOne{
@@ -723,7 +642,6 @@ func (fc *FeedCreate) OnConflict(opts ...sql.ConflictOption) *FeedUpsertOne {
 //	client.Feed.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fc *FeedCreate) OnConflictColumns(columns ...string) *FeedUpsertOne {
 	fc.conflict = append(fc.conflict, sql.ConflictColumns(columns...))
 	return &FeedUpsertOne{
@@ -1025,7 +943,6 @@ func (u *FeedUpsert) ClearDeletedAt() *FeedUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeedUpsertOne) UpdateNewValues() *FeedUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1039,10 +956,9 @@ func (u *FeedUpsertOne) UpdateNewValues() *FeedUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Feed.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Feed.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *FeedUpsertOne) Ignore() *FeedUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1514,7 +1430,6 @@ func (fcb *FeedCreateBulk) ExecX(ctx context.Context) {
 //			SetURL(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (fcb *FeedCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeedUpsertBulk {
 	fcb.conflict = opts
 	return &FeedUpsertBulk{
@@ -1528,7 +1443,6 @@ func (fcb *FeedCreateBulk) OnConflict(opts ...sql.ConflictOption) *FeedUpsertBul
 //	client.Feed.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (fcb *FeedCreateBulk) OnConflictColumns(columns ...string) *FeedUpsertBulk {
 	fcb.conflict = append(fcb.conflict, sql.ConflictColumns(columns...))
 	return &FeedUpsertBulk{
@@ -1553,14 +1467,12 @@ type FeedUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *FeedUpsertBulk) UpdateNewValues() *FeedUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
 				s.SetIgnore(feed.FieldID)
-				return
 			}
 		}
 	}))
@@ -1573,7 +1485,6 @@ func (u *FeedUpsertBulk) UpdateNewValues() *FeedUpsertBulk {
 //	client.Feed.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *FeedUpsertBulk) Ignore() *FeedUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -371,7 +371,6 @@ func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQu
 //		GroupBy(feed.FieldURL).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 	grbuild := &FeedGroupBy{config: fq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -398,13 +397,17 @@ func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 //	client.Feed.Query().
 //		Select(feed.FieldURL).
 //		Scan(ctx, &v)
-//
 func (fq *FeedQuery) Select(fields ...string) *FeedSelect {
 	fq.fields = append(fq.fields, fields...)
 	selbuild := &FeedSelect{FeedQuery: fq}
 	selbuild.label = feed.Label
 	selbuild.flds, selbuild.scan = &fq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a FeedSelect configured with the given aggregations.
+func (fq *FeedQuery) Aggregate(fns ...AggregateFunc) *FeedSelect {
+	return fq.Select().Aggregate(fns...)
 }
 
 func (fq *FeedQuery) prepareQuery(ctx context.Context) error {
@@ -433,10 +436,10 @@ func (fq *FeedQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Feed, e
 			fq.withSubscriptions != nil,
 		}
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Feed).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &Feed{config: fq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -532,18 +535,18 @@ func (fq *FeedQuery) loadSubscribedUsers(ctx context.Context, query *UserQuery, 
 	neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
 		assign := spec.Assign
 		values := spec.ScanValues
-		spec.ScanValues = func(columns []string) ([]interface{}, error) {
+		spec.ScanValues = func(columns []string) ([]any, error) {
 			values, err := values(columns[1:])
 			if err != nil {
 				return nil, err
 			}
-			return append([]interface{}{new(uuid.UUID)}, values...), nil
+			return append([]any{new(uuid.UUID)}, values...), nil
 		}
-		spec.Assign = func(columns []string, values []interface{}) error {
+		spec.Assign = func(columns []string, values []any) error {
 			outValue := *values[0].(*uuid.UUID)
 			inValue := *values[1].(*uuid.UUID)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*Feed]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*Feed]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -602,11 +605,14 @@ func (fq *FeedQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (fq *FeedQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := fq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := fq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (fq *FeedQuery) querySpec() *sqlgraph.QuerySpec {
@@ -707,7 +713,7 @@ func (fgb *FeedGroupBy) Aggregate(fns ...AggregateFunc) *FeedGroupBy {
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (fgb *FeedGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (fgb *FeedGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := fgb.path(ctx)
 	if err != nil {
 		return err
@@ -716,7 +722,7 @@ func (fgb *FeedGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return fgb.sqlScan(ctx, v)
 }
 
-func (fgb *FeedGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (fgb *FeedGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range fgb.fields {
 		if !feed.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -741,8 +747,6 @@ func (fgb *FeedGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range fgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(fgb.fields)+len(fgb.fns))
 		for _, f := range fgb.fields {
@@ -762,8 +766,14 @@ type FeedSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (fs *FeedSelect) Aggregate(fns ...AggregateFunc) *FeedSelect {
+	fs.fns = append(fs.fns, fns...)
+	return fs
+}
+
 // Scan applies the selector query and scans the result into the given value.
-func (fs *FeedSelect) Scan(ctx context.Context, v interface{}) error {
+func (fs *FeedSelect) Scan(ctx context.Context, v any) error {
 	if err := fs.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -771,7 +781,17 @@ func (fs *FeedSelect) Scan(ctx context.Context, v interface{}) error {
 	return fs.sqlScan(ctx, v)
 }
 
-func (fs *FeedSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (fs *FeedSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(fs.fns))
+	for _, fn := range fs.fns {
+		aggregation = append(aggregation, fn(fs.sql))
+	}
+	switch n := len(*fs.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		fs.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		fs.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := fs.sql.Query()
 	if err := fs.driver.Query(ctx, query, args, rows); err != nil {

@@ -229,52 +229,25 @@ func (tu *TokenUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := tu.mutation.GetType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldType,
-		})
+		_spec.SetField(token.FieldType, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldName,
-		})
+		_spec.SetField(token.FieldName, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.Token(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldToken,
-		})
+		_spec.SetField(token.FieldToken, field.TypeString, value)
 	}
 	if value, ok := tu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldCreatedAt,
-		})
+		_spec.SetField(token.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := tu.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldUpdatedAt,
-		})
+		_spec.SetField(token.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := tu.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldDeletedAt,
-		})
+		_spec.SetField(token.FieldDeletedAt, field.TypeTime, value)
 	}
 	if tu.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: token.FieldDeletedAt,
-		})
+		_spec.ClearField(token.FieldDeletedAt, field.TypeTime)
 	}
 	if tu.mutation.OwnerCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -559,52 +532,25 @@ func (tuo *TokenUpdateOne) sqlSave(ctx context.Context) (_node *Token, err error
 		}
 	}
 	if value, ok := tuo.mutation.GetType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldType,
-		})
+		_spec.SetField(token.FieldType, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldName,
-		})
+		_spec.SetField(token.FieldName, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.Token(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: token.FieldToken,
-		})
+		_spec.SetField(token.FieldToken, field.TypeString, value)
 	}
 	if value, ok := tuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldCreatedAt,
-		})
+		_spec.SetField(token.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := tuo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldUpdatedAt,
-		})
+		_spec.SetField(token.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := tuo.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: token.FieldDeletedAt,
-		})
+		_spec.SetField(token.FieldDeletedAt, field.TypeTime, value)
 	}
 	if tuo.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: token.FieldDeletedAt,
-		})
+		_spec.ClearField(token.FieldDeletedAt, field.TypeTime)
 	}
 	if tuo.mutation.OwnerCleared() {
 		edge := &sqlgraph.EdgeSpec{

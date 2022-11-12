@@ -334,7 +334,6 @@ func (rq *ReadQuery) WithItem(opts ...func(*ItemQuery)) *ReadQuery {
 //		GroupBy(read.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (rq *ReadQuery) GroupBy(field string, fields ...string) *ReadGroupBy {
 	grbuild := &ReadGroupBy{config: rq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -361,13 +360,17 @@ func (rq *ReadQuery) GroupBy(field string, fields ...string) *ReadGroupBy {
 //	client.Read.Query().
 //		Select(read.FieldUserID).
 //		Scan(ctx, &v)
-//
 func (rq *ReadQuery) Select(fields ...string) *ReadSelect {
 	rq.fields = append(rq.fields, fields...)
 	selbuild := &ReadSelect{ReadQuery: rq}
 	selbuild.label = read.Label
 	selbuild.flds, selbuild.scan = &rq.fields, selbuild.Scan
 	return selbuild
+}
+
+// Aggregate returns a ReadSelect configured with the given aggregations.
+func (rq *ReadQuery) Aggregate(fns ...AggregateFunc) *ReadSelect {
+	return rq.Select().Aggregate(fns...)
 }
 
 func (rq *ReadQuery) prepareQuery(ctx context.Context) error {
@@ -395,10 +398,10 @@ func (rq *ReadQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Read, e
 			rq.withItem != nil,
 		}
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Read).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &Read{config: rq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -491,11 +494,14 @@ func (rq *ReadQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (rq *ReadQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := rq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := rq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (rq *ReadQuery) querySpec() *sqlgraph.QuerySpec {
@@ -596,7 +602,7 @@ func (rgb *ReadGroupBy) Aggregate(fns ...AggregateFunc) *ReadGroupBy {
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (rgb *ReadGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (rgb *ReadGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := rgb.path(ctx)
 	if err != nil {
 		return err
@@ -605,7 +611,7 @@ func (rgb *ReadGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return rgb.sqlScan(ctx, v)
 }
 
-func (rgb *ReadGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (rgb *ReadGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range rgb.fields {
 		if !read.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -630,8 +636,6 @@ func (rgb *ReadGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range rgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(rgb.fields)+len(rgb.fns))
 		for _, f := range rgb.fields {
@@ -651,8 +655,14 @@ type ReadSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (rs *ReadSelect) Aggregate(fns ...AggregateFunc) *ReadSelect {
+	rs.fns = append(rs.fns, fns...)
+	return rs
+}
+
 // Scan applies the selector query and scans the result into the given value.
-func (rs *ReadSelect) Scan(ctx context.Context, v interface{}) error {
+func (rs *ReadSelect) Scan(ctx context.Context, v any) error {
 	if err := rs.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -660,7 +670,17 @@ func (rs *ReadSelect) Scan(ctx context.Context, v interface{}) error {
 	return rs.sqlScan(ctx, v)
 }
 
-func (rs *ReadSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (rs *ReadSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(rs.fns))
+	for _, fn := range rs.fns {
+		aggregation = append(aggregation, fn(rs.sql))
+	}
+	switch n := len(*rs.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		rs.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		rs.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := rs.sql.Query()
 	if err := rs.driver.Query(ctx, query, args, rows); err != nil {

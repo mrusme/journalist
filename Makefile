@@ -4,7 +4,7 @@ VERSION := $(shell git describe --tags)
 all: ent swagger build
 
 ent:
-	ent generate --feature sql/upsert ./ent/schema
+	go generate ./ent
 
 swagger:
 	swag init -g api/api.go

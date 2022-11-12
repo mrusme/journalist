@@ -35,7 +35,7 @@ func IDNEQ(id uuid.UUID) predicate.Read {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Read {
 	return predicate.Read(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -46,7 +46,7 @@ func IDIn(ids ...uuid.UUID) predicate.Read {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Read {
 	return predicate.Read(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -119,7 +119,7 @@ func UserIDNEQ(v uuid.UUID) predicate.Read {
 
 // UserIDIn applies the In predicate on the "user_id" field.
 func UserIDIn(vs ...uuid.UUID) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -130,7 +130,7 @@ func UserIDIn(vs ...uuid.UUID) predicate.Read {
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
 func UserIDNotIn(vs ...uuid.UUID) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -155,7 +155,7 @@ func ItemIDNEQ(v uuid.UUID) predicate.Read {
 
 // ItemIDIn applies the In predicate on the "item_id" field.
 func ItemIDIn(vs ...uuid.UUID) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -166,7 +166,7 @@ func ItemIDIn(vs ...uuid.UUID) predicate.Read {
 
 // ItemIDNotIn applies the NotIn predicate on the "item_id" field.
 func ItemIDNotIn(vs ...uuid.UUID) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -191,7 +191,7 @@ func CreatedAtNEQ(v time.Time) predicate.Read {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -202,7 +202,7 @@ func CreatedAtIn(vs ...time.Time) predicate.Read {
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Read {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}

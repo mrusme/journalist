@@ -393,52 +393,25 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := uu.mutation.Username(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldUsername,
-		})
+		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Role(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldRole,
-		})
+		_spec.SetField(user.FieldRole, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldCreatedAt,
-		})
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldUpdatedAt,
-		})
+		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldDeletedAt,
-		})
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 	}
 	if uu.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: user.FieldDeletedAt,
-		})
+		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
 	}
 	if uu.mutation.TokensCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1160,52 +1133,25 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		}
 	}
 	if value, ok := uuo.mutation.Username(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldUsername,
-		})
+		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Role(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldRole,
-		})
+		_spec.SetField(user.FieldRole, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldCreatedAt,
-		})
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldUpdatedAt,
-		})
+		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldDeletedAt,
-		})
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 	}
 	if uuo.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: user.FieldDeletedAt,
-		})
+		_spec.ClearField(user.FieldDeletedAt, field.TypeTime)
 	}
 	if uuo.mutation.TokensCleared() {
 		edge := &sqlgraph.EdgeSpec{

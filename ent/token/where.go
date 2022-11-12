@@ -35,7 +35,7 @@ func IDNEQ(id uuid.UUID) predicate.Token {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Token {
 	return predicate.Token(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -46,7 +46,7 @@ func IDIn(ids ...uuid.UUID) predicate.Token {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Token {
 	return predicate.Token(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -140,7 +140,7 @@ func TypeNEQ(v string) predicate.Token {
 
 // TypeIn applies the In predicate on the "type" field.
 func TypeIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -151,7 +151,7 @@ func TypeIn(vs ...string) predicate.Token {
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
 func TypeNotIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -239,7 +239,7 @@ func NameNEQ(v string) predicate.Token {
 
 // NameIn applies the In predicate on the "name" field.
 func NameIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -250,7 +250,7 @@ func NameIn(vs ...string) predicate.Token {
 
 // NameNotIn applies the NotIn predicate on the "name" field.
 func NameNotIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -338,7 +338,7 @@ func TokenNEQ(v string) predicate.Token {
 
 // TokenIn applies the In predicate on the "token" field.
 func TokenIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -349,7 +349,7 @@ func TokenIn(vs ...string) predicate.Token {
 
 // TokenNotIn applies the NotIn predicate on the "token" field.
 func TokenNotIn(vs ...string) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -437,7 +437,7 @@ func CreatedAtNEQ(v time.Time) predicate.Token {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -448,7 +448,7 @@ func CreatedAtIn(vs ...time.Time) predicate.Token {
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -501,7 +501,7 @@ func UpdatedAtNEQ(v time.Time) predicate.Token {
 
 // UpdatedAtIn applies the In predicate on the "updated_at" field.
 func UpdatedAtIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -512,7 +512,7 @@ func UpdatedAtIn(vs ...time.Time) predicate.Token {
 
 // UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
 func UpdatedAtNotIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -565,7 +565,7 @@ func DeletedAtNEQ(v time.Time) predicate.Token {
 
 // DeletedAtIn applies the In predicate on the "deleted_at" field.
 func DeletedAtIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -576,7 +576,7 @@ func DeletedAtIn(vs ...time.Time) predicate.Token {
 
 // DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
 func DeletedAtNotIn(vs ...time.Time) predicate.Token {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}

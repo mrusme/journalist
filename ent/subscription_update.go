@@ -196,25 +196,13 @@ func (su *SubscriptionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := su.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: subscription.FieldName,
-		})
+		_spec.SetField(subscription.FieldName, field.TypeString, value)
 	}
 	if value, ok := su.mutation.Group(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: subscription.FieldGroup,
-		})
+		_spec.SetField(subscription.FieldGroup, field.TypeString, value)
 	}
 	if value, ok := su.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: subscription.FieldCreatedAt,
-		})
+		_spec.SetField(subscription.FieldCreatedAt, field.TypeTime, value)
 	}
 	if su.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -500,25 +488,13 @@ func (suo *SubscriptionUpdateOne) sqlSave(ctx context.Context) (_node *Subscript
 		}
 	}
 	if value, ok := suo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: subscription.FieldName,
-		})
+		_spec.SetField(subscription.FieldName, field.TypeString, value)
 	}
 	if value, ok := suo.mutation.Group(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: subscription.FieldGroup,
-		})
+		_spec.SetField(subscription.FieldGroup, field.TypeString, value)
 	}
 	if value, ok := suo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: subscription.FieldCreatedAt,
-		})
+		_spec.SetField(subscription.FieldCreatedAt, field.TypeTime, value)
 	}
 	if suo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

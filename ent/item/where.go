@@ -35,7 +35,7 @@ func IDNEQ(id uuid.UUID) predicate.Item {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -46,7 +46,7 @@ func IDIn(ids ...uuid.UUID) predicate.Item {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -252,7 +252,7 @@ func ItemGUIDNEQ(v string) predicate.Item {
 
 // ItemGUIDIn applies the In predicate on the "item_guid" field.
 func ItemGUIDIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -263,7 +263,7 @@ func ItemGUIDIn(vs ...string) predicate.Item {
 
 // ItemGUIDNotIn applies the NotIn predicate on the "item_guid" field.
 func ItemGUIDNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -351,7 +351,7 @@ func ItemTitleNEQ(v string) predicate.Item {
 
 // ItemTitleIn applies the In predicate on the "item_title" field.
 func ItemTitleIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -362,7 +362,7 @@ func ItemTitleIn(vs ...string) predicate.Item {
 
 // ItemTitleNotIn applies the NotIn predicate on the "item_title" field.
 func ItemTitleNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -450,7 +450,7 @@ func ItemDescriptionNEQ(v string) predicate.Item {
 
 // ItemDescriptionIn applies the In predicate on the "item_description" field.
 func ItemDescriptionIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -461,7 +461,7 @@ func ItemDescriptionIn(vs ...string) predicate.Item {
 
 // ItemDescriptionNotIn applies the NotIn predicate on the "item_description" field.
 func ItemDescriptionNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -549,7 +549,7 @@ func ItemContentNEQ(v string) predicate.Item {
 
 // ItemContentIn applies the In predicate on the "item_content" field.
 func ItemContentIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -560,7 +560,7 @@ func ItemContentIn(vs ...string) predicate.Item {
 
 // ItemContentNotIn applies the NotIn predicate on the "item_content" field.
 func ItemContentNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -648,7 +648,7 @@ func ItemLinkNEQ(v string) predicate.Item {
 
 // ItemLinkIn applies the In predicate on the "item_link" field.
 func ItemLinkIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -659,7 +659,7 @@ func ItemLinkIn(vs ...string) predicate.Item {
 
 // ItemLinkNotIn applies the NotIn predicate on the "item_link" field.
 func ItemLinkNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -747,7 +747,7 @@ func ItemUpdatedNEQ(v time.Time) predicate.Item {
 
 // ItemUpdatedIn applies the In predicate on the "item_updated" field.
 func ItemUpdatedIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -758,7 +758,7 @@ func ItemUpdatedIn(vs ...time.Time) predicate.Item {
 
 // ItemUpdatedNotIn applies the NotIn predicate on the "item_updated" field.
 func ItemUpdatedNotIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -811,7 +811,7 @@ func ItemPublishedNEQ(v time.Time) predicate.Item {
 
 // ItemPublishedIn applies the In predicate on the "item_published" field.
 func ItemPublishedIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -822,7 +822,7 @@ func ItemPublishedIn(vs ...time.Time) predicate.Item {
 
 // ItemPublishedNotIn applies the NotIn predicate on the "item_published" field.
 func ItemPublishedNotIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -875,7 +875,7 @@ func ItemAuthorNameNEQ(v string) predicate.Item {
 
 // ItemAuthorNameIn applies the In predicate on the "item_author_name" field.
 func ItemAuthorNameIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -886,7 +886,7 @@ func ItemAuthorNameIn(vs ...string) predicate.Item {
 
 // ItemAuthorNameNotIn applies the NotIn predicate on the "item_author_name" field.
 func ItemAuthorNameNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -988,7 +988,7 @@ func ItemAuthorEmailNEQ(v string) predicate.Item {
 
 // ItemAuthorEmailIn applies the In predicate on the "item_author_email" field.
 func ItemAuthorEmailIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -999,7 +999,7 @@ func ItemAuthorEmailIn(vs ...string) predicate.Item {
 
 // ItemAuthorEmailNotIn applies the NotIn predicate on the "item_author_email" field.
 func ItemAuthorEmailNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1101,7 +1101,7 @@ func ItemImageTitleNEQ(v string) predicate.Item {
 
 // ItemImageTitleIn applies the In predicate on the "item_image_title" field.
 func ItemImageTitleIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1112,7 +1112,7 @@ func ItemImageTitleIn(vs ...string) predicate.Item {
 
 // ItemImageTitleNotIn applies the NotIn predicate on the "item_image_title" field.
 func ItemImageTitleNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1214,7 +1214,7 @@ func ItemImageURLNEQ(v string) predicate.Item {
 
 // ItemImageURLIn applies the In predicate on the "item_image_url" field.
 func ItemImageURLIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1225,7 +1225,7 @@ func ItemImageURLIn(vs ...string) predicate.Item {
 
 // ItemImageURLNotIn applies the NotIn predicate on the "item_image_url" field.
 func ItemImageURLNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1327,7 +1327,7 @@ func ItemCategoriesNEQ(v string) predicate.Item {
 
 // ItemCategoriesIn applies the In predicate on the "item_categories" field.
 func ItemCategoriesIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1338,7 +1338,7 @@ func ItemCategoriesIn(vs ...string) predicate.Item {
 
 // ItemCategoriesNotIn applies the NotIn predicate on the "item_categories" field.
 func ItemCategoriesNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1426,7 +1426,7 @@ func ItemEnclosuresNEQ(v string) predicate.Item {
 
 // ItemEnclosuresIn applies the In predicate on the "item_enclosures" field.
 func ItemEnclosuresIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1437,7 +1437,7 @@ func ItemEnclosuresIn(vs ...string) predicate.Item {
 
 // ItemEnclosuresNotIn applies the NotIn predicate on the "item_enclosures" field.
 func ItemEnclosuresNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1525,7 +1525,7 @@ func CrawlerTitleNEQ(v string) predicate.Item {
 
 // CrawlerTitleIn applies the In predicate on the "crawler_title" field.
 func CrawlerTitleIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1536,7 +1536,7 @@ func CrawlerTitleIn(vs ...string) predicate.Item {
 
 // CrawlerTitleNotIn applies the NotIn predicate on the "crawler_title" field.
 func CrawlerTitleNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1638,7 +1638,7 @@ func CrawlerAuthorNEQ(v string) predicate.Item {
 
 // CrawlerAuthorIn applies the In predicate on the "crawler_author" field.
 func CrawlerAuthorIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1649,7 +1649,7 @@ func CrawlerAuthorIn(vs ...string) predicate.Item {
 
 // CrawlerAuthorNotIn applies the NotIn predicate on the "crawler_author" field.
 func CrawlerAuthorNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1751,7 +1751,7 @@ func CrawlerExcerptNEQ(v string) predicate.Item {
 
 // CrawlerExcerptIn applies the In predicate on the "crawler_excerpt" field.
 func CrawlerExcerptIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1762,7 +1762,7 @@ func CrawlerExcerptIn(vs ...string) predicate.Item {
 
 // CrawlerExcerptNotIn applies the NotIn predicate on the "crawler_excerpt" field.
 func CrawlerExcerptNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1864,7 +1864,7 @@ func CrawlerSiteNameNEQ(v string) predicate.Item {
 
 // CrawlerSiteNameIn applies the In predicate on the "crawler_site_name" field.
 func CrawlerSiteNameIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1875,7 +1875,7 @@ func CrawlerSiteNameIn(vs ...string) predicate.Item {
 
 // CrawlerSiteNameNotIn applies the NotIn predicate on the "crawler_site_name" field.
 func CrawlerSiteNameNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1977,7 +1977,7 @@ func CrawlerImageNEQ(v string) predicate.Item {
 
 // CrawlerImageIn applies the In predicate on the "crawler_image" field.
 func CrawlerImageIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1988,7 +1988,7 @@ func CrawlerImageIn(vs ...string) predicate.Item {
 
 // CrawlerImageNotIn applies the NotIn predicate on the "crawler_image" field.
 func CrawlerImageNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2090,7 +2090,7 @@ func CrawlerContentHTMLNEQ(v string) predicate.Item {
 
 // CrawlerContentHTMLIn applies the In predicate on the "crawler_content_html" field.
 func CrawlerContentHTMLIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2101,7 +2101,7 @@ func CrawlerContentHTMLIn(vs ...string) predicate.Item {
 
 // CrawlerContentHTMLNotIn applies the NotIn predicate on the "crawler_content_html" field.
 func CrawlerContentHTMLNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2203,7 +2203,7 @@ func CrawlerContentTextNEQ(v string) predicate.Item {
 
 // CrawlerContentTextIn applies the In predicate on the "crawler_content_text" field.
 func CrawlerContentTextIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2214,7 +2214,7 @@ func CrawlerContentTextIn(vs ...string) predicate.Item {
 
 // CrawlerContentTextNotIn applies the NotIn predicate on the "crawler_content_text" field.
 func CrawlerContentTextNotIn(vs ...string) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2316,7 +2316,7 @@ func CreatedAtNEQ(v time.Time) predicate.Item {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2327,7 +2327,7 @@ func CreatedAtIn(vs ...time.Time) predicate.Item {
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2380,7 +2380,7 @@ func UpdatedAtNEQ(v time.Time) predicate.Item {
 
 // UpdatedAtIn applies the In predicate on the "updated_at" field.
 func UpdatedAtIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2391,7 +2391,7 @@ func UpdatedAtIn(vs ...time.Time) predicate.Item {
 
 // UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
 func UpdatedAtNotIn(vs ...time.Time) predicate.Item {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}

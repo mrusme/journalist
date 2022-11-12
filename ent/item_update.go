@@ -526,224 +526,103 @@ func (iu *ItemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := iu.mutation.ItemGUID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemGUID,
-		})
+		_spec.SetField(item.FieldItemGUID, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemTitle,
-		})
+		_spec.SetField(item.FieldItemTitle, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemDescription(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemDescription,
-		})
+		_spec.SetField(item.FieldItemDescription, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemContent(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemContent,
-		})
+		_spec.SetField(item.FieldItemContent, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemLink,
-		})
+		_spec.SetField(item.FieldItemLink, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemUpdated(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemUpdated,
-		})
+		_spec.SetField(item.FieldItemUpdated, field.TypeTime, value)
 	}
 	if value, ok := iu.mutation.ItemPublished(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemPublished,
-		})
+		_spec.SetField(item.FieldItemPublished, field.TypeTime, value)
 	}
 	if value, ok := iu.mutation.ItemAuthorName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorName,
-		})
+		_spec.SetField(item.FieldItemAuthorName, field.TypeString, value)
 	}
 	if iu.mutation.ItemAuthorNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemAuthorName,
-		})
+		_spec.ClearField(item.FieldItemAuthorName, field.TypeString)
 	}
 	if value, ok := iu.mutation.ItemAuthorEmail(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorEmail,
-		})
+		_spec.SetField(item.FieldItemAuthorEmail, field.TypeString, value)
 	}
 	if iu.mutation.ItemAuthorEmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemAuthorEmail,
-		})
+		_spec.ClearField(item.FieldItemAuthorEmail, field.TypeString)
 	}
 	if value, ok := iu.mutation.ItemImageTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageTitle,
-		})
+		_spec.SetField(item.FieldItemImageTitle, field.TypeString, value)
 	}
 	if iu.mutation.ItemImageTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemImageTitle,
-		})
+		_spec.ClearField(item.FieldItemImageTitle, field.TypeString)
 	}
 	if value, ok := iu.mutation.ItemImageURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageURL,
-		})
+		_spec.SetField(item.FieldItemImageURL, field.TypeString, value)
 	}
 	if iu.mutation.ItemImageURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemImageURL,
-		})
+		_spec.ClearField(item.FieldItemImageURL, field.TypeString)
 	}
 	if value, ok := iu.mutation.ItemCategories(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemCategories,
-		})
+		_spec.SetField(item.FieldItemCategories, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.ItemEnclosures(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemEnclosures,
-		})
+		_spec.SetField(item.FieldItemEnclosures, field.TypeString, value)
 	}
 	if value, ok := iu.mutation.CrawlerTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerTitle,
-		})
+		_spec.SetField(item.FieldCrawlerTitle, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerTitle,
-		})
+		_spec.ClearField(item.FieldCrawlerTitle, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerAuthor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerAuthor,
-		})
+		_spec.SetField(item.FieldCrawlerAuthor, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerAuthorCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerAuthor,
-		})
+		_spec.ClearField(item.FieldCrawlerAuthor, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerExcerpt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerExcerpt,
-		})
+		_spec.SetField(item.FieldCrawlerExcerpt, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerExcerptCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerExcerpt,
-		})
+		_spec.ClearField(item.FieldCrawlerExcerpt, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerSiteName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerSiteName,
-		})
+		_spec.SetField(item.FieldCrawlerSiteName, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerSiteNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerSiteName,
-		})
+		_spec.ClearField(item.FieldCrawlerSiteName, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerImage(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerImage,
-		})
+		_spec.SetField(item.FieldCrawlerImage, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerImageCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerImage,
-		})
+		_spec.ClearField(item.FieldCrawlerImage, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerContentHTML(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentHTML,
-		})
+		_spec.SetField(item.FieldCrawlerContentHTML, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerContentHTMLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerContentHTML,
-		})
+		_spec.ClearField(item.FieldCrawlerContentHTML, field.TypeString)
 	}
 	if value, ok := iu.mutation.CrawlerContentText(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentText,
-		})
+		_spec.SetField(item.FieldCrawlerContentText, field.TypeString, value)
 	}
 	if iu.mutation.CrawlerContentTextCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerContentText,
-		})
+		_spec.ClearField(item.FieldCrawlerContentText, field.TypeString)
 	}
 	if value, ok := iu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldCreatedAt,
-		})
+		_spec.SetField(item.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := iu.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldUpdatedAt,
-		})
+		_spec.SetField(item.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if iu.mutation.FeedCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1452,224 +1331,103 @@ func (iuo *ItemUpdateOne) sqlSave(ctx context.Context) (_node *Item, err error) 
 		}
 	}
 	if value, ok := iuo.mutation.ItemGUID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemGUID,
-		})
+		_spec.SetField(item.FieldItemGUID, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemTitle,
-		})
+		_spec.SetField(item.FieldItemTitle, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemDescription(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemDescription,
-		})
+		_spec.SetField(item.FieldItemDescription, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemContent(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemContent,
-		})
+		_spec.SetField(item.FieldItemContent, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemLink,
-		})
+		_spec.SetField(item.FieldItemLink, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemUpdated(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemUpdated,
-		})
+		_spec.SetField(item.FieldItemUpdated, field.TypeTime, value)
 	}
 	if value, ok := iuo.mutation.ItemPublished(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemPublished,
-		})
+		_spec.SetField(item.FieldItemPublished, field.TypeTime, value)
 	}
 	if value, ok := iuo.mutation.ItemAuthorName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorName,
-		})
+		_spec.SetField(item.FieldItemAuthorName, field.TypeString, value)
 	}
 	if iuo.mutation.ItemAuthorNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemAuthorName,
-		})
+		_spec.ClearField(item.FieldItemAuthorName, field.TypeString)
 	}
 	if value, ok := iuo.mutation.ItemAuthorEmail(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorEmail,
-		})
+		_spec.SetField(item.FieldItemAuthorEmail, field.TypeString, value)
 	}
 	if iuo.mutation.ItemAuthorEmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemAuthorEmail,
-		})
+		_spec.ClearField(item.FieldItemAuthorEmail, field.TypeString)
 	}
 	if value, ok := iuo.mutation.ItemImageTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageTitle,
-		})
+		_spec.SetField(item.FieldItemImageTitle, field.TypeString, value)
 	}
 	if iuo.mutation.ItemImageTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemImageTitle,
-		})
+		_spec.ClearField(item.FieldItemImageTitle, field.TypeString)
 	}
 	if value, ok := iuo.mutation.ItemImageURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageURL,
-		})
+		_spec.SetField(item.FieldItemImageURL, field.TypeString, value)
 	}
 	if iuo.mutation.ItemImageURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldItemImageURL,
-		})
+		_spec.ClearField(item.FieldItemImageURL, field.TypeString)
 	}
 	if value, ok := iuo.mutation.ItemCategories(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemCategories,
-		})
+		_spec.SetField(item.FieldItemCategories, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.ItemEnclosures(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemEnclosures,
-		})
+		_spec.SetField(item.FieldItemEnclosures, field.TypeString, value)
 	}
 	if value, ok := iuo.mutation.CrawlerTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerTitle,
-		})
+		_spec.SetField(item.FieldCrawlerTitle, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerTitle,
-		})
+		_spec.ClearField(item.FieldCrawlerTitle, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerAuthor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerAuthor,
-		})
+		_spec.SetField(item.FieldCrawlerAuthor, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerAuthorCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerAuthor,
-		})
+		_spec.ClearField(item.FieldCrawlerAuthor, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerExcerpt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerExcerpt,
-		})
+		_spec.SetField(item.FieldCrawlerExcerpt, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerExcerptCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerExcerpt,
-		})
+		_spec.ClearField(item.FieldCrawlerExcerpt, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerSiteName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerSiteName,
-		})
+		_spec.SetField(item.FieldCrawlerSiteName, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerSiteNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerSiteName,
-		})
+		_spec.ClearField(item.FieldCrawlerSiteName, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerImage(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerImage,
-		})
+		_spec.SetField(item.FieldCrawlerImage, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerImageCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerImage,
-		})
+		_spec.ClearField(item.FieldCrawlerImage, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerContentHTML(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentHTML,
-		})
+		_spec.SetField(item.FieldCrawlerContentHTML, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerContentHTMLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerContentHTML,
-		})
+		_spec.ClearField(item.FieldCrawlerContentHTML, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CrawlerContentText(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentText,
-		})
+		_spec.SetField(item.FieldCrawlerContentText, field.TypeString, value)
 	}
 	if iuo.mutation.CrawlerContentTextCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: item.FieldCrawlerContentText,
-		})
+		_spec.ClearField(item.FieldCrawlerContentText, field.TypeString)
 	}
 	if value, ok := iuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldCreatedAt,
-		})
+		_spec.SetField(item.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := iuo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldUpdatedAt,
-		})
+		_spec.SetField(item.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if iuo.mutation.FeedCleared() {
 		edge := &sqlgraph.EdgeSpec{

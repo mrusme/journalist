@@ -103,8 +103,8 @@ func (e FeedEdges) SubscriptionsOrErr() ([]*Subscription, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Feed) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*Feed) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case feed.FieldURL, feed.FieldUsername, feed.FieldPassword, feed.FieldFeedTitle, feed.FieldFeedDescription, feed.FieldFeedLink, feed.FieldFeedFeedLink, feed.FieldFeedAuthorName, feed.FieldFeedAuthorEmail, feed.FieldFeedLanguage, feed.FieldFeedImageTitle, feed.FieldFeedImageURL, feed.FieldFeedCopyright, feed.FieldFeedGenerator, feed.FieldFeedCategories:
@@ -122,7 +122,7 @@ func (*Feed) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Feed fields.
-func (f *Feed) assignValues(columns []string, values []interface{}) error {
+func (f *Feed) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}

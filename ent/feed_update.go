@@ -457,174 +457,79 @@ func (fu *FeedUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := fu.mutation.URL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldURL,
-		})
+		_spec.SetField(feed.FieldURL, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.Username(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldUsername,
-		})
+		_spec.SetField(feed.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldPassword,
-		})
+		_spec.SetField(feed.FieldPassword, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedTitle,
-		})
+		_spec.SetField(feed.FieldFeedTitle, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedDescription(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedDescription,
-		})
+		_spec.SetField(feed.FieldFeedDescription, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedLink, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedFeedLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedFeedLink, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedUpdated(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedUpdated,
-		})
+		_spec.SetField(feed.FieldFeedUpdated, field.TypeTime, value)
 	}
 	if value, ok := fu.mutation.FeedPublished(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedPublished,
-		})
+		_spec.SetField(feed.FieldFeedPublished, field.TypeTime, value)
 	}
 	if value, ok := fu.mutation.FeedAuthorName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorName,
-		})
+		_spec.SetField(feed.FieldFeedAuthorName, field.TypeString, value)
 	}
 	if fu.mutation.FeedAuthorNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedAuthorName,
-		})
+		_spec.ClearField(feed.FieldFeedAuthorName, field.TypeString)
 	}
 	if value, ok := fu.mutation.FeedAuthorEmail(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorEmail,
-		})
+		_spec.SetField(feed.FieldFeedAuthorEmail, field.TypeString, value)
 	}
 	if fu.mutation.FeedAuthorEmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedAuthorEmail,
-		})
+		_spec.ClearField(feed.FieldFeedAuthorEmail, field.TypeString)
 	}
 	if value, ok := fu.mutation.FeedLanguage(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLanguage,
-		})
+		_spec.SetField(feed.FieldFeedLanguage, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedImageTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageTitle,
-		})
+		_spec.SetField(feed.FieldFeedImageTitle, field.TypeString, value)
 	}
 	if fu.mutation.FeedImageTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedImageTitle,
-		})
+		_spec.ClearField(feed.FieldFeedImageTitle, field.TypeString)
 	}
 	if value, ok := fu.mutation.FeedImageURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageURL,
-		})
+		_spec.SetField(feed.FieldFeedImageURL, field.TypeString, value)
 	}
 	if fu.mutation.FeedImageURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedImageURL,
-		})
+		_spec.ClearField(feed.FieldFeedImageURL, field.TypeString)
 	}
 	if value, ok := fu.mutation.FeedCopyright(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCopyright,
-		})
+		_spec.SetField(feed.FieldFeedCopyright, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedGenerator(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedGenerator,
-		})
+		_spec.SetField(feed.FieldFeedGenerator, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.FeedCategories(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCategories,
-		})
+		_spec.SetField(feed.FieldFeedCategories, field.TypeString, value)
 	}
 	if value, ok := fu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldCreatedAt,
-		})
+		_spec.SetField(feed.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := fu.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldUpdatedAt,
-		})
+		_spec.SetField(feed.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := fu.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldDeletedAt,
-		})
+		_spec.SetField(feed.FieldDeletedAt, field.TypeTime, value)
 	}
 	if fu.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: feed.FieldDeletedAt,
-		})
+		_spec.ClearField(feed.FieldDeletedAt, field.TypeTime)
 	}
 	if fu.mutation.ItemsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1283,174 +1188,79 @@ func (fuo *FeedUpdateOne) sqlSave(ctx context.Context) (_node *Feed, err error) 
 		}
 	}
 	if value, ok := fuo.mutation.URL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldURL,
-		})
+		_spec.SetField(feed.FieldURL, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.Username(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldUsername,
-		})
+		_spec.SetField(feed.FieldUsername, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.Password(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldPassword,
-		})
+		_spec.SetField(feed.FieldPassword, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedTitle,
-		})
+		_spec.SetField(feed.FieldFeedTitle, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedDescription(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedDescription,
-		})
+		_spec.SetField(feed.FieldFeedDescription, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedLink, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedFeedLink(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedFeedLink,
-		})
+		_spec.SetField(feed.FieldFeedFeedLink, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedUpdated(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedUpdated,
-		})
+		_spec.SetField(feed.FieldFeedUpdated, field.TypeTime, value)
 	}
 	if value, ok := fuo.mutation.FeedPublished(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldFeedPublished,
-		})
+		_spec.SetField(feed.FieldFeedPublished, field.TypeTime, value)
 	}
 	if value, ok := fuo.mutation.FeedAuthorName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorName,
-		})
+		_spec.SetField(feed.FieldFeedAuthorName, field.TypeString, value)
 	}
 	if fuo.mutation.FeedAuthorNameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedAuthorName,
-		})
+		_spec.ClearField(feed.FieldFeedAuthorName, field.TypeString)
 	}
 	if value, ok := fuo.mutation.FeedAuthorEmail(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedAuthorEmail,
-		})
+		_spec.SetField(feed.FieldFeedAuthorEmail, field.TypeString, value)
 	}
 	if fuo.mutation.FeedAuthorEmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedAuthorEmail,
-		})
+		_spec.ClearField(feed.FieldFeedAuthorEmail, field.TypeString)
 	}
 	if value, ok := fuo.mutation.FeedLanguage(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedLanguage,
-		})
+		_spec.SetField(feed.FieldFeedLanguage, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedImageTitle(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageTitle,
-		})
+		_spec.SetField(feed.FieldFeedImageTitle, field.TypeString, value)
 	}
 	if fuo.mutation.FeedImageTitleCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedImageTitle,
-		})
+		_spec.ClearField(feed.FieldFeedImageTitle, field.TypeString)
 	}
 	if value, ok := fuo.mutation.FeedImageURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedImageURL,
-		})
+		_spec.SetField(feed.FieldFeedImageURL, field.TypeString, value)
 	}
 	if fuo.mutation.FeedImageURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: feed.FieldFeedImageURL,
-		})
+		_spec.ClearField(feed.FieldFeedImageURL, field.TypeString)
 	}
 	if value, ok := fuo.mutation.FeedCopyright(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCopyright,
-		})
+		_spec.SetField(feed.FieldFeedCopyright, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedGenerator(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedGenerator,
-		})
+		_spec.SetField(feed.FieldFeedGenerator, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.FeedCategories(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: feed.FieldFeedCategories,
-		})
+		_spec.SetField(feed.FieldFeedCategories, field.TypeString, value)
 	}
 	if value, ok := fuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldCreatedAt,
-		})
+		_spec.SetField(feed.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := fuo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldUpdatedAt,
-		})
+		_spec.SetField(feed.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if value, ok := fuo.mutation.DeletedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: feed.FieldDeletedAt,
-		})
+		_spec.SetField(feed.FieldDeletedAt, field.TypeTime, value)
 	}
 	if fuo.mutation.DeletedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: feed.FieldDeletedAt,
-		})
+		_spec.ClearField(feed.FieldDeletedAt, field.TypeTime)
 	}
 	if fuo.mutation.ItemsCleared() {
 		edge := &sqlgraph.EdgeSpec{

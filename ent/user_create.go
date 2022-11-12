@@ -351,51 +351,27 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = &id
 	}
 	if value, ok := uc.mutation.Username(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldUsername,
-		})
+		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
 	if value, ok := uc.mutation.Password(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
 		_node.Password = value
 	}
 	if value, ok := uc.mutation.Role(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldRole,
-		})
+		_spec.SetField(user.FieldRole, field.TypeString, value)
 		_node.Role = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldCreatedAt,
-		})
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := uc.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldUpdatedAt,
-		})
+		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := uc.mutation.DeletedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldDeletedAt,
-		})
+		_spec.SetField(user.FieldDeletedAt, field.TypeTime, value)
 		_node.DeletedAt = &value
 	}
 	if nodes := uc.mutation.TokensIDs(); len(nodes) > 0 {
@@ -526,7 +502,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 //			SetUsername(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (uc *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 	uc.conflict = opts
 	return &UserUpsertOne{
@@ -540,7 +515,6 @@ func (uc *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 //	client.User.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (uc *UserCreate) OnConflictColumns(columns ...string) *UserUpsertOne {
 	uc.conflict = append(uc.conflict, sql.ConflictColumns(columns...))
 	return &UserUpsertOne{
@@ -650,7 +624,6 @@ func (u *UserUpsert) ClearDeletedAt() *UserUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -664,10 +637,9 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.User.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.User.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *UserUpsertOne) Ignore() *UserUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -915,7 +887,6 @@ func (ucb *UserCreateBulk) ExecX(ctx context.Context) {
 //			SetUsername(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (ucb *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk {
 	ucb.conflict = opts
 	return &UserUpsertBulk{
@@ -929,7 +900,6 @@ func (ucb *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBul
 //	client.User.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (ucb *UserCreateBulk) OnConflictColumns(columns ...string) *UserUpsertBulk {
 	ucb.conflict = append(ucb.conflict, sql.ConflictColumns(columns...))
 	return &UserUpsertBulk{
@@ -954,14 +924,12 @@ type UserUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
 				s.SetIgnore(user.FieldID)
-				return
 			}
 		}
 	}))
@@ -974,7 +942,6 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 //	client.User.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *UserUpsertBulk) Ignore() *UserUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

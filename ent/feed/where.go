@@ -35,7 +35,7 @@ func IDNEQ(id uuid.UUID) predicate.Feed {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...uuid.UUID) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -46,7 +46,7 @@ func IDIn(ids ...uuid.UUID) predicate.Feed {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...uuid.UUID) predicate.Feed {
 	return predicate.Feed(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -238,7 +238,7 @@ func URLNEQ(v string) predicate.Feed {
 
 // URLIn applies the In predicate on the "url" field.
 func URLIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -249,7 +249,7 @@ func URLIn(vs ...string) predicate.Feed {
 
 // URLNotIn applies the NotIn predicate on the "url" field.
 func URLNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -337,7 +337,7 @@ func UsernameNEQ(v string) predicate.Feed {
 
 // UsernameIn applies the In predicate on the "username" field.
 func UsernameIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -348,7 +348,7 @@ func UsernameIn(vs ...string) predicate.Feed {
 
 // UsernameNotIn applies the NotIn predicate on the "username" field.
 func UsernameNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -436,7 +436,7 @@ func PasswordNEQ(v string) predicate.Feed {
 
 // PasswordIn applies the In predicate on the "password" field.
 func PasswordIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -447,7 +447,7 @@ func PasswordIn(vs ...string) predicate.Feed {
 
 // PasswordNotIn applies the NotIn predicate on the "password" field.
 func PasswordNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -535,7 +535,7 @@ func FeedTitleNEQ(v string) predicate.Feed {
 
 // FeedTitleIn applies the In predicate on the "feed_title" field.
 func FeedTitleIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -546,7 +546,7 @@ func FeedTitleIn(vs ...string) predicate.Feed {
 
 // FeedTitleNotIn applies the NotIn predicate on the "feed_title" field.
 func FeedTitleNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -634,7 +634,7 @@ func FeedDescriptionNEQ(v string) predicate.Feed {
 
 // FeedDescriptionIn applies the In predicate on the "feed_description" field.
 func FeedDescriptionIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -645,7 +645,7 @@ func FeedDescriptionIn(vs ...string) predicate.Feed {
 
 // FeedDescriptionNotIn applies the NotIn predicate on the "feed_description" field.
 func FeedDescriptionNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -733,7 +733,7 @@ func FeedLinkNEQ(v string) predicate.Feed {
 
 // FeedLinkIn applies the In predicate on the "feed_link" field.
 func FeedLinkIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -744,7 +744,7 @@ func FeedLinkIn(vs ...string) predicate.Feed {
 
 // FeedLinkNotIn applies the NotIn predicate on the "feed_link" field.
 func FeedLinkNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -832,7 +832,7 @@ func FeedFeedLinkNEQ(v string) predicate.Feed {
 
 // FeedFeedLinkIn applies the In predicate on the "feed_feed_link" field.
 func FeedFeedLinkIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -843,7 +843,7 @@ func FeedFeedLinkIn(vs ...string) predicate.Feed {
 
 // FeedFeedLinkNotIn applies the NotIn predicate on the "feed_feed_link" field.
 func FeedFeedLinkNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -931,7 +931,7 @@ func FeedUpdatedNEQ(v time.Time) predicate.Feed {
 
 // FeedUpdatedIn applies the In predicate on the "feed_updated" field.
 func FeedUpdatedIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -942,7 +942,7 @@ func FeedUpdatedIn(vs ...time.Time) predicate.Feed {
 
 // FeedUpdatedNotIn applies the NotIn predicate on the "feed_updated" field.
 func FeedUpdatedNotIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -995,7 +995,7 @@ func FeedPublishedNEQ(v time.Time) predicate.Feed {
 
 // FeedPublishedIn applies the In predicate on the "feed_published" field.
 func FeedPublishedIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1006,7 +1006,7 @@ func FeedPublishedIn(vs ...time.Time) predicate.Feed {
 
 // FeedPublishedNotIn applies the NotIn predicate on the "feed_published" field.
 func FeedPublishedNotIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1059,7 +1059,7 @@ func FeedAuthorNameNEQ(v string) predicate.Feed {
 
 // FeedAuthorNameIn applies the In predicate on the "feed_author_name" field.
 func FeedAuthorNameIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1070,7 +1070,7 @@ func FeedAuthorNameIn(vs ...string) predicate.Feed {
 
 // FeedAuthorNameNotIn applies the NotIn predicate on the "feed_author_name" field.
 func FeedAuthorNameNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1172,7 +1172,7 @@ func FeedAuthorEmailNEQ(v string) predicate.Feed {
 
 // FeedAuthorEmailIn applies the In predicate on the "feed_author_email" field.
 func FeedAuthorEmailIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1183,7 +1183,7 @@ func FeedAuthorEmailIn(vs ...string) predicate.Feed {
 
 // FeedAuthorEmailNotIn applies the NotIn predicate on the "feed_author_email" field.
 func FeedAuthorEmailNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1285,7 +1285,7 @@ func FeedLanguageNEQ(v string) predicate.Feed {
 
 // FeedLanguageIn applies the In predicate on the "feed_language" field.
 func FeedLanguageIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1296,7 +1296,7 @@ func FeedLanguageIn(vs ...string) predicate.Feed {
 
 // FeedLanguageNotIn applies the NotIn predicate on the "feed_language" field.
 func FeedLanguageNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1384,7 +1384,7 @@ func FeedImageTitleNEQ(v string) predicate.Feed {
 
 // FeedImageTitleIn applies the In predicate on the "feed_image_title" field.
 func FeedImageTitleIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1395,7 +1395,7 @@ func FeedImageTitleIn(vs ...string) predicate.Feed {
 
 // FeedImageTitleNotIn applies the NotIn predicate on the "feed_image_title" field.
 func FeedImageTitleNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1497,7 +1497,7 @@ func FeedImageURLNEQ(v string) predicate.Feed {
 
 // FeedImageURLIn applies the In predicate on the "feed_image_url" field.
 func FeedImageURLIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1508,7 +1508,7 @@ func FeedImageURLIn(vs ...string) predicate.Feed {
 
 // FeedImageURLNotIn applies the NotIn predicate on the "feed_image_url" field.
 func FeedImageURLNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1610,7 +1610,7 @@ func FeedCopyrightNEQ(v string) predicate.Feed {
 
 // FeedCopyrightIn applies the In predicate on the "feed_copyright" field.
 func FeedCopyrightIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1621,7 +1621,7 @@ func FeedCopyrightIn(vs ...string) predicate.Feed {
 
 // FeedCopyrightNotIn applies the NotIn predicate on the "feed_copyright" field.
 func FeedCopyrightNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1709,7 +1709,7 @@ func FeedGeneratorNEQ(v string) predicate.Feed {
 
 // FeedGeneratorIn applies the In predicate on the "feed_generator" field.
 func FeedGeneratorIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1720,7 +1720,7 @@ func FeedGeneratorIn(vs ...string) predicate.Feed {
 
 // FeedGeneratorNotIn applies the NotIn predicate on the "feed_generator" field.
 func FeedGeneratorNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1808,7 +1808,7 @@ func FeedCategoriesNEQ(v string) predicate.Feed {
 
 // FeedCategoriesIn applies the In predicate on the "feed_categories" field.
 func FeedCategoriesIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1819,7 +1819,7 @@ func FeedCategoriesIn(vs ...string) predicate.Feed {
 
 // FeedCategoriesNotIn applies the NotIn predicate on the "feed_categories" field.
 func FeedCategoriesNotIn(vs ...string) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1907,7 +1907,7 @@ func CreatedAtNEQ(v time.Time) predicate.Feed {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1918,7 +1918,7 @@ func CreatedAtIn(vs ...time.Time) predicate.Feed {
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1971,7 +1971,7 @@ func UpdatedAtNEQ(v time.Time) predicate.Feed {
 
 // UpdatedAtIn applies the In predicate on the "updated_at" field.
 func UpdatedAtIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -1982,7 +1982,7 @@ func UpdatedAtIn(vs ...time.Time) predicate.Feed {
 
 // UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
 func UpdatedAtNotIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2035,7 +2035,7 @@ func DeletedAtNEQ(v time.Time) predicate.Feed {
 
 // DeletedAtIn applies the In predicate on the "deleted_at" field.
 func DeletedAtIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
@@ -2046,7 +2046,7 @@ func DeletedAtIn(vs ...time.Time) predicate.Feed {
 
 // DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
 func DeletedAtNotIn(vs ...time.Time) predicate.Feed {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}

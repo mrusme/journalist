@@ -72,8 +72,8 @@ func (e SubscriptionEdges) FeedOrErr() (*Feed, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Subscription) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*Subscription) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case subscription.FieldName, subscription.FieldGroup:
@@ -91,7 +91,7 @@ func (*Subscription) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Subscription fields.
-func (s *Subscription) assignValues(columns []string, values []interface{}) error {
+func (s *Subscription) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}

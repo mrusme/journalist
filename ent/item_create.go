@@ -495,179 +495,91 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = &id
 	}
 	if value, ok := ic.mutation.ItemGUID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemGUID,
-		})
+		_spec.SetField(item.FieldItemGUID, field.TypeString, value)
 		_node.ItemGUID = value
 	}
 	if value, ok := ic.mutation.ItemTitle(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemTitle,
-		})
+		_spec.SetField(item.FieldItemTitle, field.TypeString, value)
 		_node.ItemTitle = value
 	}
 	if value, ok := ic.mutation.ItemDescription(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemDescription,
-		})
+		_spec.SetField(item.FieldItemDescription, field.TypeString, value)
 		_node.ItemDescription = value
 	}
 	if value, ok := ic.mutation.ItemContent(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemContent,
-		})
+		_spec.SetField(item.FieldItemContent, field.TypeString, value)
 		_node.ItemContent = value
 	}
 	if value, ok := ic.mutation.ItemLink(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemLink,
-		})
+		_spec.SetField(item.FieldItemLink, field.TypeString, value)
 		_node.ItemLink = value
 	}
 	if value, ok := ic.mutation.ItemUpdated(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemUpdated,
-		})
+		_spec.SetField(item.FieldItemUpdated, field.TypeTime, value)
 		_node.ItemUpdated = value
 	}
 	if value, ok := ic.mutation.ItemPublished(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldItemPublished,
-		})
+		_spec.SetField(item.FieldItemPublished, field.TypeTime, value)
 		_node.ItemPublished = value
 	}
 	if value, ok := ic.mutation.ItemAuthorName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorName,
-		})
+		_spec.SetField(item.FieldItemAuthorName, field.TypeString, value)
 		_node.ItemAuthorName = value
 	}
 	if value, ok := ic.mutation.ItemAuthorEmail(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemAuthorEmail,
-		})
+		_spec.SetField(item.FieldItemAuthorEmail, field.TypeString, value)
 		_node.ItemAuthorEmail = value
 	}
 	if value, ok := ic.mutation.ItemImageTitle(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageTitle,
-		})
+		_spec.SetField(item.FieldItemImageTitle, field.TypeString, value)
 		_node.ItemImageTitle = value
 	}
 	if value, ok := ic.mutation.ItemImageURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemImageURL,
-		})
+		_spec.SetField(item.FieldItemImageURL, field.TypeString, value)
 		_node.ItemImageURL = value
 	}
 	if value, ok := ic.mutation.ItemCategories(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemCategories,
-		})
+		_spec.SetField(item.FieldItemCategories, field.TypeString, value)
 		_node.ItemCategories = value
 	}
 	if value, ok := ic.mutation.ItemEnclosures(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldItemEnclosures,
-		})
+		_spec.SetField(item.FieldItemEnclosures, field.TypeString, value)
 		_node.ItemEnclosures = value
 	}
 	if value, ok := ic.mutation.CrawlerTitle(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerTitle,
-		})
+		_spec.SetField(item.FieldCrawlerTitle, field.TypeString, value)
 		_node.CrawlerTitle = value
 	}
 	if value, ok := ic.mutation.CrawlerAuthor(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerAuthor,
-		})
+		_spec.SetField(item.FieldCrawlerAuthor, field.TypeString, value)
 		_node.CrawlerAuthor = value
 	}
 	if value, ok := ic.mutation.CrawlerExcerpt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerExcerpt,
-		})
+		_spec.SetField(item.FieldCrawlerExcerpt, field.TypeString, value)
 		_node.CrawlerExcerpt = value
 	}
 	if value, ok := ic.mutation.CrawlerSiteName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerSiteName,
-		})
+		_spec.SetField(item.FieldCrawlerSiteName, field.TypeString, value)
 		_node.CrawlerSiteName = value
 	}
 	if value, ok := ic.mutation.CrawlerImage(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerImage,
-		})
+		_spec.SetField(item.FieldCrawlerImage, field.TypeString, value)
 		_node.CrawlerImage = value
 	}
 	if value, ok := ic.mutation.CrawlerContentHTML(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentHTML,
-		})
+		_spec.SetField(item.FieldCrawlerContentHTML, field.TypeString, value)
 		_node.CrawlerContentHTML = value
 	}
 	if value, ok := ic.mutation.CrawlerContentText(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: item.FieldCrawlerContentText,
-		})
+		_spec.SetField(item.FieldCrawlerContentText, field.TypeString, value)
 		_node.CrawlerContentText = value
 	}
 	if value, ok := ic.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldCreatedAt,
-		})
+		_spec.SetField(item.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := ic.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: item.FieldUpdatedAt,
-		})
+		_spec.SetField(item.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if nodes := ic.mutation.FeedIDs(); len(nodes) > 0 {
@@ -754,7 +666,6 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 //			SetItemGUID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (ic *ItemCreate) OnConflict(opts ...sql.ConflictOption) *ItemUpsertOne {
 	ic.conflict = opts
 	return &ItemUpsertOne{
@@ -768,7 +679,6 @@ func (ic *ItemCreate) OnConflict(opts ...sql.ConflictOption) *ItemUpsertOne {
 //	client.Item.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (ic *ItemCreate) OnConflictColumns(columns ...string) *ItemUpsertOne {
 	ic.conflict = append(ic.conflict, sql.ConflictColumns(columns...))
 	return &ItemUpsertOne{
@@ -1130,7 +1040,6 @@ func (u *ItemUpsert) UpdateUpdatedAt() *ItemUpsert {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ItemUpsertOne) UpdateNewValues() *ItemUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1144,10 +1053,9 @@ func (u *ItemUpsertOne) UpdateNewValues() *ItemUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Item.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Item.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *ItemUpsertOne) Ignore() *ItemUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1689,7 +1597,6 @@ func (icb *ItemCreateBulk) ExecX(ctx context.Context) {
 //			SetItemGUID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (icb *ItemCreateBulk) OnConflict(opts ...sql.ConflictOption) *ItemUpsertBulk {
 	icb.conflict = opts
 	return &ItemUpsertBulk{
@@ -1703,7 +1610,6 @@ func (icb *ItemCreateBulk) OnConflict(opts ...sql.ConflictOption) *ItemUpsertBul
 //	client.Item.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (icb *ItemCreateBulk) OnConflictColumns(columns ...string) *ItemUpsertBulk {
 	icb.conflict = append(icb.conflict, sql.ConflictColumns(columns...))
 	return &ItemUpsertBulk{
@@ -1728,14 +1634,12 @@ type ItemUpsertBulk struct {
 //			}),
 //		).
 //		Exec(ctx)
-//
 func (u *ItemUpsertBulk) UpdateNewValues() *ItemUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
 		for _, b := range u.create.builders {
 			if _, exists := b.mutation.ID(); exists {
 				s.SetIgnore(item.FieldID)
-				return
 			}
 		}
 	}))
@@ -1748,7 +1652,6 @@ func (u *ItemUpsertBulk) UpdateNewValues() *ItemUpsertBulk {
 //	client.Item.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *ItemUpsertBulk) Ignore() *ItemUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
