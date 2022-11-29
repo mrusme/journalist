@@ -21,6 +21,9 @@ require (
 
 require (
 	ariga.io/atlas v0.7.3-0.20221011160332-3ca609863edd // indirect
+	github.com/Danny-Dasilva/CycleTLS/cycletls v0.0.0-20220620102923-c84d740b4757 // indirect
+	github.com/Danny-Dasilva/fhttp v0.0.0-20220524230104-f801520157d6 // indirect
+	github.com/Danny-Dasilva/utls v0.0.0-20220604023528-30cb107b834e // indirect
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
@@ -28,6 +31,7 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
@@ -37,6 +41,7 @@ require (
 	github.com/gogs/chardet v0.0.0-20211120154057-b7413eaefb8f // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
