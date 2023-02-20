@@ -122,19 +122,19 @@ func (r *Read) assignValues(columns []string, values []any) error {
 
 // QueryUser queries the "user" edge of the Read entity.
 func (r *Read) QueryUser() *UserQuery {
-	return (&ReadClient{config: r.config}).QueryUser(r)
+	return NewReadClient(r.config).QueryUser(r)
 }
 
 // QueryItem queries the "item" edge of the Read entity.
 func (r *Read) QueryItem() *ItemQuery {
-	return (&ReadClient{config: r.config}).QueryItem(r)
+	return NewReadClient(r.config).QueryItem(r)
 }
 
 // Update returns a builder for updating this Read.
 // Note that you need to call Read.Unwrap() before calling this method if this Read
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (r *Read) Update() *ReadUpdateOne {
-	return (&ReadClient{config: r.config}).UpdateOne(r)
+	return NewReadClient(r.config).UpdateOne(r)
 }
 
 // Unwrap unwraps the Read entity that was returned from a transaction after it was closed,
@@ -167,9 +167,3 @@ func (r *Read) String() string {
 
 // Reads is a parsable slice of Read.
 type Reads []*Read
-
-func (r Reads) config(cfg config) {
-	for _i := range r {
-		r[_i].config = cfg
-	}
-}

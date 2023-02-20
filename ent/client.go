@@ -44,7 +44,7 @@ type Client struct {
 
 // NewClient creates a new client configured with the given options.
 func NewClient(opts ...Option) *Client {
-	cfg := config{log: log.Println, hooks: &hooks{}}
+	cfg := config{log: log.Println, hooks: &hooks{}, inters: &inters{}}
 	cfg.options(opts...)
 	client := &Client{config: cfg}
 	client.init()
@@ -159,6 +159,37 @@ func (c *Client) Use(hooks ...Hook) {
 	c.User.Use(hooks...)
 }
 
+// Intercept adds the query interceptors to all the entity clients.
+// In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
+func (c *Client) Intercept(interceptors ...Interceptor) {
+	c.Feed.Intercept(interceptors...)
+	c.Item.Intercept(interceptors...)
+	c.Read.Intercept(interceptors...)
+	c.Subscription.Intercept(interceptors...)
+	c.Token.Intercept(interceptors...)
+	c.User.Intercept(interceptors...)
+}
+
+// Mutate implements the ent.Mutator interface.
+func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
+	switch m := m.(type) {
+	case *FeedMutation:
+		return c.Feed.mutate(ctx, m)
+	case *ItemMutation:
+		return c.Item.mutate(ctx, m)
+	case *ReadMutation:
+		return c.Read.mutate(ctx, m)
+	case *SubscriptionMutation:
+		return c.Subscription.mutate(ctx, m)
+	case *TokenMutation:
+		return c.Token.mutate(ctx, m)
+	case *UserMutation:
+		return c.User.mutate(ctx, m)
+	default:
+		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
 // FeedClient is a client for the Feed schema.
 type FeedClient struct {
 	config
@@ -173,6 +204,12 @@ func NewFeedClient(c config) *FeedClient {
 // A call to `Use(f, g, h)` equals to `feed.Hooks(f(g(h())))`.
 func (c *FeedClient) Use(hooks ...Hook) {
 	c.hooks.Feed = append(c.hooks.Feed, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `feed.Intercept(f(g(h())))`.
+func (c *FeedClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Feed = append(c.inters.Feed, interceptors...)
 }
 
 // Create returns a builder for creating a Feed entity.
@@ -227,6 +264,8 @@ func (c *FeedClient) DeleteOneID(id uuid.UUID) *FeedDeleteOne {
 func (c *FeedClient) Query() *FeedQuery {
 	return &FeedQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeFeed},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -246,7 +285,7 @@ func (c *FeedClient) GetX(ctx context.Context, id uuid.UUID) *Feed {
 
 // QueryItems queries the items edge of a Feed.
 func (c *FeedClient) QueryItems(f *Feed) *ItemQuery {
-	query := &ItemQuery{config: c.config}
+	query := (&ItemClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
@@ -262,7 +301,7 @@ func (c *FeedClient) QueryItems(f *Feed) *ItemQuery {
 
 // QuerySubscribedUsers queries the subscribed_users edge of a Feed.
 func (c *FeedClient) QuerySubscribedUsers(f *Feed) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
@@ -278,7 +317,7 @@ func (c *FeedClient) QuerySubscribedUsers(f *Feed) *UserQuery {
 
 // QuerySubscriptions queries the subscriptions edge of a Feed.
 func (c *FeedClient) QuerySubscriptions(f *Feed) *SubscriptionQuery {
-	query := &SubscriptionQuery{config: c.config}
+	query := (&SubscriptionClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
@@ -297,6 +336,26 @@ func (c *FeedClient) Hooks() []Hook {
 	return c.hooks.Feed
 }
 
+// Interceptors returns the client interceptors.
+func (c *FeedClient) Interceptors() []Interceptor {
+	return c.inters.Feed
+}
+
+func (c *FeedClient) mutate(ctx context.Context, m *FeedMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&FeedCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&FeedUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&FeedUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&FeedDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Feed mutation op: %q", m.Op())
+	}
+}
+
 // ItemClient is a client for the Item schema.
 type ItemClient struct {
 	config
@@ -311,6 +370,12 @@ func NewItemClient(c config) *ItemClient {
 // A call to `Use(f, g, h)` equals to `item.Hooks(f(g(h())))`.
 func (c *ItemClient) Use(hooks ...Hook) {
 	c.hooks.Item = append(c.hooks.Item, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `item.Intercept(f(g(h())))`.
+func (c *ItemClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Item = append(c.inters.Item, interceptors...)
 }
 
 // Create returns a builder for creating a Item entity.
@@ -365,6 +430,8 @@ func (c *ItemClient) DeleteOneID(id uuid.UUID) *ItemDeleteOne {
 func (c *ItemClient) Query() *ItemQuery {
 	return &ItemQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeItem},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -384,7 +451,7 @@ func (c *ItemClient) GetX(ctx context.Context, id uuid.UUID) *Item {
 
 // QueryFeed queries the feed edge of a Item.
 func (c *ItemClient) QueryFeed(i *Item) *FeedQuery {
-	query := &FeedQuery{config: c.config}
+	query := (&FeedClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
@@ -400,7 +467,7 @@ func (c *ItemClient) QueryFeed(i *Item) *FeedQuery {
 
 // QueryReadByUsers queries the read_by_users edge of a Item.
 func (c *ItemClient) QueryReadByUsers(i *Item) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
@@ -416,7 +483,7 @@ func (c *ItemClient) QueryReadByUsers(i *Item) *UserQuery {
 
 // QueryReads queries the reads edge of a Item.
 func (c *ItemClient) QueryReads(i *Item) *ReadQuery {
-	query := &ReadQuery{config: c.config}
+	query := (&ReadClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := i.ID
 		step := sqlgraph.NewStep(
@@ -435,6 +502,26 @@ func (c *ItemClient) Hooks() []Hook {
 	return c.hooks.Item
 }
 
+// Interceptors returns the client interceptors.
+func (c *ItemClient) Interceptors() []Interceptor {
+	return c.inters.Item
+}
+
+func (c *ItemClient) mutate(ctx context.Context, m *ItemMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ItemCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ItemUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ItemUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ItemDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Item mutation op: %q", m.Op())
+	}
+}
+
 // ReadClient is a client for the Read schema.
 type ReadClient struct {
 	config
@@ -449,6 +536,12 @@ func NewReadClient(c config) *ReadClient {
 // A call to `Use(f, g, h)` equals to `read.Hooks(f(g(h())))`.
 func (c *ReadClient) Use(hooks ...Hook) {
 	c.hooks.Read = append(c.hooks.Read, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `read.Intercept(f(g(h())))`.
+func (c *ReadClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Read = append(c.inters.Read, interceptors...)
 }
 
 // Create returns a builder for creating a Read entity.
@@ -503,6 +596,8 @@ func (c *ReadClient) DeleteOneID(id uuid.UUID) *ReadDeleteOne {
 func (c *ReadClient) Query() *ReadQuery {
 	return &ReadQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeRead},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -522,7 +617,7 @@ func (c *ReadClient) GetX(ctx context.Context, id uuid.UUID) *Read {
 
 // QueryUser queries the user edge of a Read.
 func (c *ReadClient) QueryUser(r *Read) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
@@ -538,7 +633,7 @@ func (c *ReadClient) QueryUser(r *Read) *UserQuery {
 
 // QueryItem queries the item edge of a Read.
 func (c *ReadClient) QueryItem(r *Read) *ItemQuery {
-	query := &ItemQuery{config: c.config}
+	query := (&ItemClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
@@ -557,6 +652,26 @@ func (c *ReadClient) Hooks() []Hook {
 	return c.hooks.Read
 }
 
+// Interceptors returns the client interceptors.
+func (c *ReadClient) Interceptors() []Interceptor {
+	return c.inters.Read
+}
+
+func (c *ReadClient) mutate(ctx context.Context, m *ReadMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ReadCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ReadUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ReadUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ReadDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Read mutation op: %q", m.Op())
+	}
+}
+
 // SubscriptionClient is a client for the Subscription schema.
 type SubscriptionClient struct {
 	config
@@ -571,6 +686,12 @@ func NewSubscriptionClient(c config) *SubscriptionClient {
 // A call to `Use(f, g, h)` equals to `subscription.Hooks(f(g(h())))`.
 func (c *SubscriptionClient) Use(hooks ...Hook) {
 	c.hooks.Subscription = append(c.hooks.Subscription, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `subscription.Intercept(f(g(h())))`.
+func (c *SubscriptionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Subscription = append(c.inters.Subscription, interceptors...)
 }
 
 // Create returns a builder for creating a Subscription entity.
@@ -625,6 +746,8 @@ func (c *SubscriptionClient) DeleteOneID(id uuid.UUID) *SubscriptionDeleteOne {
 func (c *SubscriptionClient) Query() *SubscriptionQuery {
 	return &SubscriptionQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeSubscription},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -644,7 +767,7 @@ func (c *SubscriptionClient) GetX(ctx context.Context, id uuid.UUID) *Subscripti
 
 // QueryUser queries the user edge of a Subscription.
 func (c *SubscriptionClient) QueryUser(s *Subscription) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
@@ -660,7 +783,7 @@ func (c *SubscriptionClient) QueryUser(s *Subscription) *UserQuery {
 
 // QueryFeed queries the feed edge of a Subscription.
 func (c *SubscriptionClient) QueryFeed(s *Subscription) *FeedQuery {
-	query := &FeedQuery{config: c.config}
+	query := (&FeedClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
@@ -679,6 +802,26 @@ func (c *SubscriptionClient) Hooks() []Hook {
 	return c.hooks.Subscription
 }
 
+// Interceptors returns the client interceptors.
+func (c *SubscriptionClient) Interceptors() []Interceptor {
+	return c.inters.Subscription
+}
+
+func (c *SubscriptionClient) mutate(ctx context.Context, m *SubscriptionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&SubscriptionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&SubscriptionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&SubscriptionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&SubscriptionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Subscription mutation op: %q", m.Op())
+	}
+}
+
 // TokenClient is a client for the Token schema.
 type TokenClient struct {
 	config
@@ -693,6 +836,12 @@ func NewTokenClient(c config) *TokenClient {
 // A call to `Use(f, g, h)` equals to `token.Hooks(f(g(h())))`.
 func (c *TokenClient) Use(hooks ...Hook) {
 	c.hooks.Token = append(c.hooks.Token, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `token.Intercept(f(g(h())))`.
+func (c *TokenClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Token = append(c.inters.Token, interceptors...)
 }
 
 // Create returns a builder for creating a Token entity.
@@ -747,6 +896,8 @@ func (c *TokenClient) DeleteOneID(id uuid.UUID) *TokenDeleteOne {
 func (c *TokenClient) Query() *TokenQuery {
 	return &TokenQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeToken},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -766,7 +917,7 @@ func (c *TokenClient) GetX(ctx context.Context, id uuid.UUID) *Token {
 
 // QueryOwner queries the owner edge of a Token.
 func (c *TokenClient) QueryOwner(t *Token) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := t.ID
 		step := sqlgraph.NewStep(
@@ -785,6 +936,26 @@ func (c *TokenClient) Hooks() []Hook {
 	return c.hooks.Token
 }
 
+// Interceptors returns the client interceptors.
+func (c *TokenClient) Interceptors() []Interceptor {
+	return c.inters.Token
+}
+
+func (c *TokenClient) mutate(ctx context.Context, m *TokenMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TokenCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TokenUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TokenUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TokenDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Token mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -799,6 +970,12 @@ func NewUserClient(c config) *UserClient {
 // A call to `Use(f, g, h)` equals to `user.Hooks(f(g(h())))`.
 func (c *UserClient) Use(hooks ...Hook) {
 	c.hooks.User = append(c.hooks.User, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `user.Intercept(f(g(h())))`.
+func (c *UserClient) Intercept(interceptors ...Interceptor) {
+	c.inters.User = append(c.inters.User, interceptors...)
 }
 
 // Create returns a builder for creating a User entity.
@@ -853,6 +1030,8 @@ func (c *UserClient) DeleteOneID(id uuid.UUID) *UserDeleteOne {
 func (c *UserClient) Query() *UserQuery {
 	return &UserQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeUser},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -872,7 +1051,7 @@ func (c *UserClient) GetX(ctx context.Context, id uuid.UUID) *User {
 
 // QueryTokens queries the tokens edge of a User.
 func (c *UserClient) QueryTokens(u *User) *TokenQuery {
-	query := &TokenQuery{config: c.config}
+	query := (&TokenClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -888,7 +1067,7 @@ func (c *UserClient) QueryTokens(u *User) *TokenQuery {
 
 // QuerySubscribedFeeds queries the subscribed_feeds edge of a User.
 func (c *UserClient) QuerySubscribedFeeds(u *User) *FeedQuery {
-	query := &FeedQuery{config: c.config}
+	query := (&FeedClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -904,7 +1083,7 @@ func (c *UserClient) QuerySubscribedFeeds(u *User) *FeedQuery {
 
 // QueryReadItems queries the read_items edge of a User.
 func (c *UserClient) QueryReadItems(u *User) *ItemQuery {
-	query := &ItemQuery{config: c.config}
+	query := (&ItemClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -920,7 +1099,7 @@ func (c *UserClient) QueryReadItems(u *User) *ItemQuery {
 
 // QuerySubscriptions queries the subscriptions edge of a User.
 func (c *UserClient) QuerySubscriptions(u *User) *SubscriptionQuery {
-	query := &SubscriptionQuery{config: c.config}
+	query := (&SubscriptionClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -936,7 +1115,7 @@ func (c *UserClient) QuerySubscriptions(u *User) *SubscriptionQuery {
 
 // QueryReads queries the reads edge of a User.
 func (c *UserClient) QueryReads(u *User) *ReadQuery {
-	query := &ReadQuery{config: c.config}
+	query := (&ReadClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -953,4 +1132,24 @@ func (c *UserClient) QueryReads(u *User) *ReadQuery {
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
 	return c.hooks.User
+}
+
+// Interceptors returns the client interceptors.
+func (c *UserClient) Interceptors() []Interceptor {
+	return c.inters.User
+}
+
+func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown User mutation op: %q", m.Op())
+	}
 }

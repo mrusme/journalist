@@ -262,24 +262,24 @@ func (f *Feed) assignValues(columns []string, values []any) error {
 
 // QueryItems queries the "items" edge of the Feed entity.
 func (f *Feed) QueryItems() *ItemQuery {
-	return (&FeedClient{config: f.config}).QueryItems(f)
+	return NewFeedClient(f.config).QueryItems(f)
 }
 
 // QuerySubscribedUsers queries the "subscribed_users" edge of the Feed entity.
 func (f *Feed) QuerySubscribedUsers() *UserQuery {
-	return (&FeedClient{config: f.config}).QuerySubscribedUsers(f)
+	return NewFeedClient(f.config).QuerySubscribedUsers(f)
 }
 
 // QuerySubscriptions queries the "subscriptions" edge of the Feed entity.
 func (f *Feed) QuerySubscriptions() *SubscriptionQuery {
-	return (&FeedClient{config: f.config}).QuerySubscriptions(f)
+	return NewFeedClient(f.config).QuerySubscriptions(f)
 }
 
 // Update returns a builder for updating this Feed.
 // Note that you need to call Feed.Unwrap() before calling this method if this Feed
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (f *Feed) Update() *FeedUpdateOne {
-	return (&FeedClient{config: f.config}).UpdateOne(f)
+	return NewFeedClient(f.config).UpdateOne(f)
 }
 
 // Unwrap unwraps the Feed entity that was returned from a transaction after it was closed,
@@ -363,9 +363,3 @@ func (f *Feed) String() string {
 
 // Feeds is a parsable slice of Feed.
 type Feeds []*Feed
-
-func (f Feeds) config(cfg config) {
-	for _i := range f {
-		f[_i].config = cfg
-	}
-}

@@ -15,11 +15,10 @@ type FeedFunc func(context.Context, *ent.FeedMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f FeedFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.FeedMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FeedMutation", m)
+	if mv, ok := m.(*ent.FeedMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FeedMutation", m)
 }
 
 // The ItemFunc type is an adapter to allow the use of ordinary
@@ -28,11 +27,10 @@ type ItemFunc func(context.Context, *ent.ItemMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f ItemFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ItemMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ItemMutation", m)
+	if mv, ok := m.(*ent.ItemMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ItemMutation", m)
 }
 
 // The ReadFunc type is an adapter to allow the use of ordinary
@@ -41,11 +39,10 @@ type ReadFunc func(context.Context, *ent.ReadMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f ReadFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.ReadMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ReadMutation", m)
+	if mv, ok := m.(*ent.ReadMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ReadMutation", m)
 }
 
 // The SubscriptionFunc type is an adapter to allow the use of ordinary
@@ -54,11 +51,10 @@ type SubscriptionFunc func(context.Context, *ent.SubscriptionMutation) (ent.Valu
 
 // Mutate calls f(ctx, m).
 func (f SubscriptionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.SubscriptionMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SubscriptionMutation", m)
+	if mv, ok := m.(*ent.SubscriptionMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.SubscriptionMutation", m)
 }
 
 // The TokenFunc type is an adapter to allow the use of ordinary
@@ -67,11 +63,10 @@ type TokenFunc func(context.Context, *ent.TokenMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f TokenFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.TokenMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TokenMutation", m)
+	if mv, ok := m.(*ent.TokenMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TokenMutation", m)
 }
 
 // The UserFunc type is an adapter to allow the use of ordinary
@@ -80,11 +75,10 @@ type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.UserMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+	if mv, ok := m.(*ent.UserMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
 }
 
 // Condition is a hook condition function.

@@ -172,34 +172,34 @@ func (u *User) assignValues(columns []string, values []any) error {
 
 // QueryTokens queries the "tokens" edge of the User entity.
 func (u *User) QueryTokens() *TokenQuery {
-	return (&UserClient{config: u.config}).QueryTokens(u)
+	return NewUserClient(u.config).QueryTokens(u)
 }
 
 // QuerySubscribedFeeds queries the "subscribed_feeds" edge of the User entity.
 func (u *User) QuerySubscribedFeeds() *FeedQuery {
-	return (&UserClient{config: u.config}).QuerySubscribedFeeds(u)
+	return NewUserClient(u.config).QuerySubscribedFeeds(u)
 }
 
 // QueryReadItems queries the "read_items" edge of the User entity.
 func (u *User) QueryReadItems() *ItemQuery {
-	return (&UserClient{config: u.config}).QueryReadItems(u)
+	return NewUserClient(u.config).QueryReadItems(u)
 }
 
 // QuerySubscriptions queries the "subscriptions" edge of the User entity.
 func (u *User) QuerySubscriptions() *SubscriptionQuery {
-	return (&UserClient{config: u.config}).QuerySubscriptions(u)
+	return NewUserClient(u.config).QuerySubscriptions(u)
 }
 
 // QueryReads queries the "reads" edge of the User entity.
 func (u *User) QueryReads() *ReadQuery {
-	return (&UserClient{config: u.config}).QueryReads(u)
+	return NewUserClient(u.config).QueryReads(u)
 }
 
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (u *User) Update() *UserUpdateOne {
-	return (&UserClient{config: u.config}).UpdateOne(u)
+	return NewUserClient(u.config).UpdateOne(u)
 }
 
 // Unwrap unwraps the User entity that was returned from a transaction after it was closed,
@@ -242,9 +242,3 @@ func (u *User) String() string {
 
 // Users is a parsable slice of User.
 type Users []*User
-
-func (u Users) config(cfg config) {
-	for _i := range u {
-		u[_i].config = cfg
-	}
-}

@@ -22,11 +22,9 @@ import (
 // FeedQuery is the builder for querying Feed entities.
 type FeedQuery struct {
 	config
-	limit               *int
-	offset              *int
-	unique              *bool
+	ctx                 *QueryContext
 	order               []OrderFunc
-	fields              []string
+	inters              []Interceptor
 	predicates          []predicate.Feed
 	withItems           *ItemQuery
 	withSubscribedUsers *UserQuery
@@ -42,26 +40,26 @@ func (fq *FeedQuery) Where(ps ...predicate.Feed) *FeedQuery {
 	return fq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (fq *FeedQuery) Limit(limit int) *FeedQuery {
-	fq.limit = &limit
+	fq.ctx.Limit = &limit
 	return fq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (fq *FeedQuery) Offset(offset int) *FeedQuery {
-	fq.offset = &offset
+	fq.ctx.Offset = &offset
 	return fq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (fq *FeedQuery) Unique(unique bool) *FeedQuery {
-	fq.unique = &unique
+	fq.ctx.Unique = &unique
 	return fq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (fq *FeedQuery) Order(o ...OrderFunc) *FeedQuery {
 	fq.order = append(fq.order, o...)
 	return fq
@@ -69,7 +67,7 @@ func (fq *FeedQuery) Order(o ...OrderFunc) *FeedQuery {
 
 // QueryItems chains the current query on the "items" edge.
 func (fq *FeedQuery) QueryItems() *ItemQuery {
-	query := &ItemQuery{config: fq.config}
+	query := (&ItemClient{config: fq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := fq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -91,7 +89,7 @@ func (fq *FeedQuery) QueryItems() *ItemQuery {
 
 // QuerySubscribedUsers chains the current query on the "subscribed_users" edge.
 func (fq *FeedQuery) QuerySubscribedUsers() *UserQuery {
-	query := &UserQuery{config: fq.config}
+	query := (&UserClient{config: fq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := fq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -113,7 +111,7 @@ func (fq *FeedQuery) QuerySubscribedUsers() *UserQuery {
 
 // QuerySubscriptions chains the current query on the "subscriptions" edge.
 func (fq *FeedQuery) QuerySubscriptions() *SubscriptionQuery {
-	query := &SubscriptionQuery{config: fq.config}
+	query := (&SubscriptionClient{config: fq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := fq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -136,7 +134,7 @@ func (fq *FeedQuery) QuerySubscriptions() *SubscriptionQuery {
 // First returns the first Feed entity from the query.
 // Returns a *NotFoundError when no Feed was found.
 func (fq *FeedQuery) First(ctx context.Context) (*Feed, error) {
-	nodes, err := fq.Limit(1).All(ctx)
+	nodes, err := fq.Limit(1).All(setContextOp(ctx, fq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +157,7 @@ func (fq *FeedQuery) FirstX(ctx context.Context) *Feed {
 // Returns a *NotFoundError when no Feed ID was found.
 func (fq *FeedQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
-	if ids, err = fq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = fq.Limit(1).IDs(setContextOp(ctx, fq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -182,7 +180,7 @@ func (fq *FeedQuery) FirstIDX(ctx context.Context) uuid.UUID {
 // Returns a *NotSingularError when more than one Feed entity is found.
 // Returns a *NotFoundError when no Feed entities are found.
 func (fq *FeedQuery) Only(ctx context.Context) (*Feed, error) {
-	nodes, err := fq.Limit(2).All(ctx)
+	nodes, err := fq.Limit(2).All(setContextOp(ctx, fq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -210,7 +208,7 @@ func (fq *FeedQuery) OnlyX(ctx context.Context) *Feed {
 // Returns a *NotFoundError when no entities are found.
 func (fq *FeedQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 	var ids []uuid.UUID
-	if ids, err = fq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = fq.Limit(2).IDs(setContextOp(ctx, fq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -235,10 +233,12 @@ func (fq *FeedQuery) OnlyIDX(ctx context.Context) uuid.UUID {
 
 // All executes the query and returns a list of Feeds.
 func (fq *FeedQuery) All(ctx context.Context) ([]*Feed, error) {
+	ctx = setContextOp(ctx, fq.ctx, "All")
 	if err := fq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return fq.sqlAll(ctx)
+	qr := querierAll[[]*Feed, *FeedQuery]()
+	return withInterceptors[[]*Feed](ctx, fq, qr, fq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -251,9 +251,12 @@ func (fq *FeedQuery) AllX(ctx context.Context) []*Feed {
 }
 
 // IDs executes the query and returns a list of Feed IDs.
-func (fq *FeedQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
-	if err := fq.Select(feed.FieldID).Scan(ctx, &ids); err != nil {
+func (fq *FeedQuery) IDs(ctx context.Context) (ids []uuid.UUID, err error) {
+	if fq.ctx.Unique == nil && fq.path != nil {
+		fq.Unique(true)
+	}
+	ctx = setContextOp(ctx, fq.ctx, "IDs")
+	if err = fq.Select(feed.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -270,10 +273,11 @@ func (fq *FeedQuery) IDsX(ctx context.Context) []uuid.UUID {
 
 // Count returns the count of the given query.
 func (fq *FeedQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, fq.ctx, "Count")
 	if err := fq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return fq.sqlCount(ctx)
+	return withInterceptors[int](ctx, fq, querierCount[*FeedQuery](), fq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -287,10 +291,15 @@ func (fq *FeedQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (fq *FeedQuery) Exist(ctx context.Context) (bool, error) {
-	if err := fq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = setContextOp(ctx, fq.ctx, "Exist")
+	switch _, err := fq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return fq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -310,24 +319,23 @@ func (fq *FeedQuery) Clone() *FeedQuery {
 	}
 	return &FeedQuery{
 		config:              fq.config,
-		limit:               fq.limit,
-		offset:              fq.offset,
+		ctx:                 fq.ctx.Clone(),
 		order:               append([]OrderFunc{}, fq.order...),
+		inters:              append([]Interceptor{}, fq.inters...),
 		predicates:          append([]predicate.Feed{}, fq.predicates...),
 		withItems:           fq.withItems.Clone(),
 		withSubscribedUsers: fq.withSubscribedUsers.Clone(),
 		withSubscriptions:   fq.withSubscriptions.Clone(),
 		// clone intermediate query.
-		sql:    fq.sql.Clone(),
-		path:   fq.path,
-		unique: fq.unique,
+		sql:  fq.sql.Clone(),
+		path: fq.path,
 	}
 }
 
 // WithItems tells the query-builder to eager-load the nodes that are connected to
 // the "items" edge. The optional arguments are used to configure the query builder of the edge.
 func (fq *FeedQuery) WithItems(opts ...func(*ItemQuery)) *FeedQuery {
-	query := &ItemQuery{config: fq.config}
+	query := (&ItemClient{config: fq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -338,7 +346,7 @@ func (fq *FeedQuery) WithItems(opts ...func(*ItemQuery)) *FeedQuery {
 // WithSubscribedUsers tells the query-builder to eager-load the nodes that are connected to
 // the "subscribed_users" edge. The optional arguments are used to configure the query builder of the edge.
 func (fq *FeedQuery) WithSubscribedUsers(opts ...func(*UserQuery)) *FeedQuery {
-	query := &UserQuery{config: fq.config}
+	query := (&UserClient{config: fq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -349,7 +357,7 @@ func (fq *FeedQuery) WithSubscribedUsers(opts ...func(*UserQuery)) *FeedQuery {
 // WithSubscriptions tells the query-builder to eager-load the nodes that are connected to
 // the "subscriptions" edge. The optional arguments are used to configure the query builder of the edge.
 func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQuery {
-	query := &SubscriptionQuery{config: fq.config}
+	query := (&SubscriptionClient{config: fq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -372,16 +380,11 @@ func (fq *FeedQuery) WithSubscriptions(opts ...func(*SubscriptionQuery)) *FeedQu
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
-	grbuild := &FeedGroupBy{config: fq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := fq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return fq.sqlQuery(ctx), nil
-	}
+	fq.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &FeedGroupBy{build: fq}
+	grbuild.flds = &fq.ctx.Fields
 	grbuild.label = feed.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -398,11 +401,11 @@ func (fq *FeedQuery) GroupBy(field string, fields ...string) *FeedGroupBy {
 //		Select(feed.FieldURL).
 //		Scan(ctx, &v)
 func (fq *FeedQuery) Select(fields ...string) *FeedSelect {
-	fq.fields = append(fq.fields, fields...)
-	selbuild := &FeedSelect{FeedQuery: fq}
-	selbuild.label = feed.Label
-	selbuild.flds, selbuild.scan = &fq.fields, selbuild.Scan
-	return selbuild
+	fq.ctx.Fields = append(fq.ctx.Fields, fields...)
+	sbuild := &FeedSelect{FeedQuery: fq}
+	sbuild.label = feed.Label
+	sbuild.flds, sbuild.scan = &fq.ctx.Fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a FeedSelect configured with the given aggregations.
@@ -411,7 +414,17 @@ func (fq *FeedQuery) Aggregate(fns ...AggregateFunc) *FeedSelect {
 }
 
 func (fq *FeedQuery) prepareQuery(ctx context.Context) error {
-	for _, f := range fq.fields {
+	for _, inter := range fq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, fq); err != nil {
+				return err
+			}
+		}
+	}
+	for _, f := range fq.ctx.Fields {
 		if !feed.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -532,27 +545,30 @@ func (fq *FeedQuery) loadSubscribedUsers(ctx context.Context, query *UserQuery, 
 	if err := query.prepareQuery(ctx); err != nil {
 		return err
 	}
-	neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
-		assign := spec.Assign
-		values := spec.ScanValues
-		spec.ScanValues = func(columns []string) ([]any, error) {
-			values, err := values(columns[1:])
-			if err != nil {
-				return nil, err
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(uuid.UUID)}, values...), nil
 			}
-			return append([]any{new(uuid.UUID)}, values...), nil
-		}
-		spec.Assign = func(columns []string, values []any) error {
-			outValue := *values[0].(*uuid.UUID)
-			inValue := *values[1].(*uuid.UUID)
-			if nids[inValue] == nil {
-				nids[inValue] = map[*Feed]struct{}{byID[outValue]: {}}
-				return assign(columns[1:], values[1:])
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := *values[0].(*uuid.UUID)
+				inValue := *values[1].(*uuid.UUID)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Feed]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
 			}
-			nids[inValue][byID[outValue]] = struct{}{}
-			return nil
-		}
+		})
 	})
+	neighbors, err := withInterceptors[[]*User](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
@@ -597,41 +613,22 @@ func (fq *FeedQuery) loadSubscriptions(ctx context.Context, query *SubscriptionQ
 
 func (fq *FeedQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := fq.querySpec()
-	_spec.Node.Columns = fq.fields
-	if len(fq.fields) > 0 {
-		_spec.Unique = fq.unique != nil && *fq.unique
+	_spec.Node.Columns = fq.ctx.Fields
+	if len(fq.ctx.Fields) > 0 {
+		_spec.Unique = fq.ctx.Unique != nil && *fq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, fq.driver, _spec)
 }
 
-func (fq *FeedQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := fq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (fq *FeedQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   feed.Table,
-			Columns: feed.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
-				Column: feed.FieldID,
-			},
-		},
-		From:   fq.sql,
-		Unique: true,
-	}
-	if unique := fq.unique; unique != nil {
+	_spec := sqlgraph.NewQuerySpec(feed.Table, feed.Columns, sqlgraph.NewFieldSpec(feed.FieldID, field.TypeUUID))
+	_spec.From = fq.sql
+	if unique := fq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if fq.path != nil {
+		_spec.Unique = true
 	}
-	if fields := fq.fields; len(fields) > 0 {
+	if fields := fq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, feed.FieldID)
 		for i := range fields {
@@ -647,10 +644,10 @@ func (fq *FeedQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := fq.limit; limit != nil {
+	if limit := fq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := fq.offset; offset != nil {
+	if offset := fq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := fq.order; len(ps) > 0 {
@@ -666,7 +663,7 @@ func (fq *FeedQuery) querySpec() *sqlgraph.QuerySpec {
 func (fq *FeedQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(fq.driver.Dialect())
 	t1 := builder.Table(feed.Table)
-	columns := fq.fields
+	columns := fq.ctx.Fields
 	if len(columns) == 0 {
 		columns = feed.Columns
 	}
@@ -675,7 +672,7 @@ func (fq *FeedQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = fq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if fq.unique != nil && *fq.unique {
+	if fq.ctx.Unique != nil && *fq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range fq.predicates {
@@ -684,12 +681,12 @@ func (fq *FeedQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range fq.order {
 		p(selector)
 	}
-	if offset := fq.offset; offset != nil {
+	if offset := fq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := fq.limit; limit != nil {
+	if limit := fq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -697,13 +694,8 @@ func (fq *FeedQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // FeedGroupBy is the group-by builder for Feed entities.
 type FeedGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *FeedQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -712,58 +704,46 @@ func (fgb *FeedGroupBy) Aggregate(fns ...AggregateFunc) *FeedGroupBy {
 	return fgb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (fgb *FeedGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := fgb.path(ctx)
-	if err != nil {
+	ctx = setContextOp(ctx, fgb.build.ctx, "GroupBy")
+	if err := fgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	fgb.sql = query
-	return fgb.sqlScan(ctx, v)
+	return scanWithInterceptors[*FeedQuery, *FeedGroupBy](ctx, fgb.build, fgb, fgb.build.inters, v)
 }
 
-func (fgb *FeedGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range fgb.fields {
-		if !feed.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (fgb *FeedGroupBy) sqlScan(ctx context.Context, root *FeedQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(fgb.fns))
+	for _, fn := range fgb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := fgb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*fgb.flds)+len(fgb.fns))
+		for _, f := range *fgb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*fgb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := fgb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := fgb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (fgb *FeedGroupBy) sqlQuery() *sql.Selector {
-	selector := fgb.sql.Select()
-	aggregation := make([]string, 0, len(fgb.fns))
-	for _, fn := range fgb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(fgb.fields)+len(fgb.fns))
-		for _, f := range fgb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(fgb.fields...)...)
-}
-
 // FeedSelect is the builder for selecting fields of Feed entities.
 type FeedSelect struct {
 	*FeedQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -774,26 +754,27 @@ func (fs *FeedSelect) Aggregate(fns ...AggregateFunc) *FeedSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (fs *FeedSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, fs.ctx, "Select")
 	if err := fs.prepareQuery(ctx); err != nil {
 		return err
 	}
-	fs.sql = fs.FeedQuery.sqlQuery(ctx)
-	return fs.sqlScan(ctx, v)
+	return scanWithInterceptors[*FeedQuery, *FeedSelect](ctx, fs.FeedQuery, fs, fs.inters, v)
 }
 
-func (fs *FeedSelect) sqlScan(ctx context.Context, v any) error {
+func (fs *FeedSelect) sqlScan(ctx context.Context, root *FeedQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(fs.fns))
 	for _, fn := range fs.fns {
-		aggregation = append(aggregation, fn(fs.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*fs.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		fs.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		fs.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := fs.sql.Query()
+	query, args := selector.Query()
 	if err := fs.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

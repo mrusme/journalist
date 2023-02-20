@@ -285,50 +285,8 @@ func (fc *FeedCreate) Mutation() *FeedMutation {
 
 // Save creates the Feed in the database.
 func (fc *FeedCreate) Save(ctx context.Context) (*Feed, error) {
-	var (
-		err  error
-		node *Feed
-	)
 	fc.defaults()
-	if len(fc.hooks) == 0 {
-		if err = fc.check(); err != nil {
-			return nil, err
-		}
-		node, err = fc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*FeedMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = fc.check(); err != nil {
-				return nil, err
-			}
-			fc.mutation = mutation
-			if node, err = fc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(fc.hooks) - 1; i >= 0; i-- {
-			if fc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = fc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, fc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*Feed)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from FeedMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*Feed, FeedMutation](ctx, fc.sqlSave, fc.mutation, fc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -433,6 +391,9 @@ func (fc *FeedCreate) check() error {
 }
 
 func (fc *FeedCreate) sqlSave(ctx context.Context) (*Feed, error) {
+	if err := fc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := fc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, fc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -447,19 +408,15 @@ func (fc *FeedCreate) sqlSave(ctx context.Context) (*Feed, error) {
 			return nil, err
 		}
 	}
+	fc.mutation.id = &_node.ID
+	fc.mutation.done = true
 	return _node, nil
 }
 
 func (fc *FeedCreate) createSpec() (*Feed, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Feed{config: fc.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: feed.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
-				Column: feed.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(feed.Table, sqlgraph.NewFieldSpec(feed.FieldID, field.TypeUUID))
 	)
 	_spec.OnConflict = fc.conflict
 	if id, ok := fc.mutation.ID(); ok {
