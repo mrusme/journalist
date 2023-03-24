@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/feed"
 	"github.com/mrusme/journalist/ent/item"
@@ -17,9 +19,6 @@ import (
 	"github.com/mrusme/journalist/ent/subscription"
 	"github.com/mrusme/journalist/ent/token"
 	"github.com/mrusme/journalist/ent/user"
-
-	"entgo.io/ent"
-	"entgo.io/ent/dialect/sql"
 )
 
 const (
