@@ -128,7 +128,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 		dbFeedTmp,
 	)
 	feedId, err := dbFeedTmp.
-		OnConflict().
+		OnConflictColumns("url", "username", "password").
 		UpdateNewValues().
 		ID(context.Background())
 	if err != nil {

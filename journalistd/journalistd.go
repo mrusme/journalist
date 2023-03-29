@@ -223,7 +223,7 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) []error {
 			dbFeedTmp,
 		)
 		feedID, err := dbFeedTmp.
-			OnConflict().
+			OnConflictColumns("url", "username", "password").
 			UpdateNewValues().
 			ID(context.Background())
 		if err != nil {
@@ -242,7 +242,7 @@ func (jd *Journalistd) Refresh(feedIds []uuid.UUID) []error {
 		}
 		err = jd.entClient.Item.
 			CreateBulk(dbItems...).
-			OnConflict().
+			OnConflictColumns("item_guid").
 			UpdateNewValues().
 			Exec(context.Background())
 		if err != nil {
