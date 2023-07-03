@@ -362,7 +362,7 @@ func (fu *FeedUpdate) RemoveSubscriptions(s ...*Subscription) *FeedUpdate {
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (fu *FeedUpdate) Save(ctx context.Context) (int, error) {
 	fu.defaults()
-	return withHooks[int, FeedMutation](ctx, fu.sqlSave, fu.mutation, fu.hooks)
+	return withHooks(ctx, fu.sqlSave, fu.mutation, fu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -1011,7 +1011,7 @@ func (fuo *FeedUpdateOne) Select(field string, fields ...string) *FeedUpdateOne 
 // Save executes the query and returns the updated Feed entity.
 func (fuo *FeedUpdateOne) Save(ctx context.Context) (*Feed, error) {
 	fuo.defaults()
-	return withHooks[*Feed, FeedMutation](ctx, fuo.sqlSave, fuo.mutation, fuo.hooks)
+	return withHooks(ctx, fuo.sqlSave, fuo.mutation, fuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

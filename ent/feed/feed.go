@@ -5,6 +5,8 @@ package feed
 import (
 	"time"
 
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -139,3 +141,174 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
+
+// OrderOption defines the ordering options for the Feed queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByURL orders the results by the url field.
+func ByURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldURL, opts...).ToFunc()
+}
+
+// ByUsername orders the results by the username field.
+func ByUsername(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUsername, opts...).ToFunc()
+}
+
+// ByPassword orders the results by the password field.
+func ByPassword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+}
+
+// ByFeedTitle orders the results by the feed_title field.
+func ByFeedTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedTitle, opts...).ToFunc()
+}
+
+// ByFeedDescription orders the results by the feed_description field.
+func ByFeedDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedDescription, opts...).ToFunc()
+}
+
+// ByFeedLink orders the results by the feed_link field.
+func ByFeedLink(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedLink, opts...).ToFunc()
+}
+
+// ByFeedFeedLink orders the results by the feed_feed_link field.
+func ByFeedFeedLink(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedFeedLink, opts...).ToFunc()
+}
+
+// ByFeedUpdated orders the results by the feed_updated field.
+func ByFeedUpdated(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedUpdated, opts...).ToFunc()
+}
+
+// ByFeedPublished orders the results by the feed_published field.
+func ByFeedPublished(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedPublished, opts...).ToFunc()
+}
+
+// ByFeedAuthorName orders the results by the feed_author_name field.
+func ByFeedAuthorName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedAuthorName, opts...).ToFunc()
+}
+
+// ByFeedAuthorEmail orders the results by the feed_author_email field.
+func ByFeedAuthorEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedAuthorEmail, opts...).ToFunc()
+}
+
+// ByFeedLanguage orders the results by the feed_language field.
+func ByFeedLanguage(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedLanguage, opts...).ToFunc()
+}
+
+// ByFeedImageTitle orders the results by the feed_image_title field.
+func ByFeedImageTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedImageTitle, opts...).ToFunc()
+}
+
+// ByFeedImageURL orders the results by the feed_image_url field.
+func ByFeedImageURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedImageURL, opts...).ToFunc()
+}
+
+// ByFeedCopyright orders the results by the feed_copyright field.
+func ByFeedCopyright(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedCopyright, opts...).ToFunc()
+}
+
+// ByFeedGenerator orders the results by the feed_generator field.
+func ByFeedGenerator(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedGenerator, opts...).ToFunc()
+}
+
+// ByFeedCategories orders the results by the feed_categories field.
+func ByFeedCategories(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFeedCategories, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByDeletedAt orders the results by the deleted_at field.
+func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
+}
+
+// ByItemsCount orders the results by items count.
+func ByItemsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newItemsStep(), opts...)
+	}
+}
+
+// ByItems orders the results by items terms.
+func ByItems(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newItemsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// BySubscribedUsersCount orders the results by subscribed_users count.
+func BySubscribedUsersCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSubscribedUsersStep(), opts...)
+	}
+}
+
+// BySubscribedUsers orders the results by subscribed_users terms.
+func BySubscribedUsers(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSubscribedUsersStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// BySubscriptionsCount orders the results by subscriptions count.
+func BySubscriptionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSubscriptionsStep(), opts...)
+	}
+}
+
+// BySubscriptions orders the results by subscriptions terms.
+func BySubscriptions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSubscriptionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newItemsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ItemsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ItemsTable, ItemsColumn),
+	)
+}
+func newSubscribedUsersStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SubscribedUsersInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, SubscribedUsersTable, SubscribedUsersPrimaryKey...),
+	)
+}
+func newSubscriptionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SubscriptionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, SubscriptionsTable, SubscriptionsColumn),
+	)
+}

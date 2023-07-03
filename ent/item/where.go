@@ -1620,11 +1620,7 @@ func HasFeed() predicate.Item {
 // HasFeedWith applies the HasEdge predicate on the "feed" edge with a given conditions (other predicates).
 func HasFeedWith(preds ...predicate.Feed) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(FeedInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, FeedTable, FeedColumn),
-		)
+		step := newFeedStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -1647,11 +1643,7 @@ func HasReadByUsers() predicate.Item {
 // HasReadByUsersWith applies the HasEdge predicate on the "read_by_users" edge with a given conditions (other predicates).
 func HasReadByUsersWith(preds ...predicate.User) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReadByUsersInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, ReadByUsersTable, ReadByUsersPrimaryKey...),
-		)
+		step := newReadByUsersStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -1674,11 +1666,7 @@ func HasReads() predicate.Item {
 // HasReadsWith applies the HasEdge predicate on the "reads" edge with a given conditions (other predicates).
 func HasReadsWith(preds ...predicate.Read) predicate.Item {
 	return predicate.Item(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReadsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, ReadsTable, ReadsColumn),
-		)
+		step := newReadsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

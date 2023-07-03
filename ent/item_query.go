@@ -23,7 +23,7 @@ import (
 type ItemQuery struct {
 	config
 	ctx             *QueryContext
-	order           []OrderFunc
+	order           []item.OrderOption
 	inters          []Interceptor
 	predicates      []predicate.Item
 	withFeed        *FeedQuery
@@ -61,7 +61,7 @@ func (iq *ItemQuery) Unique(unique bool) *ItemQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (iq *ItemQuery) Order(o ...OrderFunc) *ItemQuery {
+func (iq *ItemQuery) Order(o ...item.OrderOption) *ItemQuery {
 	iq.order = append(iq.order, o...)
 	return iq
 }
@@ -321,7 +321,7 @@ func (iq *ItemQuery) Clone() *ItemQuery {
 	return &ItemQuery{
 		config:          iq.config,
 		ctx:             iq.ctx.Clone(),
-		order:           append([]OrderFunc{}, iq.order...),
+		order:           append([]item.OrderOption{}, iq.order...),
 		inters:          append([]Interceptor{}, iq.inters...),
 		predicates:      append([]predicate.Item{}, iq.predicates...),
 		withFeed:        iq.withFeed.Clone(),
@@ -601,8 +601,11 @@ func (iq *ItemQuery) loadReads(ctx context.Context, query *ReadQuery, nodes []*I
 			init(nodes[i])
 		}
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(read.FieldItemID)
+	}
 	query.Where(predicate.Read(func(s *sql.Selector) {
-		s.Where(sql.InValues(item.ReadsColumn, fks...))
+		s.Where(sql.InValues(s.C(item.ReadsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -612,7 +615,7 @@ func (iq *ItemQuery) loadReads(ctx context.Context, query *ReadQuery, nodes []*I
 		fk := n.ItemID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "item_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "item_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

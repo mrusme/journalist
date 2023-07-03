@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/feed"
@@ -31,7 +32,8 @@ type Subscription struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SubscriptionQuery when eager-loading is set.
-	Edges SubscriptionEdges `json:"edges"`
+	Edges        SubscriptionEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // SubscriptionEdges holds the relations/edges for other nodes in the graph.
@@ -83,7 +85,7 @@ func (*Subscription) scanValues(columns []string) ([]any, error) {
 		case subscription.FieldID, subscription.FieldUserID, subscription.FieldFeedID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Subscription", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -133,9 +135,17 @@ func (s *Subscription) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				s.CreatedAt = value.Time
 			}
+		default:
+			s.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Subscription.
+// This includes values selected through modifiers, order, etc.
+func (s *Subscription) Value(name string) (ent.Value, error) {
+	return s.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the Subscription entity.

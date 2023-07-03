@@ -425,11 +425,7 @@ func HasTokens() predicate.User {
 // HasTokensWith applies the HasEdge predicate on the "tokens" edge with a given conditions (other predicates).
 func HasTokensWith(preds ...predicate.Token) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(TokensInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, TokensTable, TokensColumn),
-		)
+		step := newTokensStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -452,11 +448,7 @@ func HasSubscribedFeeds() predicate.User {
 // HasSubscribedFeedsWith applies the HasEdge predicate on the "subscribed_feeds" edge with a given conditions (other predicates).
 func HasSubscribedFeedsWith(preds ...predicate.Feed) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SubscribedFeedsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, SubscribedFeedsTable, SubscribedFeedsPrimaryKey...),
-		)
+		step := newSubscribedFeedsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -479,11 +471,7 @@ func HasReadItems() predicate.User {
 // HasReadItemsWith applies the HasEdge predicate on the "read_items" edge with a given conditions (other predicates).
 func HasReadItemsWith(preds ...predicate.Item) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReadItemsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, ReadItemsTable, ReadItemsPrimaryKey...),
-		)
+		step := newReadItemsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -506,11 +494,7 @@ func HasSubscriptions() predicate.User {
 // HasSubscriptionsWith applies the HasEdge predicate on the "subscriptions" edge with a given conditions (other predicates).
 func HasSubscriptionsWith(preds ...predicate.Subscription) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(SubscriptionsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, SubscriptionsTable, SubscriptionsColumn),
-		)
+		step := newSubscriptionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -533,11 +517,7 @@ func HasReads() predicate.User {
 // HasReadsWith applies the HasEdge predicate on the "reads" edge with a given conditions (other predicates).
 func HasReadsWith(preds ...predicate.Read) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReadsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, ReadsTable, ReadsColumn),
-		)
+		step := newReadsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

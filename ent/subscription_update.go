@@ -98,7 +98,7 @@ func (su *SubscriptionUpdate) ClearFeed() *SubscriptionUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (su *SubscriptionUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, SubscriptionMutation](ctx, su.sqlSave, su.mutation, su.hooks)
+	return withHooks(ctx, su.sqlSave, su.mutation, su.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -323,7 +323,7 @@ func (suo *SubscriptionUpdateOne) Select(field string, fields ...string) *Subscr
 
 // Save executes the query and returns the updated Subscription entity.
 func (suo *SubscriptionUpdateOne) Save(ctx context.Context) (*Subscription, error) {
-	return withHooks[*Subscription, SubscriptionMutation](ctx, suo.sqlSave, suo.mutation, suo.hooks)
+	return withHooks(ctx, suo.sqlSave, suo.mutation, suo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

@@ -27,7 +27,7 @@ func (rd *ReadDelete) Where(ps ...predicate.Read) *ReadDelete {
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (rd *ReadDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks[int, ReadMutation](ctx, rd.sqlExec, rd.mutation, rd.hooks)
+	return withHooks(ctx, rd.sqlExec, rd.mutation, rd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.

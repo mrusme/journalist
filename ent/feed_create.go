@@ -286,7 +286,7 @@ func (fc *FeedCreate) Mutation() *FeedMutation {
 // Save creates the Feed in the database.
 func (fc *FeedCreate) Save(ctx context.Context) (*Feed, error) {
 	fc.defaults()
-	return withHooks[*Feed, FeedMutation](ctx, fc.sqlSave, fc.mutation, fc.hooks)
+	return withHooks(ctx, fc.sqlSave, fc.mutation, fc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -1306,8 +1306,8 @@ func (fcb *FeedCreateBulk) Save(ctx context.Context) ([]*Feed, error) {
 					return nil, err
 				}
 				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
 				var err error
+				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
 					_, err = mutators[i+1].Mutate(root, fcb.builders[i+1].mutation)
 				} else {

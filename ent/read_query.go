@@ -21,7 +21,7 @@ import (
 type ReadQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []read.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Read
 	withUser   *UserQuery
@@ -57,7 +57,7 @@ func (rq *ReadQuery) Unique(unique bool) *ReadQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (rq *ReadQuery) Order(o ...OrderFunc) *ReadQuery {
+func (rq *ReadQuery) Order(o ...read.OrderOption) *ReadQuery {
 	rq.order = append(rq.order, o...)
 	return rq
 }
@@ -295,7 +295,7 @@ func (rq *ReadQuery) Clone() *ReadQuery {
 	return &ReadQuery{
 		config:     rq.config,
 		ctx:        rq.ctx.Clone(),
-		order:      append([]OrderFunc{}, rq.order...),
+		order:      append([]read.OrderOption{}, rq.order...),
 		inters:     append([]Interceptor{}, rq.inters...),
 		predicates: append([]predicate.Read{}, rq.predicates...),
 		withUser:   rq.withUser.Clone(),
@@ -527,6 +527,12 @@ func (rq *ReadQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != read.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if rq.withUser != nil {
+			_spec.Node.AddColumnOnce(read.FieldUserID)
+		}
+		if rq.withItem != nil {
+			_spec.Node.AddColumnOnce(read.FieldItemID)
 		}
 	}
 	if ps := rq.predicates; len(ps) > 0 {

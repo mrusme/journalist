@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/token"
@@ -32,8 +33,9 @@ type Token struct {
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TokenQuery when eager-loading is set.
-	Edges       TokenEdges `json:"edges"`
-	user_tokens *uuid.UUID
+	Edges        TokenEdges `json:"edges"`
+	user_tokens  *uuid.UUID
+	selectValues sql.SelectValues
 }
 
 // TokenEdges holds the relations/edges for other nodes in the graph.
@@ -72,7 +74,7 @@ func (*Token) scanValues(columns []string) ([]any, error) {
 		case token.ForeignKeys[0]: // user_tokens
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Token", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -136,9 +138,17 @@ func (t *Token) assignValues(columns []string, values []any) error {
 				t.user_tokens = new(uuid.UUID)
 				*t.user_tokens = *value.S.(*uuid.UUID)
 			}
+		default:
+			t.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Token.
+// This includes values selected through modifiers, order, etc.
+func (t *Token) Value(name string) (ent.Value, error) {
+	return t.selectValues.Get(name)
 }
 
 // QueryOwner queries the "owner" edge of the Token entity.

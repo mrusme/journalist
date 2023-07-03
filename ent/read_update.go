@@ -86,7 +86,7 @@ func (ru *ReadUpdate) ClearItem() *ReadUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (ru *ReadUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, ReadMutation](ctx, ru.sqlSave, ru.mutation, ru.hooks)
+	return withHooks(ctx, ru.sqlSave, ru.mutation, ru.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -283,7 +283,7 @@ func (ruo *ReadUpdateOne) Select(field string, fields ...string) *ReadUpdateOne 
 
 // Save executes the query and returns the updated Read entity.
 func (ruo *ReadUpdateOne) Save(ctx context.Context) (*Read, error) {
-	return withHooks[*Read, ReadMutation](ctx, ruo.sqlSave, ruo.mutation, ruo.hooks)
+	return withHooks(ctx, ruo.sqlSave, ruo.mutation, ruo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

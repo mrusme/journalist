@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"sync"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -65,38 +66,34 @@ func NewTxContext(parent context.Context, tx *Tx) context.Context {
 }
 
 // OrderFunc applies an ordering on the sql selector.
+// Deprecated: Use Asc/Desc functions or the package builders instead.
 type OrderFunc func(*sql.Selector)
 
-// columnChecker returns a function indicates if the column exists in the given column.
-func columnChecker(table string) func(string) error {
-	checks := map[string]func(string) bool{
-		feed.Table:         feed.ValidColumn,
-		item.Table:         item.ValidColumn,
-		read.Table:         read.ValidColumn,
-		subscription.Table: subscription.ValidColumn,
-		token.Table:        token.ValidColumn,
-		user.Table:         user.ValidColumn,
-	}
-	check, ok := checks[table]
-	if !ok {
-		return func(string) error {
-			return fmt.Errorf("unknown table %q", table)
-		}
-	}
-	return func(column string) error {
-		if !check(column) {
-			return fmt.Errorf("unknown column %q for table %q", column, table)
-		}
-		return nil
-	}
+var (
+	initCheck   sync.Once
+	columnCheck sql.ColumnCheck
+)
+
+// columnChecker checks if the column exists in the given table.
+func checkColumn(table, column string) error {
+	initCheck.Do(func() {
+		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
+			feed.Table:         feed.ValidColumn,
+			item.Table:         item.ValidColumn,
+			read.Table:         read.ValidColumn,
+			subscription.Table: subscription.ValidColumn,
+			token.Table:        token.ValidColumn,
+			user.Table:         user.ValidColumn,
+		})
+	})
+	return columnCheck(table, column)
 }
 
 // Asc applies the given fields in ASC order.
-func Asc(fields ...string) OrderFunc {
+func Asc(fields ...string) func(*sql.Selector) {
 	return func(s *sql.Selector) {
-		check := columnChecker(s.TableName())
 		for _, f := range fields {
-			if err := check(f); err != nil {
+			if err := checkColumn(s.TableName(), f); err != nil {
 				s.AddError(&ValidationError{Name: f, err: fmt.Errorf("ent: %w", err)})
 			}
 			s.OrderBy(sql.Asc(s.C(f)))
@@ -105,11 +102,10 @@ func Asc(fields ...string) OrderFunc {
 }
 
 // Desc applies the given fields in DESC order.
-func Desc(fields ...string) OrderFunc {
+func Desc(fields ...string) func(*sql.Selector) {
 	return func(s *sql.Selector) {
-		check := columnChecker(s.TableName())
 		for _, f := range fields {
-			if err := check(f); err != nil {
+			if err := checkColumn(s.TableName(), f); err != nil {
 				s.AddError(&ValidationError{Name: f, err: fmt.Errorf("ent: %w", err)})
 			}
 			s.OrderBy(sql.Desc(s.C(f)))
@@ -141,8 +137,7 @@ func Count() AggregateFunc {
 // Max applies the "max" aggregation function on the given field of each group.
 func Max(field string) AggregateFunc {
 	return func(s *sql.Selector) string {
-		check := columnChecker(s.TableName())
-		if err := check(field); err != nil {
+		if err := checkColumn(s.TableName(), field); err != nil {
 			s.AddError(&ValidationError{Name: field, err: fmt.Errorf("ent: %w", err)})
 			return ""
 		}
@@ -153,8 +148,7 @@ func Max(field string) AggregateFunc {
 // Mean applies the "mean" aggregation function on the given field of each group.
 func Mean(field string) AggregateFunc {
 	return func(s *sql.Selector) string {
-		check := columnChecker(s.TableName())
-		if err := check(field); err != nil {
+		if err := checkColumn(s.TableName(), field); err != nil {
 			s.AddError(&ValidationError{Name: field, err: fmt.Errorf("ent: %w", err)})
 			return ""
 		}
@@ -165,8 +159,7 @@ func Mean(field string) AggregateFunc {
 // Min applies the "min" aggregation function on the given field of each group.
 func Min(field string) AggregateFunc {
 	return func(s *sql.Selector) string {
-		check := columnChecker(s.TableName())
-		if err := check(field); err != nil {
+		if err := checkColumn(s.TableName(), field); err != nil {
 			s.AddError(&ValidationError{Name: field, err: fmt.Errorf("ent: %w", err)})
 			return ""
 		}
@@ -177,8 +170,7 @@ func Min(field string) AggregateFunc {
 // Sum applies the "sum" aggregation function on the given field of each group.
 func Sum(field string) AggregateFunc {
 	return func(s *sql.Selector) string {
-		check := columnChecker(s.TableName())
-		if err := check(field); err != nil {
+		if err := checkColumn(s.TableName(), field); err != nil {
 			s.AddError(&ValidationError{Name: field, err: fmt.Errorf("ent: %w", err)})
 			return ""
 		}

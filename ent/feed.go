@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/mrusme/journalist/ent/feed"
@@ -59,7 +60,8 @@ type Feed struct {
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FeedQuery when eager-loading is set.
-	Edges FeedEdges `json:"edges"`
+	Edges        FeedEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // FeedEdges holds the relations/edges for other nodes in the graph.
@@ -114,7 +116,7 @@ func (*Feed) scanValues(columns []string) ([]any, error) {
 		case feed.FieldID:
 			values[i] = new(uuid.UUID)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Feed", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -255,9 +257,17 @@ func (f *Feed) assignValues(columns []string, values []any) error {
 				f.DeletedAt = new(time.Time)
 				*f.DeletedAt = value.Time
 			}
+		default:
+			f.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Feed.
+// This includes values selected through modifiers, order, etc.
+func (f *Feed) Value(name string) (ent.Value, error) {
+	return f.selectValues.Get(name)
 }
 
 // QueryItems queries the "items" edge of the Feed entity.

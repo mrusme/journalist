@@ -165,11 +165,7 @@ func HasUser() predicate.Read {
 // HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
 func HasUserWith(preds ...predicate.User) predicate.Read {
 	return predicate.Read(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(UserInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, UserTable, UserColumn),
-		)
+		step := newUserStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -192,11 +188,7 @@ func HasItem() predicate.Read {
 // HasItemWith applies the HasEdge predicate on the "item" edge with a given conditions (other predicates).
 func HasItemWith(preds ...predicate.Item) predicate.Read {
 	return predicate.Read(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ItemInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, ItemTable, ItemColumn),
-		)
+		step := newItemStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

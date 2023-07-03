@@ -21,7 +21,7 @@ import (
 type SubscriptionQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []subscription.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Subscription
 	withUser   *UserQuery
@@ -57,7 +57,7 @@ func (sq *SubscriptionQuery) Unique(unique bool) *SubscriptionQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (sq *SubscriptionQuery) Order(o ...OrderFunc) *SubscriptionQuery {
+func (sq *SubscriptionQuery) Order(o ...subscription.OrderOption) *SubscriptionQuery {
 	sq.order = append(sq.order, o...)
 	return sq
 }
@@ -295,7 +295,7 @@ func (sq *SubscriptionQuery) Clone() *SubscriptionQuery {
 	return &SubscriptionQuery{
 		config:     sq.config,
 		ctx:        sq.ctx.Clone(),
-		order:      append([]OrderFunc{}, sq.order...),
+		order:      append([]subscription.OrderOption{}, sq.order...),
 		inters:     append([]Interceptor{}, sq.inters...),
 		predicates: append([]predicate.Subscription{}, sq.predicates...),
 		withUser:   sq.withUser.Clone(),
@@ -527,6 +527,12 @@ func (sq *SubscriptionQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != subscription.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if sq.withUser != nil {
+			_spec.Node.AddColumnOnce(subscription.FieldUserID)
+		}
+		if sq.withFeed != nil {
+			_spec.Node.AddColumnOnce(subscription.FieldFeedID)
 		}
 	}
 	if ps := sq.predicates; len(ps) > 0 {

@@ -23,7 +23,7 @@ import (
 type FeedQuery struct {
 	config
 	ctx                 *QueryContext
-	order               []OrderFunc
+	order               []feed.OrderOption
 	inters              []Interceptor
 	predicates          []predicate.Feed
 	withItems           *ItemQuery
@@ -60,7 +60,7 @@ func (fq *FeedQuery) Unique(unique bool) *FeedQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (fq *FeedQuery) Order(o ...OrderFunc) *FeedQuery {
+func (fq *FeedQuery) Order(o ...feed.OrderOption) *FeedQuery {
 	fq.order = append(fq.order, o...)
 	return fq
 }
@@ -320,7 +320,7 @@ func (fq *FeedQuery) Clone() *FeedQuery {
 	return &FeedQuery{
 		config:              fq.config,
 		ctx:                 fq.ctx.Clone(),
-		order:               append([]OrderFunc{}, fq.order...),
+		order:               append([]feed.OrderOption{}, fq.order...),
 		inters:              append([]Interceptor{}, fq.inters...),
 		predicates:          append([]predicate.Feed{}, fq.predicates...),
 		withItems:           fq.withItems.Clone(),
@@ -503,7 +503,7 @@ func (fq *FeedQuery) loadItems(ctx context.Context, query *ItemQuery, nodes []*F
 	}
 	query.withFKs = true
 	query.Where(predicate.Item(func(s *sql.Selector) {
-		s.Where(sql.InValues(feed.ItemsColumn, fks...))
+		s.Where(sql.InValues(s.C(feed.ItemsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -516,7 +516,7 @@ func (fq *FeedQuery) loadItems(ctx context.Context, query *ItemQuery, nodes []*F
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "feed_items" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "feed_items" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}
@@ -593,8 +593,11 @@ func (fq *FeedQuery) loadSubscriptions(ctx context.Context, query *SubscriptionQ
 			init(nodes[i])
 		}
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(subscription.FieldFeedID)
+	}
 	query.Where(predicate.Subscription(func(s *sql.Selector) {
-		s.Where(sql.InValues(feed.SubscriptionsColumn, fks...))
+		s.Where(sql.InValues(s.C(feed.SubscriptionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -604,7 +607,7 @@ func (fq *FeedQuery) loadSubscriptions(ctx context.Context, query *SubscriptionQ
 		fk := n.FeedID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "feed_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "feed_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

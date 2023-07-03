@@ -718,6 +718,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "The Journalist REST API v1",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

@@ -96,7 +96,7 @@ func (sc *SubscriptionCreate) Mutation() *SubscriptionMutation {
 // Save creates the Subscription in the database.
 func (sc *SubscriptionCreate) Save(ctx context.Context) (*Subscription, error) {
 	sc.defaults()
-	return withHooks[*Subscription, SubscriptionMutation](ctx, sc.sqlSave, sc.mutation, sc.hooks)
+	return withHooks(ctx, sc.sqlSave, sc.mutation, sc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -541,8 +541,8 @@ func (scb *SubscriptionCreateBulk) Save(ctx context.Context) ([]*Subscription, e
 					return nil, err
 				}
 				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
 				var err error
+				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
 					_, err = mutators[i+1].Mutate(root, scb.builders[i+1].mutation)
 				} else {

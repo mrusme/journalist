@@ -5,6 +5,8 @@ package item
 import (
 	"time"
 
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -152,3 +154,177 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
+
+// OrderOption defines the ordering options for the Item queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByItemGUID orders the results by the item_guid field.
+func ByItemGUID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemGUID, opts...).ToFunc()
+}
+
+// ByItemTitle orders the results by the item_title field.
+func ByItemTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemTitle, opts...).ToFunc()
+}
+
+// ByItemDescription orders the results by the item_description field.
+func ByItemDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemDescription, opts...).ToFunc()
+}
+
+// ByItemContent orders the results by the item_content field.
+func ByItemContent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemContent, opts...).ToFunc()
+}
+
+// ByItemLink orders the results by the item_link field.
+func ByItemLink(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemLink, opts...).ToFunc()
+}
+
+// ByItemUpdated orders the results by the item_updated field.
+func ByItemUpdated(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemUpdated, opts...).ToFunc()
+}
+
+// ByItemPublished orders the results by the item_published field.
+func ByItemPublished(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemPublished, opts...).ToFunc()
+}
+
+// ByItemAuthorName orders the results by the item_author_name field.
+func ByItemAuthorName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemAuthorName, opts...).ToFunc()
+}
+
+// ByItemAuthorEmail orders the results by the item_author_email field.
+func ByItemAuthorEmail(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemAuthorEmail, opts...).ToFunc()
+}
+
+// ByItemImageTitle orders the results by the item_image_title field.
+func ByItemImageTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemImageTitle, opts...).ToFunc()
+}
+
+// ByItemImageURL orders the results by the item_image_url field.
+func ByItemImageURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemImageURL, opts...).ToFunc()
+}
+
+// ByItemCategories orders the results by the item_categories field.
+func ByItemCategories(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemCategories, opts...).ToFunc()
+}
+
+// ByItemEnclosures orders the results by the item_enclosures field.
+func ByItemEnclosures(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldItemEnclosures, opts...).ToFunc()
+}
+
+// ByCrawlerTitle orders the results by the crawler_title field.
+func ByCrawlerTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerTitle, opts...).ToFunc()
+}
+
+// ByCrawlerAuthor orders the results by the crawler_author field.
+func ByCrawlerAuthor(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerAuthor, opts...).ToFunc()
+}
+
+// ByCrawlerExcerpt orders the results by the crawler_excerpt field.
+func ByCrawlerExcerpt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerExcerpt, opts...).ToFunc()
+}
+
+// ByCrawlerSiteName orders the results by the crawler_site_name field.
+func ByCrawlerSiteName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerSiteName, opts...).ToFunc()
+}
+
+// ByCrawlerImage orders the results by the crawler_image field.
+func ByCrawlerImage(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerImage, opts...).ToFunc()
+}
+
+// ByCrawlerContentHTML orders the results by the crawler_content_html field.
+func ByCrawlerContentHTML(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerContentHTML, opts...).ToFunc()
+}
+
+// ByCrawlerContentText orders the results by the crawler_content_text field.
+func ByCrawlerContentText(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCrawlerContentText, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByFeedField orders the results by feed field.
+func ByFeedField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newFeedStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByReadByUsersCount orders the results by read_by_users count.
+func ByReadByUsersCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newReadByUsersStep(), opts...)
+	}
+}
+
+// ByReadByUsers orders the results by read_by_users terms.
+func ByReadByUsers(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReadByUsersStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByReadsCount orders the results by reads count.
+func ByReadsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newReadsStep(), opts...)
+	}
+}
+
+// ByReads orders the results by reads terms.
+func ByReads(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReadsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newFeedStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(FeedInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, FeedTable, FeedColumn),
+	)
+}
+func newReadByUsersStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReadByUsersInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, ReadByUsersTable, ReadByUsersPrimaryKey...),
+	)
+}
+func newReadsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReadsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, ReadsTable, ReadsColumn),
+	)
+}
