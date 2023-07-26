@@ -45,7 +45,7 @@ that Journalist creates automatically (default login: `admin`:`admin`).
 First, make sure to export `JOURNALIST_API_URL` in the current terminal session:
 
 ```sh
-$ export JOURNALIST_API_URL="http://127.0.0.1:8000/api"
+$ export JOURNALIST_API_URL="http://127.0.0.1:8000/api/v1"
 ```
 
 Then, using [Redacteur](#redacteur), a new user can be added like this:
