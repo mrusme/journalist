@@ -13,7 +13,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 
 	"github.com/Danny-Dasilva/CycleTLS/cycletls"
-	scraper "github.com/tinoquang/go-cloudflare-scraper"
+	scraper "github.com/memclutter/go-cloudflare-scraper"
 
 	"github.com/go-shiori/go-readability"
 )
