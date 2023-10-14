@@ -431,12 +431,16 @@ func (u *ReadUpsertOne) IDX(ctx context.Context) uuid.UUID {
 // ReadCreateBulk is the builder for creating many Read entities in bulk.
 type ReadCreateBulk struct {
 	config
+	err      error
 	builders []*ReadCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the Read entities in the database.
 func (rcb *ReadCreateBulk) Save(ctx context.Context) ([]*Read, error) {
+	if rcb.err != nil {
+		return nil, rcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
 	nodes := make([]*Read, len(rcb.builders))
 	mutators := make([]Mutator, len(rcb.builders))
@@ -645,6 +649,9 @@ func (u *ReadUpsertBulk) UpdateCreatedAt() *ReadUpsertBulk {
 
 // Exec executes the query.
 func (u *ReadUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ReadCreateBulk instead", i)

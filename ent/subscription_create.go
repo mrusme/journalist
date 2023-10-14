@@ -519,12 +519,16 @@ func (u *SubscriptionUpsertOne) IDX(ctx context.Context) uuid.UUID {
 // SubscriptionCreateBulk is the builder for creating many Subscription entities in bulk.
 type SubscriptionCreateBulk struct {
 	config
+	err      error
 	builders []*SubscriptionCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the Subscription entities in the database.
 func (scb *SubscriptionCreateBulk) Save(ctx context.Context) ([]*Subscription, error) {
+	if scb.err != nil {
+		return nil, scb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(scb.builders))
 	nodes := make([]*Subscription, len(scb.builders))
 	mutators := make([]Mutator, len(scb.builders))
@@ -761,6 +765,9 @@ func (u *SubscriptionUpsertBulk) UpdateCreatedAt() *SubscriptionUpsertBulk {
 
 // Exec executes the query.
 func (u *SubscriptionUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the SubscriptionCreateBulk instead", i)

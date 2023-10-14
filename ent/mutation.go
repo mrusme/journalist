@@ -3898,6 +3898,7 @@ func (m *ReadMutation) ResetCreatedAt() {
 // ClearUser clears the "user" edge to the User entity.
 func (m *ReadMutation) ClearUser() {
 	m.cleareduser = true
+	m.clearedFields[read.FieldUserID] = struct{}{}
 }
 
 // UserCleared reports if the "user" edge to the User entity was cleared.
@@ -3924,6 +3925,7 @@ func (m *ReadMutation) ResetUser() {
 // ClearItem clears the "item" edge to the Item entity.
 func (m *ReadMutation) ClearItem() {
 	m.cleareditem = true
+	m.clearedFields[read.FieldItemID] = struct{}{}
 }
 
 // ItemCleared reports if the "item" edge to the Item entity was cleared.
@@ -4510,6 +4512,7 @@ func (m *SubscriptionMutation) ResetCreatedAt() {
 // ClearUser clears the "user" edge to the User entity.
 func (m *SubscriptionMutation) ClearUser() {
 	m.cleareduser = true
+	m.clearedFields[subscription.FieldUserID] = struct{}{}
 }
 
 // UserCleared reports if the "user" edge to the User entity was cleared.
@@ -4536,6 +4539,7 @@ func (m *SubscriptionMutation) ResetUser() {
 // ClearFeed clears the "feed" edge to the Feed entity.
 func (m *SubscriptionMutation) ClearFeed() {
 	m.clearedfeed = true
+	m.clearedFields[subscription.FieldFeedID] = struct{}{}
 }
 
 // FeedCleared reports if the "feed" edge to the Feed entity was cleared.

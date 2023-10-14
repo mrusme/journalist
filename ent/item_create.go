@@ -1451,12 +1451,16 @@ func (u *ItemUpsertOne) IDX(ctx context.Context) uuid.UUID {
 // ItemCreateBulk is the builder for creating many Item entities in bulk.
 type ItemCreateBulk struct {
 	config
+	err      error
 	builders []*ItemCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the Item entities in the database.
 func (icb *ItemCreateBulk) Save(ctx context.Context) ([]*Item, error) {
+	if icb.err != nil {
+		return nil, icb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(icb.builders))
 	nodes := make([]*Item, len(icb.builders))
 	mutators := make([]Mutator, len(icb.builders))
@@ -2008,6 +2012,9 @@ func (u *ItemUpsertBulk) UpdateUpdatedAt() *ItemUpsertBulk {
 
 // Exec executes the query.
 func (u *ItemUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ItemCreateBulk instead", i)
