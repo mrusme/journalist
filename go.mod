@@ -13,9 +13,9 @@ require (
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/go-shiori/go-readability v0.0.0-20230421032831-c66949dfc0ad
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/gofiber/fiber/v2 v2.50.0
+	github.com/gofiber/fiber/v2 v2.52.1
 	github.com/gofiber/template v1.7.5
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.5.0
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/memclutter/go-cloudflare-scraper v0.0.0-20220907170638-a1faa8b189bd
@@ -23,7 +23,7 @@ require (
 	github.com/mmcdole/gofeed v1.2.1
 	github.com/spf13/viper v1.17.0
 	github.com/swaggo/swag v1.16.1
-	github.com/valyala/fasthttp v1.50.0
+	github.com/valyala/fasthttp v1.51.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/net v0.17.0
 )
@@ -65,7 +65,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.19 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
