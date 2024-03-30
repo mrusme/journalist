@@ -46,12 +46,10 @@ type ReadEdges struct {
 // UserOrErr returns the User value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ReadEdges) UserOrErr() (*User, error) {
-	if e.loadedTypes[0] {
-		if e.User == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: user.Label}
-		}
+	if e.User != nil {
 		return e.User, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "user"}
 }
@@ -59,12 +57,10 @@ func (e ReadEdges) UserOrErr() (*User, error) {
 // ItemOrErr returns the Item value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ReadEdges) ItemOrErr() (*Item, error) {
-	if e.loadedTypes[1] {
-		if e.Item == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: item.Label}
-		}
+	if e.Item != nil {
 		return e.Item, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: item.Label}
 	}
 	return nil, &NotLoadedError{edge: "item"}
 }

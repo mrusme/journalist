@@ -37,9 +37,25 @@ func (ru *ReadUpdate) SetUserID(u uuid.UUID) *ReadUpdate {
 	return ru
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (ru *ReadUpdate) SetNillableUserID(u *uuid.UUID) *ReadUpdate {
+	if u != nil {
+		ru.SetUserID(*u)
+	}
+	return ru
+}
+
 // SetItemID sets the "item_id" field.
 func (ru *ReadUpdate) SetItemID(u uuid.UUID) *ReadUpdate {
 	ru.mutation.SetItemID(u)
+	return ru
+}
+
+// SetNillableItemID sets the "item_id" field if the given value is not nil.
+func (ru *ReadUpdate) SetNillableItemID(u *uuid.UUID) *ReadUpdate {
+	if u != nil {
+		ru.SetItemID(*u)
+	}
 	return ru
 }
 
@@ -221,9 +237,25 @@ func (ruo *ReadUpdateOne) SetUserID(u uuid.UUID) *ReadUpdateOne {
 	return ruo
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (ruo *ReadUpdateOne) SetNillableUserID(u *uuid.UUID) *ReadUpdateOne {
+	if u != nil {
+		ruo.SetUserID(*u)
+	}
+	return ruo
+}
+
 // SetItemID sets the "item_id" field.
 func (ruo *ReadUpdateOne) SetItemID(u uuid.UUID) *ReadUpdateOne {
 	ruo.mutation.SetItemID(u)
+	return ruo
+}
+
+// SetNillableItemID sets the "item_id" field if the given value is not nil.
+func (ruo *ReadUpdateOne) SetNillableItemID(u *uuid.UUID) *ReadUpdateOne {
+	if u != nil {
+		ruo.SetItemID(*u)
+	}
 	return ruo
 }
 

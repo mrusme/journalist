@@ -37,9 +37,25 @@ func (su *SubscriptionUpdate) SetUserID(u uuid.UUID) *SubscriptionUpdate {
 	return su
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (su *SubscriptionUpdate) SetNillableUserID(u *uuid.UUID) *SubscriptionUpdate {
+	if u != nil {
+		su.SetUserID(*u)
+	}
+	return su
+}
+
 // SetFeedID sets the "feed_id" field.
 func (su *SubscriptionUpdate) SetFeedID(u uuid.UUID) *SubscriptionUpdate {
 	su.mutation.SetFeedID(u)
+	return su
+}
+
+// SetNillableFeedID sets the "feed_id" field if the given value is not nil.
+func (su *SubscriptionUpdate) SetNillableFeedID(u *uuid.UUID) *SubscriptionUpdate {
+	if u != nil {
+		su.SetFeedID(*u)
+	}
 	return su
 }
 
@@ -49,9 +65,25 @@ func (su *SubscriptionUpdate) SetName(s string) *SubscriptionUpdate {
 	return su
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (su *SubscriptionUpdate) SetNillableName(s *string) *SubscriptionUpdate {
+	if s != nil {
+		su.SetName(*s)
+	}
+	return su
+}
+
 // SetGroup sets the "group" field.
 func (su *SubscriptionUpdate) SetGroup(s string) *SubscriptionUpdate {
 	su.mutation.SetGroup(s)
+	return su
+}
+
+// SetNillableGroup sets the "group" field if the given value is not nil.
+func (su *SubscriptionUpdate) SetNillableGroup(s *string) *SubscriptionUpdate {
+	if s != nil {
+		su.SetGroup(*s)
+	}
 	return su
 }
 
@@ -249,9 +281,25 @@ func (suo *SubscriptionUpdateOne) SetUserID(u uuid.UUID) *SubscriptionUpdateOne 
 	return suo
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (suo *SubscriptionUpdateOne) SetNillableUserID(u *uuid.UUID) *SubscriptionUpdateOne {
+	if u != nil {
+		suo.SetUserID(*u)
+	}
+	return suo
+}
+
 // SetFeedID sets the "feed_id" field.
 func (suo *SubscriptionUpdateOne) SetFeedID(u uuid.UUID) *SubscriptionUpdateOne {
 	suo.mutation.SetFeedID(u)
+	return suo
+}
+
+// SetNillableFeedID sets the "feed_id" field if the given value is not nil.
+func (suo *SubscriptionUpdateOne) SetNillableFeedID(u *uuid.UUID) *SubscriptionUpdateOne {
+	if u != nil {
+		suo.SetFeedID(*u)
+	}
 	return suo
 }
 
@@ -261,9 +309,25 @@ func (suo *SubscriptionUpdateOne) SetName(s string) *SubscriptionUpdateOne {
 	return suo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (suo *SubscriptionUpdateOne) SetNillableName(s *string) *SubscriptionUpdateOne {
+	if s != nil {
+		suo.SetName(*s)
+	}
+	return suo
+}
+
 // SetGroup sets the "group" field.
 func (suo *SubscriptionUpdateOne) SetGroup(s string) *SubscriptionUpdateOne {
 	suo.mutation.SetGroup(s)
+	return suo
+}
+
+// SetNillableGroup sets the "group" field if the given value is not nil.
+func (suo *SubscriptionUpdateOne) SetNillableGroup(s *string) *SubscriptionUpdateOne {
+	if s != nil {
+		suo.SetGroup(*s)
+	}
 	return suo
 }
 

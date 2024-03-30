@@ -38,9 +38,25 @@ func (iu *ItemUpdate) SetItemGUID(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemGUID sets the "item_guid" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemGUID(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemGUID(*s)
+	}
+	return iu
+}
+
 // SetItemTitle sets the "item_title" field.
 func (iu *ItemUpdate) SetItemTitle(s string) *ItemUpdate {
 	iu.mutation.SetItemTitle(s)
+	return iu
+}
+
+// SetNillableItemTitle sets the "item_title" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemTitle(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemTitle(*s)
+	}
 	return iu
 }
 
@@ -50,9 +66,25 @@ func (iu *ItemUpdate) SetItemDescription(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemDescription sets the "item_description" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemDescription(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemDescription(*s)
+	}
+	return iu
+}
+
 // SetItemContent sets the "item_content" field.
 func (iu *ItemUpdate) SetItemContent(s string) *ItemUpdate {
 	iu.mutation.SetItemContent(s)
+	return iu
+}
+
+// SetNillableItemContent sets the "item_content" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemContent(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemContent(*s)
+	}
 	return iu
 }
 
@@ -62,15 +94,39 @@ func (iu *ItemUpdate) SetItemLink(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemLink sets the "item_link" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemLink(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemLink(*s)
+	}
+	return iu
+}
+
 // SetItemUpdated sets the "item_updated" field.
 func (iu *ItemUpdate) SetItemUpdated(t time.Time) *ItemUpdate {
 	iu.mutation.SetItemUpdated(t)
 	return iu
 }
 
+// SetNillableItemUpdated sets the "item_updated" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemUpdated(t *time.Time) *ItemUpdate {
+	if t != nil {
+		iu.SetItemUpdated(*t)
+	}
+	return iu
+}
+
 // SetItemPublished sets the "item_published" field.
 func (iu *ItemUpdate) SetItemPublished(t time.Time) *ItemUpdate {
 	iu.mutation.SetItemPublished(t)
+	return iu
+}
+
+// SetNillableItemPublished sets the "item_published" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemPublished(t *time.Time) *ItemUpdate {
+	if t != nil {
+		iu.SetItemPublished(*t)
+	}
 	return iu
 }
 
@@ -160,9 +216,25 @@ func (iu *ItemUpdate) SetItemCategories(s string) *ItemUpdate {
 	return iu
 }
 
+// SetNillableItemCategories sets the "item_categories" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemCategories(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemCategories(*s)
+	}
+	return iu
+}
+
 // SetItemEnclosures sets the "item_enclosures" field.
 func (iu *ItemUpdate) SetItemEnclosures(s string) *ItemUpdate {
 	iu.mutation.SetItemEnclosures(s)
+	return iu
+}
+
+// SetNillableItemEnclosures sets the "item_enclosures" field if the given value is not nil.
+func (iu *ItemUpdate) SetNillableItemEnclosures(s *string) *ItemUpdate {
+	if s != nil {
+		iu.SetItemEnclosures(*s)
+	}
 	return iu
 }
 
@@ -751,9 +823,25 @@ func (iuo *ItemUpdateOne) SetItemGUID(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemGUID sets the "item_guid" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemGUID(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemGUID(*s)
+	}
+	return iuo
+}
+
 // SetItemTitle sets the "item_title" field.
 func (iuo *ItemUpdateOne) SetItemTitle(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemTitle(s)
+	return iuo
+}
+
+// SetNillableItemTitle sets the "item_title" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemTitle(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemTitle(*s)
+	}
 	return iuo
 }
 
@@ -763,9 +851,25 @@ func (iuo *ItemUpdateOne) SetItemDescription(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemDescription sets the "item_description" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemDescription(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemDescription(*s)
+	}
+	return iuo
+}
+
 // SetItemContent sets the "item_content" field.
 func (iuo *ItemUpdateOne) SetItemContent(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemContent(s)
+	return iuo
+}
+
+// SetNillableItemContent sets the "item_content" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemContent(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemContent(*s)
+	}
 	return iuo
 }
 
@@ -775,15 +879,39 @@ func (iuo *ItemUpdateOne) SetItemLink(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemLink sets the "item_link" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemLink(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemLink(*s)
+	}
+	return iuo
+}
+
 // SetItemUpdated sets the "item_updated" field.
 func (iuo *ItemUpdateOne) SetItemUpdated(t time.Time) *ItemUpdateOne {
 	iuo.mutation.SetItemUpdated(t)
 	return iuo
 }
 
+// SetNillableItemUpdated sets the "item_updated" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemUpdated(t *time.Time) *ItemUpdateOne {
+	if t != nil {
+		iuo.SetItemUpdated(*t)
+	}
+	return iuo
+}
+
 // SetItemPublished sets the "item_published" field.
 func (iuo *ItemUpdateOne) SetItemPublished(t time.Time) *ItemUpdateOne {
 	iuo.mutation.SetItemPublished(t)
+	return iuo
+}
+
+// SetNillableItemPublished sets the "item_published" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemPublished(t *time.Time) *ItemUpdateOne {
+	if t != nil {
+		iuo.SetItemPublished(*t)
+	}
 	return iuo
 }
 
@@ -873,9 +1001,25 @@ func (iuo *ItemUpdateOne) SetItemCategories(s string) *ItemUpdateOne {
 	return iuo
 }
 
+// SetNillableItemCategories sets the "item_categories" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemCategories(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemCategories(*s)
+	}
+	return iuo
+}
+
 // SetItemEnclosures sets the "item_enclosures" field.
 func (iuo *ItemUpdateOne) SetItemEnclosures(s string) *ItemUpdateOne {
 	iuo.mutation.SetItemEnclosures(s)
+	return iuo
+}
+
+// SetNillableItemEnclosures sets the "item_enclosures" field if the given value is not nil.
+func (iuo *ItemUpdateOne) SetNillableItemEnclosures(s *string) *ItemUpdateOne {
+	if s != nil {
+		iuo.SetItemEnclosures(*s)
+	}
 	return iuo
 }
 

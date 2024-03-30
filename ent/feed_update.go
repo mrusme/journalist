@@ -38,6 +38,14 @@ func (fu *FeedUpdate) SetURL(s string) *FeedUpdate {
 	return fu
 }
 
+// SetNillableURL sets the "url" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableURL(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetURL(*s)
+	}
+	return fu
+}
+
 // SetUsername sets the "username" field.
 func (fu *FeedUpdate) SetUsername(s string) *FeedUpdate {
 	fu.mutation.SetUsername(s)
@@ -72,9 +80,25 @@ func (fu *FeedUpdate) SetFeedTitle(s string) *FeedUpdate {
 	return fu
 }
 
+// SetNillableFeedTitle sets the "feed_title" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedTitle(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedTitle(*s)
+	}
+	return fu
+}
+
 // SetFeedDescription sets the "feed_description" field.
 func (fu *FeedUpdate) SetFeedDescription(s string) *FeedUpdate {
 	fu.mutation.SetFeedDescription(s)
+	return fu
+}
+
+// SetNillableFeedDescription sets the "feed_description" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedDescription(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedDescription(*s)
+	}
 	return fu
 }
 
@@ -84,9 +108,25 @@ func (fu *FeedUpdate) SetFeedLink(s string) *FeedUpdate {
 	return fu
 }
 
+// SetNillableFeedLink sets the "feed_link" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedLink(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedLink(*s)
+	}
+	return fu
+}
+
 // SetFeedFeedLink sets the "feed_feed_link" field.
 func (fu *FeedUpdate) SetFeedFeedLink(s string) *FeedUpdate {
 	fu.mutation.SetFeedFeedLink(s)
+	return fu
+}
+
+// SetNillableFeedFeedLink sets the "feed_feed_link" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedFeedLink(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedFeedLink(*s)
+	}
 	return fu
 }
 
@@ -96,9 +136,25 @@ func (fu *FeedUpdate) SetFeedUpdated(t time.Time) *FeedUpdate {
 	return fu
 }
 
+// SetNillableFeedUpdated sets the "feed_updated" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedUpdated(t *time.Time) *FeedUpdate {
+	if t != nil {
+		fu.SetFeedUpdated(*t)
+	}
+	return fu
+}
+
 // SetFeedPublished sets the "feed_published" field.
 func (fu *FeedUpdate) SetFeedPublished(t time.Time) *FeedUpdate {
 	fu.mutation.SetFeedPublished(t)
+	return fu
+}
+
+// SetNillableFeedPublished sets the "feed_published" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedPublished(t *time.Time) *FeedUpdate {
+	if t != nil {
+		fu.SetFeedPublished(*t)
+	}
 	return fu
 }
 
@@ -148,6 +204,14 @@ func (fu *FeedUpdate) SetFeedLanguage(s string) *FeedUpdate {
 	return fu
 }
 
+// SetNillableFeedLanguage sets the "feed_language" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedLanguage(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedLanguage(*s)
+	}
+	return fu
+}
+
 // SetFeedImageTitle sets the "feed_image_title" field.
 func (fu *FeedUpdate) SetFeedImageTitle(s string) *FeedUpdate {
 	fu.mutation.SetFeedImageTitle(s)
@@ -194,15 +258,39 @@ func (fu *FeedUpdate) SetFeedCopyright(s string) *FeedUpdate {
 	return fu
 }
 
+// SetNillableFeedCopyright sets the "feed_copyright" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedCopyright(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedCopyright(*s)
+	}
+	return fu
+}
+
 // SetFeedGenerator sets the "feed_generator" field.
 func (fu *FeedUpdate) SetFeedGenerator(s string) *FeedUpdate {
 	fu.mutation.SetFeedGenerator(s)
 	return fu
 }
 
+// SetNillableFeedGenerator sets the "feed_generator" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedGenerator(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedGenerator(*s)
+	}
+	return fu
+}
+
 // SetFeedCategories sets the "feed_categories" field.
 func (fu *FeedUpdate) SetFeedCategories(s string) *FeedUpdate {
 	fu.mutation.SetFeedCategories(s)
+	return fu
+}
+
+// SetNillableFeedCategories sets the "feed_categories" field if the given value is not nil.
+func (fu *FeedUpdate) SetNillableFeedCategories(s *string) *FeedUpdate {
+	if s != nil {
+		fu.SetFeedCategories(*s)
+	}
 	return fu
 }
 
@@ -674,6 +762,14 @@ func (fuo *FeedUpdateOne) SetURL(s string) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableURL sets the "url" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableURL(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetURL(*s)
+	}
+	return fuo
+}
+
 // SetUsername sets the "username" field.
 func (fuo *FeedUpdateOne) SetUsername(s string) *FeedUpdateOne {
 	fuo.mutation.SetUsername(s)
@@ -708,9 +804,25 @@ func (fuo *FeedUpdateOne) SetFeedTitle(s string) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableFeedTitle sets the "feed_title" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedTitle(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedTitle(*s)
+	}
+	return fuo
+}
+
 // SetFeedDescription sets the "feed_description" field.
 func (fuo *FeedUpdateOne) SetFeedDescription(s string) *FeedUpdateOne {
 	fuo.mutation.SetFeedDescription(s)
+	return fuo
+}
+
+// SetNillableFeedDescription sets the "feed_description" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedDescription(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedDescription(*s)
+	}
 	return fuo
 }
 
@@ -720,9 +832,25 @@ func (fuo *FeedUpdateOne) SetFeedLink(s string) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableFeedLink sets the "feed_link" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedLink(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedLink(*s)
+	}
+	return fuo
+}
+
 // SetFeedFeedLink sets the "feed_feed_link" field.
 func (fuo *FeedUpdateOne) SetFeedFeedLink(s string) *FeedUpdateOne {
 	fuo.mutation.SetFeedFeedLink(s)
+	return fuo
+}
+
+// SetNillableFeedFeedLink sets the "feed_feed_link" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedFeedLink(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedFeedLink(*s)
+	}
 	return fuo
 }
 
@@ -732,9 +860,25 @@ func (fuo *FeedUpdateOne) SetFeedUpdated(t time.Time) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableFeedUpdated sets the "feed_updated" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedUpdated(t *time.Time) *FeedUpdateOne {
+	if t != nil {
+		fuo.SetFeedUpdated(*t)
+	}
+	return fuo
+}
+
 // SetFeedPublished sets the "feed_published" field.
 func (fuo *FeedUpdateOne) SetFeedPublished(t time.Time) *FeedUpdateOne {
 	fuo.mutation.SetFeedPublished(t)
+	return fuo
+}
+
+// SetNillableFeedPublished sets the "feed_published" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedPublished(t *time.Time) *FeedUpdateOne {
+	if t != nil {
+		fuo.SetFeedPublished(*t)
+	}
 	return fuo
 }
 
@@ -784,6 +928,14 @@ func (fuo *FeedUpdateOne) SetFeedLanguage(s string) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableFeedLanguage sets the "feed_language" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedLanguage(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedLanguage(*s)
+	}
+	return fuo
+}
+
 // SetFeedImageTitle sets the "feed_image_title" field.
 func (fuo *FeedUpdateOne) SetFeedImageTitle(s string) *FeedUpdateOne {
 	fuo.mutation.SetFeedImageTitle(s)
@@ -830,15 +982,39 @@ func (fuo *FeedUpdateOne) SetFeedCopyright(s string) *FeedUpdateOne {
 	return fuo
 }
 
+// SetNillableFeedCopyright sets the "feed_copyright" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedCopyright(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedCopyright(*s)
+	}
+	return fuo
+}
+
 // SetFeedGenerator sets the "feed_generator" field.
 func (fuo *FeedUpdateOne) SetFeedGenerator(s string) *FeedUpdateOne {
 	fuo.mutation.SetFeedGenerator(s)
 	return fuo
 }
 
+// SetNillableFeedGenerator sets the "feed_generator" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedGenerator(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedGenerator(*s)
+	}
+	return fuo
+}
+
 // SetFeedCategories sets the "feed_categories" field.
 func (fuo *FeedUpdateOne) SetFeedCategories(s string) *FeedUpdateOne {
 	fuo.mutation.SetFeedCategories(s)
+	return fuo
+}
+
+// SetNillableFeedCategories sets the "feed_categories" field if the given value is not nil.
+func (fuo *FeedUpdateOne) SetNillableFeedCategories(s *string) *FeedUpdateOne {
+	if s != nil {
+		fuo.SetFeedCategories(*s)
+	}
 	return fuo
 }
 

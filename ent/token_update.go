@@ -50,9 +50,25 @@ func (tu *TokenUpdate) SetName(s string) *TokenUpdate {
 	return tu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (tu *TokenUpdate) SetNillableName(s *string) *TokenUpdate {
+	if s != nil {
+		tu.SetName(*s)
+	}
+	return tu
+}
+
 // SetToken sets the "token" field.
 func (tu *TokenUpdate) SetToken(s string) *TokenUpdate {
 	tu.mutation.SetToken(s)
+	return tu
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (tu *TokenUpdate) SetNillableToken(s *string) *TokenUpdate {
+	if s != nil {
+		tu.SetToken(*s)
+	}
 	return tu
 }
 
@@ -279,9 +295,25 @@ func (tuo *TokenUpdateOne) SetName(s string) *TokenUpdateOne {
 	return tuo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (tuo *TokenUpdateOne) SetNillableName(s *string) *TokenUpdateOne {
+	if s != nil {
+		tuo.SetName(*s)
+	}
+	return tuo
+}
+
 // SetToken sets the "token" field.
 func (tuo *TokenUpdateOne) SetToken(s string) *TokenUpdateOne {
 	tuo.mutation.SetToken(s)
+	return tuo
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (tuo *TokenUpdateOne) SetNillableToken(s *string) *TokenUpdateOne {
+	if s != nil {
+		tuo.SetToken(*s)
+	}
 	return tuo
 }
 
