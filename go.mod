@@ -25,14 +25,13 @@ require (
 	github.com/swaggo/swag v1.16.1
 	github.com/valyala/fasthttp v1.52.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.23.0
 )
 
 require (
 	ariga.io/atlas v0.20.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/Danny-Dasilva/fhttp v0.0.0-20240217042913-eeeb0b347ce1 // indirect
-	github.com/Danny-Dasilva/utls v0.0.0-20220604023528-30cb107b834e // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
@@ -43,7 +42,6 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
-	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-openapi/inflect v0.21.0 // indirect
