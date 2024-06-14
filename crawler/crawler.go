@@ -97,6 +97,10 @@ func (c *Crawler) SetBasicAuth(username string, password string) {
 	c.password = password
 }
 
+func (c *Crawler) GetSource() io.ReadCloser {
+	return c.source
+}
+
 func (c *Crawler) GetReadable(useCycleTLS bool) (ItemCrawled, error) {
 	if err := c.FromAuto(useCycleTLS); err != nil {
 		return ItemCrawled{}, err
