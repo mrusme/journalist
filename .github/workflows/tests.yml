@@ -33,7 +33,7 @@ jobs:
 
       - name: Run integration tests
         env:
-          JOURNALIST_API_URL: http://127.0.0.1:8000/api
+          JOURNALIST_API_URL: http://127.0.0.1:8000/api/v1
         run: |
           ./test.sh true
 
