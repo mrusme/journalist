@@ -1,0 +1,24 @@
+services:
+  - name: journalist
+    type: web
+    env: docker
+    repo: https://github.com/mrusme/journalist.git
+    branch: master
+    numInstances: 1
+    healthCheckPath: /health
+    envVars:
+      - key: JOURNALIST_SERVER_BINDIP
+        value: "0.0.0.0"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: journalistdb
+          property: connectionString
+    autoDeploy: false
+
+databases:
+  - name: journalistdb
+    databaseName: journalist
+    user: journalist
+    ipAllowList: []
+    postgresMajorVersion: 14
+
