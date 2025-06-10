@@ -1,6 +1,7 @@
 module github.com/mrusme/journalist
 
-go 1.22.5
+go 1.24.0
+
 toolchain go1.24.1
 
 require (
@@ -38,7 +39,7 @@ require (
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/cloudflare/circl v1.5.0 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.4 // indirect
 	github.com/go-openapi/inflect v0.21.0 // indirect
